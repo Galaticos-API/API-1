@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}NinjaDevs{% endblock %}</title>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <div>
+                <a class="navbar-brand mx-5" href="/">Home</a>
+                <a class="navbar-brand mx-5" href="/atestados">Atestados</a>
+                <a class="navbar-brand mx-5" href="/avaliacao">Avaliação</a>
+            </div>
+            <div>
+                <a class="navbar-brand mx-5" href="/login">Login</a>
+                <a class="navbar-brand mx-5" href="/cadastro/">Cadastro</a>
+            </div>
+        </div>
+
+    </nav>
+
+
+    <main class="main container bg-light-subtle mt-4">
+        {% block content %}{% endblock %}
+    </main>
+
+</body>
+
+</html>

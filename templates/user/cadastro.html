@@ -1,0 +1,42 @@
+<!-- templates/atestados.html -->
+{% extends "base.html" %}
+
+{% block title %}Atestados{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h1 class="mb-3 text-center">Crie uma conta.</h1>
+    <form class="row justify-content-md-center">
+        <div class="mb-3 col-7">
+            <label for="login" class="form-label">Login</label>
+            <input type="email" class="form-control" id="login" aria-describedby="emailHelp">
+            <div id="emailHelp" class="form-text">*E-mail.</div>
+        </div>
+        <div class="mb-3 col-7">
+            <label for="senha" class="form-label">Senha</label>
+            <input type="password" class="form-control" id="senha">
+        </div>
+        <div class="mb-3 col-7">
+            <label for="senha" class="form-label">Confirme a senha</label>
+            <input type="password" class="form-control" id="senha">
+        </div>
+        <div class="mb-3 col-7">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="radioUSerType" id="adm">
+                <label class="form-check-label" for="adm">
+                    Administrador
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="radioUSerType" id="aluno" checked>
+                <label class="form-check-label" for="aluno">
+                    Aluno
+                </label>
+            </div>
+        </div>
+        <div class="col-7">
+            <button type="submit" class="btn btn-light">Entrar</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

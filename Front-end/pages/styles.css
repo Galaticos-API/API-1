@@ -1,9 +1,0 @@
-.navHome {
-    a {
-        transition: 250ms;
-        border-radius: 5px;
-        &:hover {
-            background-color: #4c535a;
-        }
-    }
-}
