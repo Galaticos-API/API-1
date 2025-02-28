@@ -47,13 +47,6 @@ Clique na imagem abaixo para uma demonstração.
 ![My Skills](https://go-skill-icons.vercel.app/api/icons?i=git,github,vscode,html,css,bootstrap,js,python,flask,figma)
 
 
-# Backlog do produto
-
-| Rank | User Story | Prioridade | Sprint |
-| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ------ |
-| 1    | Exemplo item backlog                                                                                                         | Altíssima  | 1      |
-
-
 # :medal_sports: Docentes
 | P¹                       | m²                   |
 | ------------------------ | -------------------- |
