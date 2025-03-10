@@ -21,8 +21,8 @@ Os resultados dos projetos devem obedecer ao Aviso Legal disponível no site da 
 | Sprint               | Previsão                | Status    |
 | -------------------- | ----------------------- | --------- |
 | Kick Off Geral       | 26/08/2024 - 30/08/2024 | Concluído |
-| Kick Off 1° Semestre | 02/09/2024 - 06/09/2024 | A começar |
-| 01                   | 10/03/2025 - 30/03/2025 | A começar |
+| Kick Off 1° Semestre | 02/09/2024 - 06/09/2024 | concluído |
+| 01                   | 10/03/2025 - 30/03/2025 | Em progresso |
 | 02                   | 07/04/2025 - 27/04/2025 | A começar |
 | 03                   | 05/05/2025 - 25/05/2025 | A começar |
 | Feira de Soluções    | 29/05/2024              | A começar |
