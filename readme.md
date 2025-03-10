@@ -48,7 +48,7 @@ Clique na imagem abaixo para uma demonstração.
 
 
 # :medal_sports: Docentes
-| P¹                       | m²                   |
+| P²                       | m²                   |
 | ------------------------ | -------------------- |
 | Antônio Egydio | Jean Costa |
 
