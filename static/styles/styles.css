@@ -2,8 +2,30 @@
     border-radius: 10px;
     padding-top: 2%;
     padding-bottom: 2%;
+    background-color: #F1F0E9;
 }
 
 .content {
     padding: 20px;
+}
+
+.navbar {
+    background-color: #41644A;
+}
+
+.navbar-contents {
+    a {
+        color: white;
+        padding: 10px;
+        transition: 100ms;
+    }
+
+    a:hover {
+        background-color: #0D4715;
+        color: white;
+    }
+}
+
+button{
+    background-color: #41644A;
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en" data-bs-theme="light">
 
 <head>
     <meta charset="utf-8">
@@ -14,12 +14,12 @@
 <body>
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            <div>
+            <div class="navbar-contents">
                 <a class="navbar-brand mx-5" href="/">Home</a>
                 <a class="navbar-brand mx-5" href="/atestados">Atestados</a>
                 <a class="navbar-brand mx-5" href="/avaliacao">Avaliação</a>
             </div>
-            <div>
+            <div class="navbar-contents">
                 <a class="navbar-brand mx-5" href="/login">Login</a>
                 <a class="navbar-brand mx-5" href="/cadastro/">Cadastro</a>
             </div>
@@ -28,7 +28,7 @@
     </nav>
 
 
-    <main class="main container bg-light-subtle mt-4">
+    <main class="main container bg-light mt-4">
         {% block content %}{% endblock %}
     </main>
 
