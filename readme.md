@@ -22,7 +22,6 @@ Clique na imagem abaixo para uma demonstração.
 [(![Logo NinjaDevs]())](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
 
 
-## :desktop_computer: Tecnologias Utilizadas
 
 ![My Skills](https://go-skill-icons.vercel.app/api/icons?i=git,github,vscode,html,css,bootstrap,js,python,flask,figma)
 
@@ -36,3 +35,8 @@ Clique na imagem abaixo para uma demonstração.
 |  Dev Team  | Gabriel Vinicius de Barros Cursino |  [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](#)   |
 |  Dev Team  | Gabriel dos Santos Lasaro |  [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](#)   |
 |  Dev Team  | Hiago V. |  [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](#)   |
+
+# Instalação de bibliotecas necessárias 
+
+`pip install flask`
+`pip install cryptography`
