@@ -7,7 +7,7 @@ key = Fernet.generate_key()
 cipher_suite = Fernet(key)
 
 def verifyLogin(route):
-    if(session.get("login") and session.get("senha")): # verifica se o existe o login e senha do user na sessão atual
+    if(session.get("RA") and session.get("senha")): # verifica se o existe o login e senha do user na sessão atual
         return render_template(route) # se tiver, envia para a rota do parametro
     else:
         return redirect(url_for("login")) # se não tiver, ele vai para a página de login, forcando o usuário a realizar o login, independente da rota
@@ -32,14 +32,14 @@ def avaliacao():
 def login():
     if request.method == "POST":
         # Captura os dados do formulário
-        login = request.form["login"]
+        ra = request.form["RA"]
         senha = request.form["senha"]
         
          # Criptografa a senha antes de armazenar na sessão
-        senha_criptografada = cipher_suite.encrypt(senha.encode())
+        # senha_criptografada = cipher_suite.encrypt(senha.encode())
         
-        session["login"] = login  # Armazena o e-mail na sessão
-        session["senha"] = senha_criptografada.decode()  # Armazenar como string
+        session["RA"] = ra  # Armazena o e-mail na sessão
+        session["senha"] = senha  # Armazenar como string
         
         # Para descriptografar a senha armazenada na sessão
         # senha_descriptografada = cipher_suite.decrypt(session["senha"].encode()).decode()
