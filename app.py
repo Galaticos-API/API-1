@@ -1,6 +1,7 @@
 from cryptography.fernet import Fernet
 from flask import Flask, session, redirect, url_for, render_template, request
 import secrets
+from controlarUsuarios.user import usuarios_bp
 
 # Geração da chave de criptografia (só deve ser gerada uma vez e salva de maneira segura)
 key = Fernet.generate_key()
@@ -35,14 +36,8 @@ def login():
         ra = request.form["RA"]
         senha = request.form["senha"]
         
-         # Criptografa a senha antes de armazenar na sessão
-        # senha_criptografada = cipher_suite.encrypt(senha.encode())
-        
         session["RA"] = ra  # Armazena o e-mail na sessão
         session["senha"] = senha  # Armazenar como string
-        
-        # Para descriptografar a senha armazenada na sessão
-        # senha_descriptografada = cipher_suite.decrypt(session["senha"].encode()).decode()
 
         
         return redirect(url_for("home"))
@@ -51,13 +46,20 @@ def login():
 
 @app.route('/cadastro/')
 def cadastro():
-    return verifyLogin("/user/cadastro.html")
+    if(session.get("RA") and session.get("senha")): # verifica se o existe o login e senha do user na sessão atual
+        return render_template(url_for("home")) # se tiver, envia para a rota do parametro
+    else:
+        return render_template("/user/cadastro.html") 
+    
 
 @app.route("/logout/")
 def logout():
     session.pop("login", None)
     session.pop("senha", None)
     return redirect(url_for("home"))
+
+# Pega as rotas da parte de controlar usuarios e adiciona o prefixo /usuario
+app.register_blueprint(usuarios_bp, url_prefix="/usuario")
 
 if __name__ == '__main__':
     app.run(debug=True)

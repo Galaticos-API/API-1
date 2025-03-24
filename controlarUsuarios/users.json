@@ -1,0 +1,16 @@
+[
+  {
+    "nome": "Rafael",
+    "email": "djwhaobdwa",
+    "senha": "$2b$12$R07bqD3CoD9lYYOHcY3aNOx1xEd/sokTnzUDXjsUWINKAgXRKMcnC",
+    "ra": null,
+    "tipo": "aluno"
+  },
+  {
+    "nome": "Rafael",
+    "email": "djwhaobdwa",
+    "senha": "$2b$12$TAQRG0i5KvPpiZPBlos9HO8UmuqHxyxfqBr3I6HcNEEczC9iEwZu2",
+    "ra": null,
+    "tipo": "aluno"
+  }
+]
