@@ -13,14 +13,15 @@ USERS_FILE_PATH = os.path.join(BASE_DIR, 'users.json')
 @usuarios_bp.route('/add_user', methods=['POST'])
 def add_user():
     data = request.get_json()
+    print(data)
     nome = data.get('nome')
     email = data.get('email')
     senha = data.get('senha')
-    ra = data.get('RA')
+    ra = data.get('login')
     tipo = data.get('tipo')
     
-    if not nome or not email:
-        return jsonify({"error": "Username and email are required"}), 400
+    if not nome or not email or not senha or not ra or not tipo:
+        return jsonify({"message": "Preencha todos os campos"}), 400
     
     # Criptografar a senha
     hashed_senha = bcrypt.hashpw(senha.encode('utf-8'), bcrypt.gensalt())
@@ -43,7 +44,7 @@ def add_user():
     with open(USERS_FILE_PATH, 'w') as file:
         json.dump(users, file)
 
-    return jsonify({"message": "User added successfully"}), 201
+    return jsonify({"message": "Cadastro realizado com sucesso"}), 201
 
 @usuarios_bp.route('/get_users', methods=['GET'])
 def get_users():

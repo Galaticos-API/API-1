@@ -29,3 +29,10 @@
 button{
     background-color: #41644A;
 }
+
+#divCadastro {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
