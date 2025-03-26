@@ -1,7 +1,7 @@
 from cryptography.fernet import Fernet
 from flask import Flask, session, redirect, url_for, render_template, request
 import secrets
-from controlarUsuarios.user import usuarios_bp
+from back.user import usuarios_bp
 
 # Geração da chave de criptografia (só deve ser gerada uma vez e salva de maneira segura)
 key = Fernet.generate_key()
