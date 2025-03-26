@@ -1,17 +1,30 @@
+from flask import Flask, session, redirect, url_for, render_template, request, flash
 from cryptography.fernet import Fernet
-from flask import Flask, session, redirect, url_for, render_template, request
 import secrets
+import json
+import os
+import bcrypt
+
 from back.user import usuarios_bp
 
-# Geração da chave de criptografia (só deve ser gerada uma vez e salva de maneira segura)
-key = Fernet.generate_key()
+key = Fernet.generate_key() # Gera a chave de criptografia
 cipher_suite = Fernet(key)
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+caminho_json  = os.path.join(BASE_DIR, 'back/users.json')
+
+def carregar_usuarios(): # Função para carregar os usuários cadastrados
+    try:
+        with open(caminho_json, "r", encoding="utf-8") as arquivo:
+            return json.load(arquivo) # retorna os users salvos no JSON
+    except FileNotFoundError:
+        return {}  # Retorna um dic vazio se o arquivo não existir
+
 def verifyLogin(route):
-    if(session.get("RA") and session.get("senha")): # verifica se o existe o login e senha do user na sessão atual
-        return render_template(route) # se tiver, envia para a rota do parametro
+    if session.get("RA"): # verifica se o user está logado
+        return render_template(route) # se tiver, envia para a rota especificada
     else:
-        return redirect(url_for("login")) # se não tiver, ele vai para a página de login, forcando o usuário a realizar o login, independente da rota
+        return redirect(url_for("login")) # se nao estiver logado, vai para pagina de login
 
 
 app = Flask(__name__)
@@ -29,17 +42,25 @@ def atestado():
 def avaliacao():
     return verifyLogin("avaliacao.html")
 
-@app.route('/login/', methods=["GET", "POST"])
+@app.route('/login/', methods=["GET","POST"])
 def login():
     if request.method == "POST":
         # Captura os dados do formulário
-        ra = request.form["RA"]
+        ra = request.form["login"]
         senha = request.form["senha"]
         
-        session["RA"] = ra  # Armazena o e-mail na sessão
-        session["senha"] = senha  # Armazenar como string
-
+        usuarios = carregar_usuarios()  # Carrega os usuários do JSON
+        for user in usuarios:
+            if ra == user['ra']: # Verifica se algum user tem o RA digitado
+                senha = senha.encode('utf-8')
+                senha_armazenada = user["senha"].encode('utf-8')  # Converter para bytes
+                
+                if bcrypt.checkpw(senha, senha_armazenada): # Comparar senha digitada com a senha no JSON
+                    session["RA"] = ra  # Armazena o RA na sessão
+                    flash("Login realizado com sucesso!", "success") # toast para mostrar na tela
+                    return redirect(url_for("home"))
         
+        flash("RA ou senha incorretos!", "danger")  # toast para mostrar na tela
         return redirect(url_for("home"))
     
     return render_template('/user/login.html')
@@ -54,8 +75,7 @@ def cadastro():
 
 @app.route("/logout/")
 def logout():
-    session.pop("login", None)
-    session.pop("senha", None)
+    session.clear()  # Remove todos os dados da sessão
     return redirect(url_for("home"))
 
 # Pega as rotas da parte de controlar usuarios e adiciona o prefixo /usuario

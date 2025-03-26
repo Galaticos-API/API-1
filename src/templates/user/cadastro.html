@@ -120,7 +120,10 @@ content %}
           tipo: userType,
         }),
         success: function (response) {
-          mostrarToast(response.message, "bg-success text-white");
+          mostrarToast(response.message + ", realize o login", "bg-success text-white");
+          setTimeout(() => {
+            window.location.replace("/login/");
+          }, 1500);
         },
         error: function (response) {
           let responseJson = response.responseJSON;

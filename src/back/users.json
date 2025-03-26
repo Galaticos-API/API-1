@@ -1,9 +1,1 @@
-[
-  {
-    "nome": "Rafael Matesco",
-    "email": "rafael.matesco@fatec.sp.gov.br",
-    "senha": "$2b$12$5bytjjGpkTJEBL9gxbos9uwheKK/Dle.y8WTESJJ6kKh.59ukmWOO",
-    "ra": "1460482511007",
-    "tipo": "aluno"
-  }
-]
+[{"nome": "Rafael Matesco", "email": "rafael.matesco@fatec.sp.gov.br", "senha": "$2b$12$5bytjjGpkTJEBL9gxbos9uwheKK/Dle.y8WTESJJ6kKh.59ukmWOO", "ra": "1460482511007", "tipo": "aluno"}, {"nome": "teste", "email": "gustavo@gmail.com", "senha": "$2b$12$T.7Vq4R5eiJXZQf7C/.aA.tBqE3aw/mcr1GN6lEL2EwQycMkEUci.", "ra": "123", "tipo": "adm"}]
