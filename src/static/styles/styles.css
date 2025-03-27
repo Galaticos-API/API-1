@@ -10,18 +10,19 @@
 }
 
 .navbar {
-    background-color: #41644A;
+    background-color: #366341;
 }
 
 .navbar-contents {
     a {
+        font-family: Helvetica;
         color: white;
         padding: 10px;
         transition: 100ms;
     }
 
     a:hover {
-        background-color: #0D4715;
+        background-color: #25562b;
         color: white;
     }
 }
@@ -35,4 +36,39 @@ button{
     justify-content: center;
     align-items: center;
     flex-direction: column;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+}
+
+#search {
+    background-color: white;
+    border: 1px solid #212529;
+    padding: 0px 15px 0px 15px;
+    color: #757575;
+    border-radius: 10px;
+    width: 30%;
+    height: 40px;
+    font-family: Helvetica;
+    margin-right: 10px;
+}
+
+#category {
+    background-color: white;
+    border: 1px solid #212529;
+    padding: 0px 15px 0px 15px;
+    color: #757575; 
+    border-radius: 10px;
+    width: 12%;
+    height: 40px;
+    font-family: Helvetica;
+}
+
+select:hover {
+    color: #25562b;
 }
