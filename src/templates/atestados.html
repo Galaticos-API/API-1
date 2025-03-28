@@ -42,4 +42,9 @@
         });
     }
 </script>
+<form action="/src/atestados/uploads" method="POST" enctype="multipart/form-data"> 
+    <label for="file">Escolha um arquivo PDF:</label> 
+    <input type="file" name="file" id="file" accept=".pdf" required> 
+    <button type="submit">Enviar</button> 
+</form>
 {% endblock %}
