@@ -7,6 +7,12 @@
 
 .content {
     padding: 20px;
+
+    .formAtestado {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }
 
 .navbar {

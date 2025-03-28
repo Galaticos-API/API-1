@@ -1,51 +1,40 @@
 <!-- templates/atestados.html -->
-{% extends "base.html" %}
-
-{% block title %}Atestados{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Atestados{% endblock %} {% block content %}
 <div class="content">
-    <h1>Atestados</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec faucibus magna eget libero sagittis
-        laoreet.
-        Aenean ornare lorem id ipsum viverra pharetra. Nullam commodo, magna id facilisis mattis, leo nulla
-        tincidunt diam, sed efficitur ante dui ac augue. Duis vitae feugiat enim. Sed aliquam massa diam, ut
-        dignissim justo blandit sit amet. Donec molestie massa arcu, in commodo dolor pellentesque quis. Sed
-        vitae</p>
+  <h1>Atestados</h1>
+  <form class="formAtestado mb-3" action="/src/atestados/uploads" method="POST" enctype="multipart/form-data">
+    <input class="mb-3" type="file" name="file" id="file" accept=".pdf" required />
+    <button class="btn btn-dark" type="submit">Enviar</button>
+  </form>
+
+  <nav class="search-container mb-3">
+    <input type="number" id="search" placeholder="Buscar por RA..." oninput="filterDocuments()" />
+    <select id="category" onchange="filterDocuments()">
+      <option value="nameaz">Nome de A-Z</option>
+      <option value="nameza">Nome de Z-A</option>
+      <option value="dateolder">Mais Antigo</option>
+      <option value="datenewer">Mais Recente</option>
+    </select>
+  </nav>
 </div>
 
-<nav class="search-container">
-    <input type="text" id="search" placeholder="Buscar por RA..." oninput="filterDocuments()">
-    <select id="category" onchange="filterDocuments()">
-        <option value="nameaz">Nome de A-Z</option>
-        <option value="nameza">Nome de Z-A</option>
-        <option value="dateolder">Mais Antigo</option>
-        <option value="datenewer">Mais Recente</option>
-    </select>
-</nav>
-
 <script>
-    function filterDocuments() {
-        let searchInput = document.getElementById('search').value.toLowerCase();
-        let categoryFilter = document.getElementById('category').value;
-        let documents = document.querySelectorAll('.document');
+  function filterDocuments() {
+    let searchInput = document.getElementById("search").value.toLowerCase();
+    let categoryFilter = document.getElementById("category").value;
+    let documents = document.querySelectorAll(".document");
 
-        documents.forEach(doc => {
-            let text = doc.textContent.toLowerCase();
-            let category = doc.getAttribute('data-category');
-            
-            if ((text.includes(searchInput) || searchInput === '') && (categoryFilter === 'all' || category === categoryFilter)) {
-                doc.style.display = 'block';
-            } else {
-                doc.style.display = 'none';
-            }
-        });
-    }
+    documents.forEach((doc) => {
+      let text = doc.textContent.toLowerCase();
+      let category = doc.getAttribute("data-category");
+
+      if ((text.includes(searchInput) || searchInput === "") && (categoryFilter === "all" || category === categoryFilter)) {
+        doc.style.display = "block";
+      } else {
+        doc.style.display = "none";
+      }
+    });
+  }
 </script>
-<form action="/src/atestados/uploads" method="POST" enctype="multipart/form-data"> 
-    <label for="file">Escolha um arquivo PDF:</label> 
-    <input type="file" name="file" id="file" accept=".pdf" required> 
-    <button type="submit">Enviar</button> 
-</form>
 
 {% endblock %}
