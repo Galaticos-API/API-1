@@ -1,18 +1,23 @@
 from flask import Flask, session, redirect, url_for, render_template, request, flash
 from cryptography.fernet import Fernet
-from datetime import datetime
 import secrets
 import json
 import os
 import bcrypt
 
 from back.user import usuarios_bp
+from back.atestados import atestados_bp
 
 key = Fernet.generate_key() # Gera a chave de criptografia
 cipher_suite = Fernet(key)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-caminho_json  = os.path.join(BASE_DIR, 'back/users.json')
+caminho_json  = os.path.join(BASE_DIR, 'back/JSON/users.json')
+UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
+
+
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)  # Cria a pasta se ela não existir
 
 def carregar_usuarios(): # Função para carregar os usuários cadastrados
     try:
@@ -79,78 +84,10 @@ def logout():
     session.clear()  # Remove todos os dados da sessão
     return redirect(url_for("home"))
 
+
 # Pega as rotas da parte de controlar usuarios e adiciona o prefixo /usuario
 app.register_blueprint(usuarios_bp, url_prefix="/usuario")
+app.register_blueprint(atestados_bp, url_prefix="/atestado/")
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
-#tavão tentando criar uma rota para o upload dos PDFs
-
-UPLOAD_FOLDER = 'uploads'  # Nome da pasta onde os PDFs serão salvos
-
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)  # Cria a pasta se ela não existir
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER  # Configura a pasta de upload
-
-ALLOWED_EXTENSIONS = {'pdf'}  # Definição das extensões permitidas
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-JSON_FILE = 'uploads.json'  # Nome do arquivo JSON
-
-# Garante que o arquivo JSON existe
-if not os.path.exists(JSON_FILE):
-    with open(JSON_FILE, 'w') as f:
-        json.dump([], f)  # Cria uma lista vazia no JSON
-
-def save_to_json(filename, file_path, user):
-    with open(JSON_FILE, 'r', encoding='utf-8') as f:
-        data = json.load(f)  # Carrega os dados existentes
-
-    # Adiciona um novo registro com informações do usuário
-    data.append({
-        "filename": filename,
-        "file_path": file_path,
-        "uploaded_by": user,
-        "timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    })
-
-    with open(JSON_FILE, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=4)  # Salva os dados atualizados
-
-@app.route('/src/atestados/uploads', methods=['POST'])
-def upload_file():
-    if 'file' not in request.files:  # Verifica se o arquivo foi enviado
-        return "Nenhum arquivo enviado!", 400
-
-    file = request.files['file']  # Obtém o arquivo do formulário
-
-    if file.filename == '':  # Verifica se o usuário selecionou um arquivo
-        return "Nenhum arquivo selecionado!", 400
-    
-    if not allowed_file(file.filename):  # Verifica a extensão
-        return "Apenas arquivos PDF são permitidos!", 400
-
-    if file.mimetype != 'application/pdf':  # Verifica o tipo MIME
-        return "O arquivo enviado não é um PDF válido!", 400
-
-    # Obtém o usuário logado
-    user = session.get("RA")
-    if not user:
-        return "Usuário não autenticado!", 403
-
-    file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)  
-    file.save(file_path)  # Salva o arquivo na pasta
-
-    # Salva os detalhes do arquivo no JSON, incluindo o usuário logado
-    save_to_json(file.filename, file_path, user)
-
-    return f"Arquivo {file.filename} enviado com sucesso por {user}!"
-
-if __name__ == '__main__':
-    app.run(debug=True)  # Inicia o servidor Flask
-    

@@ -8,7 +8,10 @@ usuarios_bp = Blueprint("usuarios", __name__)
 # para pegar o caminho certo do arquivo, pois esta sendo importado para o app.py
 # e o caminho do arquivo é relativo ao app.py
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-USERS_FILE_PATH = os.path.join(BASE_DIR, 'users.json')
+USERS_FILE_PATH = os.path.join(BASE_DIR+"\\JSON\\", 'users.json')
+
+if not os.path.exists(BASE_DIR+"/JSON/"):
+    os.makedirs(BASE_DIR+"/JSON/")  # Cria a pasta se ela não existir
 
 @usuarios_bp.route('/add_user', methods=['POST'])
 def add_user():

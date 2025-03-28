@@ -2,7 +2,7 @@
 {% extends "base.html" %} {% block title %}Atestados{% endblock %} {% block content %}
 <div class="content">
   <h1>Atestados</h1>
-  <form class="formAtestado mb-3" action="/src/atestados/uploads" method="POST" enctype="multipart/form-data">
+  <form class="formAtestado mb-3" action="/atestado/upload/" method="POST" enctype="multipart/form-data">
     <input class="mb-3" type="file" name="file" id="file" accept=".pdf" required />
     <button class="btn btn-dark" type="submit">Enviar</button>
   </form>
