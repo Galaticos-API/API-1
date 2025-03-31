@@ -17,9 +17,8 @@ O objetivo é desenvolver um sistema web para o registro e gestão de atestados 
 # :vhs: Demostrações das sprints
 
 Apresentação das funcionalidades.
-Clique na imagem abaixo para uma demonstração.
-
-[![Clique aqui para ver(https://www.youtube.com/watch?v=dQw4w9WgXcQ)](#)
+Link abaixo.
+https://www.youtube.com/watch?v=dQw4w9WgXcQ
 
 
 
