@@ -19,7 +19,7 @@ O objetivo é desenvolver um sistema web para o registro e gestão de atestados 
 Apresentação das funcionalidades.
 Clique na imagem abaixo para uma demonstração.
 
-[(![Logo NinjaDevs]())]([https://www.youtube.com/watch?v=dQw4w9WgXcQ](https://youtu.be/Aag2fdVSDXw))
+[![Clique aqui para baixar]([https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white](https://www.youtube.com/watch?v=dQw4w9WgXcQ))](#)
 
 
 
