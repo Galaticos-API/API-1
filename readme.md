@@ -9,16 +9,15 @@ O objetivo é desenvolver um sistema web para o registro e gestão de atestados 
 | -------------------- | ----------------------- | --------- |
 | Kick Off Geral       | 26/08/2024 - 30/08/2024 | Concluído |
 | Kick Off 1° Semestre | 02/09/2024 - 06/09/2024 | concluído |
-| 01                   | 10/03/2025 - 30/03/2025 | Em progresso |
-| 02                   | 07/04/2025 - 27/04/2025 | A começar |
+| 01                   | 10/03/2025 - 30/03/2025 | Concluído |
+| 02                   | 07/04/2025 - 27/04/2025 | Em progresso |
 | 03                   | 05/05/2025 - 25/05/2025 | A começar |
 | Feira de Soluções    | 29/05/2024              | A começar |
 
 # :vhs: Demostrações das sprints
 
 Apresentação das funcionalidades.
-Link abaixo.
-https://www.youtube.com/watch?v=Aag2fdVSDXw
+Link Sprint 1: https://www.youtube.com/watch?v=Aag2fdVSDXw
 
 
 
