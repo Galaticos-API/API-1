@@ -78,3 +78,9 @@ button{
 select:hover {
     color: #25562b;
 }
+
+
+.minhaEquipe {
+    display: flex;
+    justify-content: space-between;
+}

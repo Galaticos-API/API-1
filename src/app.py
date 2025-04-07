@@ -44,9 +44,9 @@ def home(): # funcao que é executada quando está na rota
 def atestado():
     return verifyLogin("atestados.html")
 
-@app.route('/avaliacao/')
+@app.route('/equipe/')
 def avaliacao():
-    return verifyLogin("avaliacao.html")
+    return verifyLogin("equipe.html")
 
 @app.route('/login/', methods=["GET","POST"])
 def login():
