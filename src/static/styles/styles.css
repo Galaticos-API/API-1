@@ -6,12 +6,44 @@
 }
 
 .content {
-    padding: 20px;
+    padding: 20px;    
+}
 
-    .formAtestado {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
+.content > .formAtestado {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.content > .contIndex {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    place-items: center;
+}
+
+/*botoes da tela inicial*/
+.contIndex > a {
+    width: 50%;
+    min-height: 100%;
+
+    border: 1px solid #212529;
+    border-radius: 10px;
+
+    text-align: center;
+
+    /*essa parte faz parecer um botão*/
+    cursor: pointer;
+    transition: background 0.2s;
+    user-select: none;
+    text-decoration: none;
+    color: black;
+    &:hover {
+        background: #ebebeb;
+    }   
+    
+    i {
+        font-size: 120px;
     }
 }
 
