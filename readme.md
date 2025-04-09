@@ -21,8 +21,6 @@ Link Sprint 1: https://www.youtube.com/watch?v=Aag2fdVSDXw
 
 # Backlog do produto
 
-# Backlog do produto
-
 | Rank | User Story | Prioridade | Sprint |
 |----|---------|----------|------|
 | 1 | Lorem ipsum | Alta | 1 |
