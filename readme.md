@@ -21,6 +21,10 @@ Link Sprint 1: https://www.youtube.com/watch?v=Aag2fdVSDXw
 
 # Backlog do produto
 
+Link backlog:
+https://ninjadevs.atlassian.net/jira/core/projects/NN/board?groupBy=status
+https://docs.google.com/spreadsheets/d/1-Sdii1AgituZAbzs_JbxUy3fin6m1SFMDGsHcxd5krk/edit?gid=0#gid=0
+
 | Rank | User Story | Prioridade | Sprint |
 |----|---------|----------|------|
 | 1 | Lorem ipsum | Alta | 1 |
