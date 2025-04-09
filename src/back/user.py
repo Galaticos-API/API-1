@@ -1,4 +1,4 @@
-from flask import Blueprint, Flask, request, jsonify
+from flask import Blueprint, Flask, request, jsonify, flash
 import json
 import os
 import bcrypt
@@ -16,21 +16,19 @@ if not os.path.exists(BASE_DIR+"/JSON/"):
 @usuarios_bp.route('/add_user', methods=['POST'])
 def add_user():
     data = request.get_json()
-    print(data)
     nome = data.get('nome')
     email = data.get('email')
     senha = data.get('senha')
     ra = data.get('login')
-    tipo = data.get('tipo')
     
-    if not nome or not email or not senha or not ra or not tipo:
+    if not nome or not email or not senha or not ra:
         return jsonify({"message": "Preencha todos os campos"}), 400
     
     # Criptografar a senha
     hashed_senha = bcrypt.hashpw(senha.encode('utf-8'), bcrypt.gensalt())
     
     # Armazenar os dados de usuários
-    user = {"nome": nome, "email": email, "senha": hashed_senha.decode('utf-8'), "ra": ra, "tipo": tipo}
+    user = {"nome": nome, "email": email, "senha": hashed_senha.decode('utf-8'), "ra": ra}
     
     try:
         # Deixar todos os dados registrados em um arquivo JSON
@@ -46,7 +44,8 @@ def add_user():
     
     with open(USERS_FILE_PATH, 'w') as file:
         json.dump(users, file)
-
+        
+    flash("Cadastro realizado com sucesso! Faça login", "success") # toast para mostrar na tela
     return jsonify({"message": "Cadastro realizado com sucesso"}), 201
 
 @usuarios_bp.route('/get_users', methods=['GET'])

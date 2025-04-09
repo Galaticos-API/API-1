@@ -1,58 +1,47 @@
 <!-- templates/atestados.html -->
-{% extends "base.html" %}
+{% extends "base.html" %} {% block title %}Atestados{% endblock %} {% block content %}
+<div class="modal fade modal_adm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Entre como Administrador</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="POST">
+        <div class="modal-body">
+          <label for="senha" class="form-label">Senha</label>
+          <input type="password" class="form-control" id="senhaADM" name="senhaADM" required />
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-dark">Entrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
-{% block title %}Atestados{% endblock %}
-
-{% block content %}
-
-{% with messages = get_flashed_messages(with_categories=True) %}
-  {% if messages %}
-      {% for category, message in messages %}
-        <script>
-            var toast = document.createElement("div");
-            toast.innerHTML = `
-            <div
-                id="toastResposta"
-                class="toast align-items-center position-fixed top-0 end-0 m-5 bg-{{ category }} text-white"
-                role="alert"
-                aria-live="assertive"
-                aria-atomic="true"
-                style="z-index: 1050"
-            >
-                <div class="d-flex">
-                <div class="toast-body" id="toastMensagem">{{ message }}</div>
-                <button
-                    type="button"
-                    class="btn-close me-2 m-auto"
-                    data-bs-dismiss="toast"
-                    aria-label="Fechar"
-                ></button>
-                </div>
-            </div>`;
-            document.body.appendChild(toast);
-
-            let toastEl = $("#toastResposta");
-            toast = new bootstrap.Toast(toastEl[0]);
-            toast.show();
-        </script>
-      {% endfor %}
-  {% endif %}
-{% endwith %}
 <div class="content">
-    <h1 class="mb-3 text-center">Entre na sua conta.</h1>
-    <form id="loginForm" class="row justify-content-md-center" method="POST">
-        <div class="mb-3 col-7">
-            <label for="login" class="form-label">Login</label>
-            <input type="text" class="form-control" id="login" name="login" required>
-            <div id="loginHelp" class="form-text">*número do seu RA.</div>
-        </div>
-        <div class="mb-3 col-7">
-            <label for="senha" class="form-label">Senha</label>
-            <input type="password" class="form-control" id="senha" name="senha" required>
-        </div>
-        <div class="col-7">
-            <button type="submit" class="btn btn-dark">Entrar</button>
-        </div>
-    </form>
+  <h1 class="mb-3 text-center">Entre na sua conta.</h1>
+  <form id="loginForm" class="row justify-content-md-center" method="POST">
+    <div class="mb-3 col-7">
+      <label for="login" class="form-label">Login</label>
+      <input type="text" class="form-control" id="login" name="login" required />
+      <div id="loginHelp" class="form-text">*número do seu RA.</div>
+    </div>
+    <div class="mb-3 col-7">
+      <label for="senha" class="form-label">Senha</label>
+      <input type="password" class="form-control" id="senha" name="senha" required />
+    </div>
+    <div class="mb-3 col-7">
+      <button type="submit" class="btn btn-dark">Entrar</button>
+    </div>
+    <div class="col-7">
+      <span>
+        <a id="btn_modal_adm" data-toggle="modal" data-target=".modal_adm">Login como Administrador</a>
+      </span>
+    </div>
+  </form>
 </div>
 {% endblock %}

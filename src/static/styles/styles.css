@@ -1,3 +1,9 @@
+:root {
+    --light_main_color: #6cb6f3;
+    --middle_main_color: #157fd7;
+    --dark_main_color: #0d4880;
+  }
+
 .main {
     border-radius: 10px;
     padding-top: 2%;
@@ -115,4 +121,10 @@ select:hover {
 .minhaEquipe {
     display: flex;
     justify-content: space-between;
+}
+
+#btn_modal_adm {
+    cursor: pointer;
+    text-decoration: underline;
+    color: blue;
 }

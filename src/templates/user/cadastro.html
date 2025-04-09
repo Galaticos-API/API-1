@@ -1,58 +1,22 @@
 <!-- templates/atestados.html -->
-{% extends "base.html" %} {% block title %}Atestados{% endblock %} {% block
-content %}
+{% extends "base.html" %} {% block title %}Atestados{% endblock %} {% block content %}
 <div class="content" id="divCadastro">
-  <!-- Toast -->
-  <div
-    id="toastResposta"
-    class="toast align-items-center position-fixed top-0 end-0 m-5 text-dark"
-    role="alert"
-    aria-live="assertive"
-    aria-atomic="true"
-    style="z-index: 1050"
-  >
-    <div class="d-flex">
-      <div class="toast-body" id="toastMensagem"></div>
-      <button
-        type="button"
-        class="btn-close me-2 m-auto"
-        data-bs-dismiss="toast"
-        aria-label="Fechar"
-      ></button>
-    </div>
-  </div>
-
   <h1 class="mb-3 text-center">Crie uma conta.</h1>
   <div>
     <form id="formCadastro" class="row justify-content-md-center" method="POST">
       <div class="mb-3 col-4">
         <label for="nome" class="form-label">Nome</label>
-        <input
-          type="text"
-          class="form-control"
-          id="nome"
-          aria-describedby="nome"
-        />
+        <input type="text" class="form-control" id="nome" aria-describedby="nome" />
       </div>
 
       <div class="mb-3 col-3">
         <label for="email" class="form-label">E-mail</label>
-        <input
-          type="email"
-          class="form-control"
-          id="email"
-          aria-describedby="email"
-        />
+        <input type="email" class="form-control" id="email" aria-describedby="email" />
       </div>
 
       <div class="mb-3 col-7">
         <label for="login" class="form-label">Login</label>
-        <input
-          type="number"
-          class="form-control"
-          id="login"
-          aria-describedby="login"
-        />
+        <input type="number" class="form-control" id="login" aria-describedby="login" />
         <div id="login" class="form-text">*Número de RA.</div>
       </div>
 
@@ -61,7 +25,7 @@ content %}
         <input type="password" class="form-control" id="senha" />
       </div>
 
-      <div class="mb-3 col-7">
+      <!-- <div class="mb-3 col-7">
         <div class="form-check">
           <input
             class="form-check-input"
@@ -84,10 +48,10 @@ content %}
           />
           <label class="form-check-label" for="aluno"> Aluno </label>
         </div>
-      </div>
+      </div> -->
 
       <div class="col-7">
-        <button type="submit" class="btn btn-dark">Entrar</button>
+        <button type="submit" class="btn btn-dark">Criar</button>
       </div>
 
       <div id="resposta"></div>
@@ -105,7 +69,6 @@ content %}
       let email = $("#email").val();
       let login = $("#login").val();
       let senha = $("#senha").val();
-      let userType = $('input[name="radioUSerType"]:checked').val();
 
       $.ajax({
         url: "/usuario/add_user",
@@ -117,35 +80,16 @@ content %}
           email: email,
           login: login,
           senha: senha,
-          tipo: userType,
         }),
         success: function (response) {
-          mostrarToast(response.message + ", realize o login", "bg-success text-white");
-          setTimeout(() => {
-            window.location.replace("/login/");
-          }, 1500);
+          window.location.replace("/login/");
         },
         error: function (response) {
           let responseJson = response.responseJSON;
-          mostrarToast(responseJson.message, "bg-danger text-white");
         },
       });
     });
   });
-
-  function mostrarToast(mensagem, classe) {
-    let toastEl = $("#toastResposta");
-
-    // Define a mensagem no toast
-    $("#toastMensagem").html(mensagem);
-
-    // Adiciona a classe de cor (sucesso/erro)
-    toastEl.removeClass("bg-success bg-danger text-white").addClass(classe);
-
-    // Exibe o toast
-    let toast = new bootstrap.Toast(toastEl[0]);
-    toast.show();
-  }
 </script>
 
 {% endblock %}

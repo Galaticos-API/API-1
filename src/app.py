@@ -52,23 +52,38 @@ def avaliacao():
 def login():
     if request.method == "POST":
         # Captura os dados do formulário
-        ra = request.form["login"]
-        senha = request.form["senha"]
+        print(request.form)
+        if "senhaADM" in request.form:
+            ra = "admin"
+            senha = request.form["senhaADM"]
+            print("Login de administrador detectado!")
+            
+            if senha == "teste":
+                session["RA"] = ra  # Armazena o RA na sessão
+                flash("Login de ADMINISTRADOR realizado com sucesso!", "success")
+                return redirect(url_for("home"))
+            else:
+                flash("Senha incorreta!", "danger")
+        else:
+            ra = request.form["login"]
+            senha = request.form["senha"]
+            print("Login de usuário comum.")
+            
+            usuarios = carregar_usuarios()  # Carrega os usuários do JSON
+            for user in usuarios:
+                if ra == user['ra']: # Verifica se algum user tem o RA digitado
+                    senha = senha.encode('utf-8')
+                    senha_armazenada = user["senha"].encode('utf-8')  # Converter para bytes
+                    
+                    if bcrypt.checkpw(senha, senha_armazenada): # Comparar senha digitada com a senha no JSON
+                        session["RA"] = ra  # Armazena o RA na sessão
+                        flash("Login realizado com sucesso!", "success") # toast para mostrar na tela
+                        return redirect(url_for("home"))
+            
+            flash("RA ou senha incorretos!", "danger")  # toast para mostrar na tela
+            return redirect(url_for("home"))
         
-        usuarios = carregar_usuarios()  # Carrega os usuários do JSON
-        for user in usuarios:
-            if ra == user['ra']: # Verifica se algum user tem o RA digitado
-                senha = senha.encode('utf-8')
-                senha_armazenada = user["senha"].encode('utf-8')  # Converter para bytes
-                
-                if bcrypt.checkpw(senha, senha_armazenada): # Comparar senha digitada com a senha no JSON
-                    session["RA"] = ra  # Armazena o RA na sessão
-                    flash("Login realizado com sucesso!", "success") # toast para mostrar na tela
-                    return redirect(url_for("home"))
         
-        flash("RA ou senha incorretos!", "danger")  # toast para mostrar na tela
-        return redirect(url_for("home"))
-    
     return render_template('/user/login.html')
 
 @app.route('/cadastro/')
