@@ -36,19 +36,19 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg py-0">
       <div class="container-fluid">
         <div class="navbar-contents">
-          <a class="navbar-brand mx-5" href="/">Início</a>
-          <a class="navbar-brand mx-5" href="/atestados">Atestados</a>
-          <a class="navbar-brand mx-5" href="/equipe">Minha equipe</a>
+          <a class="navbar-brand" href="/">Início</a>
+          <a class="navbar-brand" href="/atestados">Atestados</a>
+          <a class="navbar-brand" href="/equipe">Minha equipe</a>
         </div>
         <div class="navbar-contents">
           {% if "RA" not in session %}
-          <a id="loginBtn" class="navbar-brand mx-5" href="/login">Login</a>
-          <a id="cadastroBtn" class="navbar-brand mx-5" href="/cadastro/">Cadastro</a>
+          <a id="loginBtn" class="navbar-brand " href="/login">Login</a>
+          <a id="cadastroBtn" class="navbar-brand " href="/cadastro/">Cadastro</a>
           {% else %}
-          <a id="logoutBtn" class="navbar-brand mx-5" href="/logout/">Sair</a>
+          <a id="logoutBtn" class="navbar-brand " href="/logout/">Sair</a>
           {% endif %}
         </div>
       </div>

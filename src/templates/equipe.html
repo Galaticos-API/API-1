@@ -1,5 +1,62 @@
 <!-- templates/atestados.html -->
 {% extends "base.html" %} {% block title %}Minha equipe{% endblock %} {% block content %}
+<div class="modal fade modal_adm" tabindex="-1" role="dialog" aria-labelledby="modalEquipeLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEquipeLabel">Cadastro da Equipe</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form method="POST" id="formEquipe">
+        <div class="modal-body">
+          <!-- Nome da Equipe -->
+          <div class="form-group">
+            <label for="nomeEquipe">Nome da Equipe</label>
+            <input type="text" class="form-control" id="nomeEquipe" name="nomeEquipe" required />
+          </div>
+
+          <!-- Membros da Equipe -->
+          <div id="membrosContainer">
+            <div class="membro form-row mb-2">
+              <div class="col-md-6">
+                <label>Usuário</label>
+                <select name="membros[]" class="form-control" required>
+                  <option value="">Selecione o usuário</option>
+                  <!-- Exemplo: gerar dinamicamente com backend -->
+                  <option value="1">Giovanni Moretto</option>
+                  <option value="2">Gustavo Bueno</option>
+                  <option value="3">Rafael Giordano</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label>Cargo Ágil</label>
+                <select name="cargos[]" class="form-control" required>
+                  <option value="">Selecione o cargo</option>
+                  <option value="Scrum Master">Scrum Master</option>
+                  <option value="Product Owner">Product Owner</option>
+                  <option value="Dev Team">Dev Team</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-sm btn-outline-secondary" id="addMembro">
+            <i class="bi bi-person-plus"></i>
+            Adicionar Membro
+          </button>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-dark">Salvar Equipe</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <div class="content">
   <h1>Minha equipe</h1>
   <div class="minhaEquipe">
@@ -7,11 +64,21 @@
       <p><b>Você não está associado a nenhuma equipe</b></p>
     </div>
     <div>
-      <button class="btn btn-dark">
+      <button class="btn btn-dark" id="btn_modal_equipe" data-toggle="modal" data-target=".modal_adm">
         <i class="bi bi-plus"></i>
         Nova equipe
       </button>
     </div>
   </div>
 </div>
+
+<script>
+  document.getElementById("addMembro").addEventListener("click", function () {
+    const container = document.getElementById("membrosContainer");
+    const membro = container.querySelector(".membro");
+    const clone = membro.cloneNode(true);
+    clone.querySelectorAll("select").forEach((select) => (select.value = ""));
+    container.appendChild(clone);
+  });
+</script>
 {% endblock %}
