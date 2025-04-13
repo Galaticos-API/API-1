@@ -7,6 +7,7 @@ import bcrypt
 
 from back.user import usuarios_bp
 from back.atestados import atestados_bp
+from back.equipe import equipes_bp
 
 key = Fernet.generate_key() # Gera a chave de criptografia
 cipher_suite = Fernet(key)
@@ -103,6 +104,7 @@ def logout():
 # Pega as rotas da parte de controlar usuarios e adiciona o prefixo /usuario
 app.register_blueprint(usuarios_bp, url_prefix="/usuario")
 app.register_blueprint(atestados_bp, url_prefix="/atestado/")
+app.register_blueprint(equipes_bp, url_prefix="/equipe/")
 
 if __name__ == '__main__':
     app.run(debug=True)

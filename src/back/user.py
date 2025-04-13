@@ -13,8 +13,8 @@ USERS_FILE_PATH = os.path.join(BASE_DIR+"\\JSON\\", 'users.json')
 if not os.path.exists(BASE_DIR+"/JSON/"):
     os.makedirs(BASE_DIR+"/JSON/")  # Cria a pasta se ela não existir
 
-@usuarios_bp.route('/add_user', methods=['POST'])
-def add_user():
+@usuarios_bp.route('/add', methods=['POST'])
+def add():
     data = request.get_json()
     nome = data.get('nome')
     email = data.get('email')

@@ -22,9 +22,9 @@
           <div id="membrosContainer">
             <div class="membro form-row mb-2">
               <div class="col-md-6">
-                <label>Usuário</label>
+                <label>Membro</label>
                 <select name="membros[]" class="form-control" required>
-                  <option value="">Selecione o usuário</option>
+                  <option value="">Selecione uma pessoa</option>
                   <!-- Exemplo: gerar dinamicamente com backend -->
                   <option value="1">Giovanni Moretto</option>
                   <option value="2">Gustavo Bueno</option>
@@ -32,7 +32,7 @@
                 </select>
               </div>
               <div class="col-md-6">
-                <label>Cargo Ágil</label>
+                <label>Função</label>
                 <select name="cargos[]" class="form-control" required>
                   <option value="">Selecione o cargo</option>
                   <option value="Scrum Master">Scrum Master</option>
@@ -45,7 +45,11 @@
 
           <button type="button" class="btn btn-sm btn-outline-secondary" id="addMembro">
             <i class="bi bi-person-plus"></i>
-            Adicionar Membro
+            Adicionar
+          </button>
+          <button type="button" class="btn btn-danger btn-sm removeMembro" title="Remover membro">
+            <i class="bi bi-x"></i>
+            Remover
           </button>
         </div>
 
@@ -61,7 +65,7 @@
   <h1>Minha equipe</h1>
   <div class="minhaEquipe">
     <div>
-      <p><b>Você não está associado a nenhuma equipe</b></p>
+      <p><b></b></p>
     </div>
     <div>
       <button class="btn btn-dark" id="btn_modal_equipe" data-toggle="modal" data-target=".modal_adm">
@@ -73,12 +77,81 @@
 </div>
 
 <script>
-  document.getElementById("addMembro").addEventListener("click", function () {
-    const container = document.getElementById("membrosContainer");
-    const membro = container.querySelector(".membro");
-    const clone = membro.cloneNode(true);
-    clone.querySelectorAll("select").forEach((select) => (select.value = ""));
-    container.appendChild(clone);
+  $(document).ready(function () {
+    let contadorMembros = 0;
+    // Esse jQuery serve pra adicionar membros na interface de criação de equipe
+    $("#addMembro").on("click", function () {
+      if (contadorMembros < 9) {
+        const $container = $("#membrosContainer");
+        const $membro = $container.find(".membro").first();
+        const $clone = $membro.clone();
+
+        // Limpa os selects dentro do clone
+        $clone.find("select").val("");
+
+        // Adiciona no container
+        $container.append($clone);
+        contadorMembros++;
+      } else {
+        alert("Uma equipe ágil pode ter apenas de 5 até 9 membros");
+      }
+    });
+
+    $(".removeMembro").on("click", function () {
+      const $membros = $("#membrosContainer .membro");
+      if ($membros.length > 5) {
+        $membros.last().remove();
+        contadorMembros--;
+      } else {
+        alert("Uma equipe ágil pode ter apenas de 5 até 9 membros");
+      }
+    });
+
+    for (let index = 0; index < 4; index++) {
+      $("#addMembro").click();
+    }
+
+    $("#formEquipe").submit(function (event) {
+      event.preventDefault(); // Impede o envio padrão
+
+      let nomeEquipe = $("#nomeEquipe").val();
+      let membros = [];
+      let cargos = [];
+
+      // Coleta todos os valores dos selects de membros e cargos
+      $("select[name='membros[]']").each(function () {
+        membros.push($(this).val());
+      });
+
+      $("select[name='cargos[]']").each(function () {
+        cargos.push($(this).val());
+      });
+
+      // Junta membros e cargos em uma lista de objetos
+      let equipeFinal = membros.map((id, index) => ({
+        id_usuario: id,
+        cargo: cargos[index],
+      }));
+
+      // Envia via AJAX pro Flask
+      $.ajax({
+        url: "/equipe/add",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          nome: nomeEquipe,
+          membros: equipeFinal,
+        }),
+        success: function (response) {
+          window.location.reload();
+        },
+        error: function (response) {
+          let responseJson = response.responseJSON;
+          console.error(responseJson);
+        },
+      });
+    });
   });
 </script>
+
 {% endblock %}
