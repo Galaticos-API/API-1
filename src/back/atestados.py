@@ -1,6 +1,7 @@
 from flask import Blueprint, request, session
 import json
 import os
+import time
 from datetime import datetime
 
 atestados_bp = Blueprint("atestados", __name__)
@@ -41,6 +42,11 @@ def save_to_json(filename, file_path, user):
     with open(JSON_FILE, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=4)  # Salva os dados atualizados
 
+def is_duplicate(filename, user):
+    with open(JSON_FILE, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        return any(entry['filename'] == filename and entry['uploaded_by'] == user for entry in data)
+
 @atestados_bp.route('/upload/', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:  # Verifica se o arquivo foi enviado
@@ -61,6 +67,13 @@ def upload_file():
     user = session.get("RA")
     if not user:
         return "Usuário não autenticado!", 403
+    
+    # Evitar sobrescrever e gerar nome único
+    timestamped_filename = f"{int(time.time())}_{file.filename}"
+    file_path = os.path.join(UPLOAD_FOLDER, timestamped_filename)
+
+    if is_duplicate(file.filename, user):
+        return "Você já enviou esse arquivo anteriormente!", 400
 
     file_path = os.path.join(UPLOAD_FOLDER, file.filename)  
     file.save(file_path)  # Salva o arquivo na pasta
