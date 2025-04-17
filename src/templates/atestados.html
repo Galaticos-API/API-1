@@ -2,7 +2,7 @@
 {% extends "base.html" %} {% block title %}Atestados{% endblock %} {% block content %}
 <div class="content">
   <h1>Atestados</h1>
-  <form class="formAtestado mb-3" action="/atestado/upload/" method="POST" enctype="multipart/form-data">
+  <form class="formAtestado mb-3" method="POST" enctype="multipart/form-data">
     <input class="mb-3" type="file" name="file" id="file" accept=".pdf" required />
     <button class="btn btn-dark" type="submit">Enviar</button>
   </form>
@@ -19,22 +19,45 @@
 </div>
 
 <script>
-  function filterDocuments() {
-    let searchInput = document.getElementById("search").value.toLowerCase();
-    let categoryFilter = document.getElementById("category").value;
-    let documents = document.querySelectorAll(".document");
+  $(document).ready(function () {
+    function filterDocuments() {
+      let searchInput = document.getElementById("search").value.toLowerCase();
+      let categoryFilter = document.getElementById("category").value;
+      let documents = document.querySelectorAll(".document");
 
-    documents.forEach((doc) => {
-      let text = doc.textContent.toLowerCase();
-      let category = doc.getAttribute("data-category");
+      documents.forEach((doc) => {
+        let text = doc.textContent.toLowerCase();
+        let category = doc.getAttribute("data-category");
 
-      if ((text.includes(searchInput) || searchInput === "") && (categoryFilter === "all" || category === categoryFilter)) {
-        doc.style.display = "block";
-      } else {
-        doc.style.display = "none";
-      }
+        if ((text.includes(searchInput) || searchInput === "") && (categoryFilter === "all" || category === categoryFilter)) {
+          doc.style.display = "block";
+        } else {
+          doc.style.display = "none";
+        }
+      });
+    }
+
+    $(".formAtestado").on("submit", function (e) {
+      e.preventDefault(); // evita que a página recarregue
+
+      let form = $(this)[0]; // pega o form HTML
+      let formData = new FormData(form); // cria um FormData com os dados do form (inclusive o arquivo!)
+
+      $.ajax({
+        url: "/atestado/upload/",
+        type: "POST",
+        data: formData,
+        processData: false, // impede que o jQuery processe os dados
+        contentType: false, // deixa o browser decidir o tipo (multipart/form-data)
+        success: function (response) {
+          window.location.reload()
+        },
+        error: function (xhr, status, error) {
+          console.error(xhr.responseText);
+        },
+      });
     });
-  }
+  });
 </script>
 
 {% endblock %}

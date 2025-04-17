@@ -83,6 +83,9 @@ def login():
                     
                     if bcrypt.checkpw(senha, senha_armazenada): # Comparar senha digitada com a senha no JSON
                         session["RA"] = ra  # Armazena o RA na sessão
+                        nome = user["nome"]
+                        nome = nome.split()
+                        session["nome"] = nome[0] + " " + nome[-1]
                         flash("Login realizado com sucesso!", "success") # toast para mostrar na tela
                         return redirect(url_for("home"))
             
@@ -107,7 +110,7 @@ def logout():
 
 
 # Pega as rotas da parte de controlar usuarios e adiciona o prefixo /usuario
-app.register_blueprint(usuarios_bp, url_prefix="/usuario")
+app.register_blueprint(usuarios_bp, url_prefix="/usuario/")
 app.register_blueprint(atestados_bp, url_prefix="/atestado/")
 app.register_blueprint(equipes_bp, url_prefix="/equipe/")
 app.register_blueprint(endpoint_bp, url_prefix="/endpoint/")

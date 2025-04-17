@@ -1,6 +1,6 @@
 <!-- templates/atestados.html -->
 {% extends "base.html" %} {% block title %}Minha equipe{% endblock %} {% block content %}
-<div class="modal fade modal_adm" tabindex="-1" role="dialog" aria-labelledby="modalEquipeLabel" aria-hidden="true">
+<div class="modal fade modal_equipe" tabindex="-1" role="dialog" aria-labelledby="modalEquipeLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -27,8 +27,6 @@
                   <option value="">Selecione uma pessoa</option>
                   <!-- Exemplo: gerar dinamicamente com backend -->
                   <option value="1">Giovanni Moretto</option>
-                  <option value="2">Gustavo Bueno</option>
-                  <option value="3">Rafael Giordano</option>
                 </select>
               </div>
               <div class="col-md-6">
@@ -61,24 +59,71 @@
   </div>
 </div>
 
-<div class="content">
-  <h1>Minha equipe</h1>
-  <div class="minhaEquipe">
-    <div>
-      <p><b></b></p>
-    </div>
-    <div>
-      <button class="btn btn-dark" id="btn_modal_equipe" data-toggle="modal" data-target=".modal_adm">
-        <i class="bi bi-plus"></i>
-        Nova equipe
-      </button>
-    </div>
+<div class="content row">
+  <h2 class="col-12 col-md-9">Minha equipe</h1>
+  <div class="col-6 col-md-3">
+    <button class="btn btn-dark" id="btn_modal_equipe" data-toggle="modal" data-target=".modal_equipe">
+      <i class="bi bi-plus"></i>
+      Nova equipe
+    </button>
+  </div>
+  <div class="col-12 col-md-12 px-3 mb-5 row">
+    <table class="table table-responsive col-6 col-md-9 mt-3">
+      <thead>
+        <tr>
+          <th>NinjaDevs</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Rafael, Gustavo</th>
+        </tr>
+        <tr>
+          <th>
+            <button class="btn btn-dark" id="btn_modal_avaliacao" data-toggle="modal" data-target=".modal_avaliacao">
+              <i class="bi bi-star"></i>
+              Avaliar membro
+            </button>
+          </th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="col-12 col-md-12">Todas as equipes</h1>
+  <div class="col-12 col-md-12">
+    <table id="tabela-equipes" class="table table-striped table-bordered">
+      <thead class="thead-dark">
+        <tr>
+          <th>Nome</th>
+          <th>Membros</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Vai ser preenchido via JS -->
+      </tbody>
+    </table>
   </div>
 </div>
 
 <script>
   $(document).ready(function () {
     let contadorMembros = 0;
+    var users = [];
+    var equipes = [];
+
+    getUsers();
+
+    $("#tabela-equipes").DataTable({
+      lengthChange: false,
+      info: true,
+      paging: false,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json",
+      },
+    }); // inicia a tabela vazia
+    getEquipes(); // carrega os dados depois
+
     // Esse jQuery serve pra adicionar membros na interface de criação de equipe
     $("#addMembro").on("click", function () {
       if (contadorMembros < 9) {
@@ -151,6 +196,65 @@
         },
       });
     });
+
+    function preencherSelectMembros() {
+      const selects = $("#membrosContainer select[name='membros[]']");
+      selects.each(function () {
+        const select = $(this);
+        select.empty(); // limpa as opções
+        select.append('<option value="" disabled selected>Selecione uma pessoa</option>'); // adiciona a opção padrão
+
+        users.forEach((user) => {
+          select.append(`<option value="${user.ra}">${user.nome}</option>`);
+        });
+      });
+    }
+    function preencherTabelaEquipes(equipes) {
+      const $tabela = $("#tabela-equipes").DataTable();
+      $tabela.clear(); // limpa dados antigos
+
+      var membrosText = [];
+      equipes.forEach((equipe) => {
+        equipe.membros.forEach((membro) => {
+          membrosText.push(membro.nome);
+        });
+
+        membrosText = membrosText.join("<br>");
+        $tabela.row.add([equipe.nome, membrosText]);
+      });
+
+      $tabela.draw(); // redesenha a tabela
+    }
+
+    function getUsers() {
+      $.ajax({
+        url: "/usuario/get_users",
+        type: "GET",
+        success: function (response) {
+          users = response.users;
+          users.sort((a, b) => a.nome.localeCompare(b.nome));
+          preencherSelectMembros(); // chama a função ao carregar
+        },
+        error: function (response) {
+          let responseJson = response.responseJSON;
+          console.error(responseJson);
+        },
+      });
+    }
+    function getEquipes() {
+      $.ajax({
+        url: "/equipe/get_equipes",
+        type: "GET",
+        success: function (response) {
+          equipes = response.equipes;
+          preencherTabelaEquipes(equipes);
+        },
+        error: function (response) {
+          let responseJson = response.responseJSON;
+          console.error(responseJson);
+        },
+      });
+    }
   });
 </script>
 

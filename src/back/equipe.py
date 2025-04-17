@@ -1,6 +1,7 @@
 from flask import Blueprint, Flask, request, jsonify, flash
 import json
 import os
+import uuid
 
 equipes_bp = Blueprint("equipes", __name__)
 
@@ -8,10 +9,20 @@ equipes_bp = Blueprint("equipes", __name__)
 # e o caminho do arquivo é relativo ao app.py
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 EQUIPES_FILE_PATH = os.path.join(BASE_DIR+"\\JSON\\", 'equipes.json')
+USERS_FILE_PATH = os.path.join(BASE_DIR+"\\JSON\\", 'users.json')
 
 if not os.path.exists(BASE_DIR+"/JSON/"):
     os.makedirs(BASE_DIR+"/JSON/")  # Cria a pasta se ela não existir
 
+users = []
+try:
+    if os.path.exists(USERS_FILE_PATH) and os.path.getsize(USERS_FILE_PATH) > 0:
+        with open(USERS_FILE_PATH, 'r') as file:
+            users = json.load(file)
+    else:
+        users = []
+except FileNotFoundError:
+    users = []
 
 
 @equipes_bp.route('/add', methods=['POST'])
@@ -24,8 +35,18 @@ def add():
         for m in membros:
             print(f"Usuário {m['id_usuario']} - Cargo: {m['cargo']}")
 
+       
+        
+
         # Armazenar os dados de usuários
-        equipe = {"nome": nome, "membros": membros}
+        # ✅ Gerar um ID único
+        equipe_id = str(uuid.uuid4())  # se quiser algo tipo: '2ff4-8be2...'
+        equipe = {
+            "id": equipe_id,
+            "nome": nome,
+            "membros": membros
+        }
+        
         
         try:
             # Deixar todos os dados registrados em um arquivo JSON
@@ -55,7 +76,14 @@ def get_equipes():
         if os.path.exists(EQUIPES_FILE_PATH) and os.path.getsize(EQUIPES_FILE_PATH) > 0:
             with open(EQUIPES_FILE_PATH, 'r') as file:
                 equipes = json.load(file)
-                
+            
+            usuarios_dict = {u["ra"]: u["nome"] for u in users}
+            for equipe in equipes:
+                for membro in equipe.get("membros", []):
+                    id_usuario = membro.get("id_usuario")
+                    nome = usuarios_dict.get(id_usuario, "Desconhecido")
+                    nome = nome.split()
+                    membro["nome"] = nome[0] + " " + nome[-1]
         else:
             equipes = []
     except FileNotFoundError:

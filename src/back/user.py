@@ -71,6 +71,7 @@ def add():
     
     # Validação da senha
     if not validar_senha(senha):
+        flash("A senha deve ter pelo menos 6 caracteres", "error")
         return jsonify({"message": "A senha deve ter pelo menos 6 caracteres"}), 400
 
     # Criptografar a senha

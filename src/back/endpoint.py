@@ -4,7 +4,7 @@ import json, os
 
 endpoint_bp = Blueprint('endpoint_bp', __name__)
 
-CAMINHO_ATESTADOS = 'uploads.json'
+CAMINHO_ATESTADOS = 'JSON/uploads.json'
 
 @endpoint_bp.route('/back/JSON/uploads', methods=['GET'])
 # @login_required (exige login)

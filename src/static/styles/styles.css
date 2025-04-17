@@ -45,6 +45,8 @@
     text-decoration: none;
     color: black;
     &:hover {
+        text-decoration: none;
+        color: black;
         background: #ebebeb;
     }   
     
@@ -53,19 +55,31 @@
     }
 }
 
-.navbar {
-    background-color: #366341;
+.fas {
+    color: white;
 }
 
-.navbar-contents {
-    a {
-        font-family: Helvetica;
+.navbar {
+    background-color: #366341;
+    color: white;
+
+    .nav-link {
         color: white;
-        padding: 10px;
+        text-align: center;
+        font-size: 1.2rem;
         transition: 100ms;
+        border-radius: 10px;
+    }
+    .navbar-brand {
+        font-size: 18px;
+        color: white;
     }
 
-    a:hover {
+    .nav-item {
+        font-size: 15px;
+    }
+
+    .nav-link:hover {
         background-color: #25562b;
         color: white;
     }
