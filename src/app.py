@@ -9,7 +9,6 @@ import bcrypt
 from back.user import usuarios_bp
 from back.atestados import atestados_bp
 from back.equipe import equipes_bp
-from back.endpoint import endpoint_bp
 
 key = Fernet.generate_key() # Gera a chave de criptografia
 cipher_suite = Fernet(key)
@@ -113,24 +112,6 @@ def logout():
 app.register_blueprint(usuarios_bp, url_prefix="/usuario/")
 app.register_blueprint(atestados_bp, url_prefix="/atestado/")
 app.register_blueprint(equipes_bp, url_prefix="/equipe/")
-app.register_blueprint(endpoint_bp, url_prefix="/endpoint/")
-
-
-class Usuario(UserMixin):
-    def __init__(self, id, nome, senha):
-        self.id = id
-        self.nome = nome
-        self.senha = senha
-
-# ESSA PARTE É OBRIGATÓRIA
-@login_manager.user_loader
-def load_user(user_id):
-    with open('usuarios.json', 'r', encoding='utf-8') as f:
-        usuarios = json.load(f)
-    for usuario in usuarios:
-        if usuario['id'] == user_id:
-            return Usuario(usuario['id'], usuario['nome'], usuario['senha'])
-    return None
 
 if __name__ == '__main__':
     app.run(debug=True)

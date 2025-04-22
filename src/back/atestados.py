@@ -39,7 +39,6 @@ def save_to_json(filename, file_path, user):
     # Adiciona um novo registro com informações do usuário
     data.append({
         "filename": filename,
-        "file_path": file_path,
         "uploaded_by": user,
         "timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     })
@@ -76,6 +75,7 @@ def upload_file():
     # Evitar sobrescrever e gerar nome único
     timestamped_filename = f"{int(time.time())}_{file.filename}"
     file_path = os.path.join(UPLOAD_FOLDER, timestamped_filename)
+    
 
     # if is_duplicate(file.filename, user):
     #     return "Você já enviou esse arquivo anteriormente!", 400
@@ -87,3 +87,43 @@ def upload_file():
     save_to_json(file.filename, file_path, user)
     flash(f"Documento {file.filename} enviado com sucesso!", "success")
     return jsonify({"message": f"Documento {file.filename} enviado com sucesso!"}), 201
+
+
+@atestados_bp.route('/lista/', methods=['GET'])
+# @login_required (exige login)
+def recuperar_atestados():
+    # Carrega os dados
+    if not os.path.exists(JSON_FILE):
+        return jsonify({"mensagem": "Nenhum atestado encontrado."}), 200
+
+    try:
+        with open(JSON_FILE, 'r', encoding='utf-8') as f:
+            atestados = json.load(f)
+
+        # Filtros
+        aluno = request.args.get('aluno', '').lower()
+        data = request.args.get('data', '')
+
+        if aluno:
+            atestados = [a for a in atestados if aluno in a.get('aluno', '').lower()]
+        if data:
+            atestados = [a for a in atestados if a.get('data') == data]
+
+        # Paginação
+        pagina = int(request.args.get('pagina', 1))
+        tamanho = int(request.args.get('tamanho', 10))
+        inicio = (pagina - 1) * tamanho
+        fim = inicio + tamanho
+        atestados_paginados = atestados[inicio:fim]
+
+        return jsonify({
+            "total": len(atestados),
+            "pagina": pagina,
+            "tamanho": tamanho,
+            "dados": atestados_paginados
+        }), 200
+
+    except json.JSONDecodeError:
+        return jsonify({"erro": "Erro ao buscar os atestados."}), 500
+    except Exception as e:
+        return jsonify({"erro": f"Erro interno do servidor: {str(e)}"}), 500
