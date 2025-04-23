@@ -46,5 +46,4 @@ https://docs.google.com/spreadsheets/d/1-Sdii1AgituZAbzs_JbxUy3fin6m1SFMDGsHcxd5
 
 # Instalação de bibliotecas necessárias 
 
-`pip install flask`
-`pip install cryptography`
+`pip install -r requirements.txt`
