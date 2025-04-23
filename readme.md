@@ -49,3 +49,6 @@ O objetivo é desenvolver um sistema web para o registro e gestão de atestados 
 |  Dev Team  | Gabriel dos Santos Lasaro |  [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](#)   |
 |  Dev Team  | Hiago V. |  [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](#)   |
 
+# Instalação de bibliotecas necessárias 
+
+`pip install -r requirements.txt`

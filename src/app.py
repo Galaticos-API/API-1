@@ -1,6 +1,6 @@
 from flask import Flask, session, redirect, url_for, render_template, request, flash
 from flask_login import LoginManager, UserMixin
-from cryptography.fernet import Fernet
+#from cryptography.fernet import Fernet
 import secrets
 import json
 import os
@@ -10,8 +10,8 @@ from back.user import usuarios_bp
 from back.atestados import atestados_bp
 from back.equipe import equipes_bp
 
-key = Fernet.generate_key() # Gera a chave de criptografia
-cipher_suite = Fernet(key)
+#key = Fernet.generate_key() # Gera a chave de criptografia
+#cipher_suite = Fernet(key)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 caminho_json  = os.path.join(BASE_DIR, 'back/JSON/users.json')
