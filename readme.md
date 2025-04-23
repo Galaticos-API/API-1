@@ -3,7 +3,7 @@
 # Objetivo do Projeto
 O objetivo é desenvolver um sistema web para o registro e gestão de atestados médicos de alunos, facilitando a comunicação entre estudantes, professores e a coordenação acadêmica, além de permitir a avaliação contínua de equipes ágeis em projetos de desenvolvimento de software. A plataforma garantirá um armazenamento seguro e organizado dos atestados, possibilitando consultas rápidas e emissão de relatórios sobre afastamentos. Paralelamente, permitirá a avaliação individual dos membros de equipes Scrum, analisando métricas como colaboração, proatividade e entrega de resultados, fornecendo relatórios analíticos para acompanhamento da evolução das equipes ao longo do tempo.
 
-## :card_index: Sprints
+## Sprints
 
 | Sprint               | Previsão                | Status    |
 | -------------------- | ----------------------- | --------- |
@@ -14,15 +14,20 @@ O objetivo é desenvolver um sistema web para o registro e gestão de atestados 
 | 03                   | 05/05/2025 - 25/05/2025 | A começar |
 | Feira de Soluções    | 29/05/2024              | A começar |
 
-# :vhs: Demostrações das sprints
+# MVP
 
-Apresentação das funcionalidades.
-Link Sprint 1: https://www.youtube.com/watch?v=Aag2fdVSDXw
+<p align="center">
+      <img src="/documents/mvp.jpg" alt="MVP do Projeto" width=550 height=310>
+<br>
+
+### link do figma
+
+# Demostrações das sprints
+
+[Apresentação das funcionalidades](https://www.youtube.com/watch?v=Aag2fdVSDXw)
 
 # Backlog do produto
-
-Link backlog:
-https://docs.google.com/spreadsheets/d/1-Sdii1AgituZAbzs_JbxUy3fin6m1SFMDGsHcxd5krk/edit?gid=0#gid=0
+[Planilha do backlog](https://docs.google.com/spreadsheets/d/1-Sdii1AgituZAbzs_JbxUy3fin6m1SFMDGsHcxd5krk/edit?gid=0#gid=0)
 
 | Rank | User Story | Prioridade | Sprint |
 |----|---------|----------|------|
@@ -44,7 +49,3 @@ https://docs.google.com/spreadsheets/d/1-Sdii1AgituZAbzs_JbxUy3fin6m1SFMDGsHcxd5
 |  Dev Team  | Gabriel dos Santos Lasaro |  [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](#)   |
 |  Dev Team  | Hiago V. |  [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](#)   |
 
-# Instalação de bibliotecas necessárias 
-
-`pip install flask`
-`pip install cryptography`
