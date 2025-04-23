@@ -69,26 +69,11 @@
 
         <div class="modal-body">
           <div class="mb-3">
-            <label for="membro" class="form-label">Nome do Membro</label>
-            <input type="text" class="form-control" id="membro" name="membro" placeholder="Ex: João Silva" required />
-          </div>
-
-          <div class="row g-3">
             <div class="col-md-6">
-              <label for="papel" class="form-label">Papel na Equipe</label>
-              <select class="form-select" id="papel" name="papel" required>
-                <option value="" selected disabled>Selecione...</option>
-                <option>Scrum Master</option>
-                <option>Product Owner</option>
-                <option>Desenvolvedor(a)</option>
-                <option>Designer</option>
-                <option>Outro</option>
+              <label>Membro</label>
+              <select name="membros[]" class="form-select" required>
+                <option value="">Selecione uma pessoa</option>
               </select>
-            </div>
-
-            <div class="col-md-6">
-              <label for="dataAvaliacao" class="form-label">Data da Avaliação</label>
-              <input type="date" class="form-control" id="dataAvaliacao" name="dataAvaliacao" required />
             </div>
           </div>
 
@@ -97,28 +82,32 @@
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label">Entrega de Resultados</label>
-              <input type="range" class="form-range" min="0" max="10" name="resultados" required />
+              <input type="range" class="form-range" min="0" max="3" name="resultados" required />
+              <span id="valor-resultados"></span>
             </div>
 
             <div class="col-md-6">
               <label class="form-label">Colaboração</label>
-              <input type="range" class="form-range" min="0" max="10" name="colaboracao" required />
+              <input type="range" class="form-range" min="0" max="3" name="colaboracao" required />
+              <span id="valor-colaboracao"></span>
             </div>
 
             <div class="col-md-6">
               <label class="form-label">Proatividade</label>
-              <input type="range" class="form-range" min="0" max="10" name="proatividade" required />
+              <input type="range" class="form-range" min="0" max="3" name="proatividade" required />
+              <span id="valor-proatividade"></span>
             </div>
 
             <div class="col-md-6">
               <label class="form-label">Autonomia</label>
-              <input type="range" class="form-range" min="0" max="10" name="autonomia" required />
+              <input type="range" class="form-range" min="0" max="3" name="autonomia" required />
+              <span id="valor-autonomia"></span>
             </div>
           </div>
 
           <div class="mt-3">
             <label for="observacoes" class="form-label">Observações (opcional)</label>
-            <textarea class="form-control" id="observacoes" name="observacoes" rows="3" placeholder="Escreva um feedback mais detalhado..."></textarea>
+            <textarea class="form-control" id="observacoes" name="observacoes" rows="3" placeholder=". . ."></textarea>
           </div>
         </div>
 
@@ -181,6 +170,7 @@
     var equipes = [];
 
     getUsers();
+    mostrarValor_ranges();
 
     $("#tabela-equipes").DataTable({
       lengthChange: false,
@@ -324,6 +314,22 @@
           let responseJson = response.responseJSON;
           console.error(responseJson);
         },
+      });
+    }
+
+    function mostrarValor_ranges() {
+      const ranges = document.querySelectorAll('input[type="range"]');
+      ranges.forEach((range) => {
+        const valorSpan = document.getElementById("valor-" + range.name);
+        const atualizarValor = () => {
+          valorSpan.textContent = range.value;
+        };
+
+        // Atualiza no load inicial
+        atualizarValor();
+
+        // Atualiza ao mudar
+        range.addEventListener("input", atualizarValor);
       });
     }
   });
