@@ -14,11 +14,7 @@ from back.equipe import equipes_bp
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 caminho_json  = os.path.join(BASE_DIR, 'back/JSON/users.json')
-UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
 
-
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)  # Cria a pasta se ela não existir
 
 def carregar_usuarios(): # Função para carregar os usuários cadastrados
     try:
