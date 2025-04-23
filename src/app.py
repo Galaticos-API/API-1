@@ -1,5 +1,4 @@
 from flask import Flask, session, redirect, url_for, render_template, request, flash
-from flask_login import LoginManager, UserMixin
 #from cryptography.fernet import Fernet
 import secrets
 import json
@@ -37,9 +36,6 @@ def verifyLogin(route):
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
-
-login_manager = LoginManager()
-login_manager.init_app(app)
     
 @app.route('/') # isso define uma rota
 def home(): # funcao que é executada quando está na rota
