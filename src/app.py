@@ -49,11 +49,11 @@ def avaliacao():
 def login():
     if request.method == "POST":
         # Captura os dados do formulário
-        print(request.form)
+        #print(request.form)
         if "senhaADM" in request.form:
             ra = "admin"
             senha = request.form["senhaADM"]
-            print("Login de administrador detectado!")
+            #print("Login de administrador detectado!")
             
             if senha == "teste":
                 session["RA"] = ra  # Armazena o RA na sessão
@@ -64,7 +64,7 @@ def login():
         else:
             ra = request.form["login"]
             senha = request.form["senha"]
-            print("Login de usuário comum.")
+            #print("Login de usuário comum.")
             
             usuarios = carregar_usuarios()  # Carrega os usuários do JSON
             for user in usuarios:
@@ -76,7 +76,7 @@ def login():
                         session["RA"] = ra  # Armazena o RA na sessão
                         nome = user["nome"]
                         nome = nome.split()
-                        session["nome"] = nome[0] + " " + nome[-1]
+                        session["nome"] = nome[0] + " " + nome[-1] if len(nome) > 1 else nome[0]
                         flash("Login realizado com sucesso!", "success") # toast para mostrar na tela
                         return redirect(url_for("home"))
             

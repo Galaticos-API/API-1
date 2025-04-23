@@ -27,7 +27,6 @@ try:
 except FileNotFoundError:
     users = []
 
-
 @equipes_bp.route('/add', methods=['POST'])
 def add():
     if request.method == "POST":
@@ -35,8 +34,8 @@ def add():
         nome = data.get("nome")
         membros = data.get("membros")  # lista de dicts com id_usuario e cargo
 
-        for m in membros:
-            print(f"Usuário {m['id_usuario']} - Cargo: {m['cargo']}")
+        #for m in membros:
+            #print(f"Usuário {m['id_usuario']} - Cargo: {m['cargo']}")
 
        
         
@@ -81,12 +80,13 @@ def get_equipes():
                 equipes = json.load(file)
             
             usuarios_dict = {u["ra"]: u["nome"] for u in users}
+            #print(usuarios_dict)
             for equipe in equipes:
                 for membro in equipe.get("membros", []):
                     id_usuario = membro.get("id_usuario")
                     nome = usuarios_dict.get(id_usuario, "Desconhecido")
                     nome = nome.split()
-                    membro["nome"] = nome[0] + " " + nome[-1]
+                    membro["nome"] = nome[0] + " " + nome[-1] if len(nome) > 1 else nome[0]
         else:
             equipes = []
     except FileNotFoundError:
