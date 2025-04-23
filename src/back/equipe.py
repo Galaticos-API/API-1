@@ -13,6 +13,9 @@ USERS_FILE_PATH = os.path.join(BASE_DIR+"\\JSON\\", 'users.json')
 
 if not os.path.exists(BASE_DIR+"/JSON/"):
     os.makedirs(BASE_DIR+"/JSON/")  # Cria a pasta se ela não existir
+if not os.path.exists(EQUIPES_FILE_PATH):
+    with open(EQUIPES_FILE_PATH, 'w') as f:
+        json.dump([], f)  # Cria uma lista vazia no JSON
 
 users = []
 try:
