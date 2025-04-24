@@ -95,6 +95,37 @@ def get_equipes():
     return jsonify({"equipes": equipes}), 200
 
 
+@equipes_bp.route('/get_equipe_single', methods=['GET'])
+def get_minha_equipe():
+    id_usuario = request.args.get('id_usuario')
+
+    if not id_usuario:
+        return jsonify({"error": "Parâmetro 'id_usuario' é obrigatório"}), 400
+
+    try:
+        if os.path.exists(EQUIPES_FILE_PATH) and os.path.getsize(EQUIPES_FILE_PATH) > 0:
+            with open(EQUIPES_FILE_PATH, 'r') as file:
+                equipes = json.load(file)
+
+            usuarios_dict = {u["ra"]: u["nome"] for u in users}
+
+            for equipe in equipes:
+                for membro in equipe.get("membros", []):
+                    membro_id = membro.get("id_usuario")
+                    nome = usuarios_dict.get(membro_id, "Desconhecido")
+                    nome = nome.split()
+                    membro["nome"] = nome[0] + " " + nome[-1] if len(nome) > 1 else nome[0]
+
+                # Verifica se esse usuário faz parte da equipe
+                if any(m["id_usuario"] == id_usuario for m in equipe.get("membros", [])):
+                    return jsonify({"equipe": equipe}), 200
+
+        return jsonify({"error": "Equipe não encontrada para esse usuário"}), 404
+
+    except FileNotFoundError:
+        return jsonify({"error": "Arquivo de equipes não encontrado"}), 500
+
+
 
 @equipes_bp.route('/check_equipes_file', methods=['GET'])
 def check_equipes_file():
