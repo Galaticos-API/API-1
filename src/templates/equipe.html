@@ -72,11 +72,11 @@
           <div class="mb-3 row">
             <div class="col-md-6">
               <label>Membro</label>
-              <select name="membros[]" class="form-select" required></select>
+              <select name="membro" id="membro" class="form-select" required></select>
             </div>
             <div class="col-md-6">
               <label>Função</label>
-              <select name="sprints[]" class="form-select" required>
+              <select name="sprint" id="sprint" class="form-select" required>
                 <option value="" selected disabled>Selecione a sprint</option>
                 <option value="1">Sprint 1</option>
                 <option value="2">Sprint 2</option>
@@ -265,6 +265,40 @@
       });
     });
 
+    $("#formAvaliacao").on("submit", function (event) {
+      event.preventDefault(); // Impede o envio padrão
+
+      let membro = $('#membro').val();
+      let sprint = $('#sprint').val();
+      let avaliacao = {
+        resultados: parseFloat($('input[name="resultados"]').val()),
+        colaboracao: parseFloat($('input[name="colaboracao"]').val()),
+        proatividade: parseFloat($('input[name="proatividade"]').val()),
+        autonomia: parseFloat($('input[name="autonomia"]').val()),
+      };
+      let observacoes = $("#observacoes").val();
+      
+      // Envia via AJAX pro Flask
+      $.ajax({
+        url: "/equipe/avaliar",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          membro: membro,
+          sprint: sprint,
+          avaliacao: avaliacao,
+          obs: observacoes
+        }),
+        success: function (response) {
+          window.location.reload();
+        },
+        error: function (response) {
+          let responseJson = response.responseJSON;
+          console.error(responseJson);
+        },
+      });
+    });
+
     function preencherSelectMembros() {
       const selects = $("#membrosContainer select[name='membros[]']");
       selects.each(function () {
@@ -337,13 +371,11 @@
           $("#nome_equipe_single").append(minha_equipe.nome);
           $("#nome_equipe_single2").append(minha_equipe.nome);
 
-          const selects = $("#MembrosAvaliacao select[name='membros[]']");
+          const selects = $("#MembrosAvaliacao select[name='membro']");
           selects.append('<option value="" disabled selected>Selecione uma pessoa</option>'); // adiciona a opção padrão
           minha_equipe.membros.forEach((membro) => {
-            console.log(membro);
-
             $("#membros_equipe_single").append('<span style="font-size: 1rem" class="badge text-bg-dark me-1">' + membro.nome + "</span>");
-            selects.append(`<option value="${membro.ra}">${membro.nome}</option>`);
+            selects.append(`<option value="${membro.id_usuario}">${membro.nome}</option>`);
           });
         },
         error: function (response) {
