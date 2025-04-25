@@ -195,5 +195,6 @@ select:hover {
 #btn_modal_adm {
     cursor: pointer;
     text-decoration: underline;
-    color: blue;
+    font-weight: 500;
+    color: black;
 }
