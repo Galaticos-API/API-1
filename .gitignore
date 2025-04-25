@@ -1,4 +1,4 @@
-/src/back/__pycache__/
+__pycache__/
 /src/back/JSON/
 /src/back/uploads/
 venv/
