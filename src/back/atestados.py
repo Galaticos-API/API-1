@@ -2,7 +2,7 @@ from flask import Blueprint, request, session, jsonify, flash
 import json
 import os
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 atestados_bp = Blueprint("atestados", __name__)
 
@@ -27,7 +27,7 @@ ALLOWED_EXTENSIONS = {'pdf'}  # Definição das extensões permitidas
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def save_to_json(filename, file_path, user):
+def save_to_json(filename, file_path, user, duration):
     if os.path.exists(JSON_FILE) and os.path.getsize(JSON_FILE) > 0:
         with open(JSON_FILE, 'r', encoding='utf-8') as f:
             data = json.load(f)  # Carrega os dados existentes
@@ -40,7 +40,8 @@ def save_to_json(filename, file_path, user):
     data.append({
         "filename": filename,
         "uploaded_by": user,
-        "timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        "timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        "duration": int(duration)
     })
 
     with open(JSON_FILE, 'w', encoding='utf-8') as f:
@@ -67,6 +68,14 @@ def upload_file():
     if not allowed_file(file.filename):  # Verifica a extensão
         return "Apenas arquivos PDF são permitidos!", 400
     
+    if  not request.values.get('duration'): # verifica se a duração foi recebida
+        return "duração não recebida", 400
+    
+    duration = request.values.get('duration') # Salva a duração
+    
+    if duration == 0: # Verifica se a duração é igual a zero
+        return "A duração não pode ser zero", 400
+    
     # Obtém o usuário logado
     user = session.get("RA")
     if not user:
@@ -84,7 +93,7 @@ def upload_file():
     file.save(file_path)  # Salva o arquivo na pasta
 
     # Salva os detalhes do arquivo no JSON, incluindo o usuário logado
-    save_to_json(file.filename, file_path, user)
+    save_to_json(file.filename, file_path, user, duration)
     flash(f"Documento {file.filename} enviado com sucesso!", "success")
     return jsonify({"message": f"Documento {file.filename} enviado com sucesso!"}), 201
 
