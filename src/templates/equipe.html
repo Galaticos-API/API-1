@@ -3,9 +3,9 @@
 <div class="modal fade" id="modal_equipe" tabindex="-1" role="dialog" aria-labelledby="modalEquipeLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
-      <div class="modal-header bg-dark text-white">
+      <div class="modal-header bg-dark text-white" style="background-color: #366341 !important">
         <h1 class="modal-title fs-5" id="exampleModalLabel">Cadastrar nova equipe</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
       <div class="modal-body">
@@ -49,7 +49,7 @@
       </div>
 
       <div class="modal-footer">
-        <button type="submit" class="btn btn-dark" id="btn_cadastro_equipe">Salvar Equipe</button>
+        <button type="submit" class="btn btn-success" id="btn_cadastro_equipe">Salvar Equipe</button>
       </div>
     </div>
   </div>
@@ -59,7 +59,7 @@
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <form id="formAvaliacao">
-        <div class="modal-header bg-dark text-white">
+        <div class="modal-header bg-dark text-white" style="background-color: #366341 !important">
           <h5 class="modal-title" id="modalAvaliacaoLabel">
             <i class="bi bi-star-fill me-2"></i>
             Avaliar membro do
@@ -139,7 +139,7 @@
         </tr>
       </thead>
     </table>
-    <button class="btn btn-dark col-4 col-md-2" data-bs-toggle="modal" data-bs-target="#modal_avaliacao">
+    <button class="btn btn-dark col-4 col-md-2" data-bs-toggle="modal" data-bs-target="#modal_avaliacao" style="background-color: #366341 !important">
       <i class="bi bi-star"></i>
       Avaliar membro
     </button>
@@ -147,7 +147,7 @@
 
   <h2 class="col-12 col-md-9">Todas as equipes</h2>
   <div class="col-6 col-md-3 row">
-    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modal_equipe">
+    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modal_equipe" style="background-color: #366341 !important">
       <i class="bi bi-plus"></i>
       Cadastrar equipe
     </button>
@@ -186,9 +186,6 @@
       lengthChange: false,
       info: true,
       paging: false,
-      language: {
-        url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json",
-      },
     }); // inicia a tabela vazia
     getEquipes(); // carrega os dados depois
     getEquipeSingle(USER_ID);
@@ -268,8 +265,8 @@
     $("#formAvaliacao").on("submit", function (event) {
       event.preventDefault(); // Impede o envio padrão
 
-      let membro = $('#membro').val();
-      let sprint = $('#sprint').val();
+      let membro = $("#membro").val();
+      let sprint = $("#sprint").val();
       let avaliacao = {
         resultados: parseFloat($('input[name="resultados"]').val()),
         colaboracao: parseFloat($('input[name="colaboracao"]').val()),
@@ -277,7 +274,7 @@
         autonomia: parseFloat($('input[name="autonomia"]').val()),
       };
       let observacoes = $("#observacoes").val();
-      
+
       // Envia via AJAX pro Flask
       $.ajax({
         url: "/equipe/avaliar",
@@ -287,7 +284,7 @@
           membro: membro,
           sprint: sprint,
           avaliacao: avaliacao,
-          obs: observacoes
+          obs: observacoes,
         }),
         success: function (response) {
           window.location.reload();
@@ -321,7 +318,7 @@
           // Cria as badges com o nome dos membros
           const membrosText = equipe.membros
             .map((membro) => {
-              return `<span style="font-size:1rem" class="badge text-bg-dark me-1 my-1">${membro.nome}</span>`;
+              return `<span style="font-size:1rem" class="badge text-bg-light me-1 my-1">${membro.nome}</span>`;
             })
             .join(" "); // separa por espaço
           $tabela.row.add([equipe.nome, membrosText]);
@@ -374,7 +371,7 @@
           const selects = $("#MembrosAvaliacao select[name='membro']");
           selects.append('<option value="" disabled selected>Selecione uma pessoa</option>'); // adiciona a opção padrão
           minha_equipe.membros.forEach((membro) => {
-            $("#membros_equipe_single").append('<span style="font-size: 1rem" class="badge text-bg-dark me-1">' + membro.nome + "</span>");
+            $("#membros_equipe_single").append('<span style="font-size: 1rem" class="badge text-bg-light me-1">' + membro.nome + "</span>");
             selects.append(`<option value="${membro.id_usuario}">${membro.nome}</option>`);
           });
         },
