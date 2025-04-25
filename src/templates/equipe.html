@@ -4,8 +4,11 @@
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header bg-dark text-white" style="background-color: #366341 !important">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Cadastrar nova equipe</h1>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          <i class="bi bi-person-plus-fill ms-1 me-2"></i>
+            Cadastrar uma Nova Equipe
+        </h1>
+        <button type="button" class="btn-close btn-close-white me-1" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
       <div class="modal-body">
@@ -22,13 +25,13 @@
               <div class="col-md-6">
                 <label>Membro</label>
                 <select name="membros[]" class="form-select" required>
-                  <option value="">Selecione uma pessoa</option>
+                  <option value="" selected disabled>Selecione uma pessoa</option>
                 </select>
               </div>
               <div class="col-md-6">
                 <label>Função</label>
                 <select name="cargos[]" class="form-select" required>
-                  <option value="">Selecione o cargo</option>
+                  <option value="" selected disabled>Selecione o cargo</option>
                   <option value="Scrum Master">Scrum Master</option>
                   <option value="Product Owner">Product Owner</option>
                   <option value="Dev Team">Dev Team</option>
@@ -37,19 +40,20 @@
             </div>
           </div>
 
-          <button type="button" class="btn btn-sm btn-outline-secondary col-md-2 mx-3" id="addMembro">
+          <button type="button" class="btn btn-sm btn-outline-primary col-md-2 mx-3" id="addMembro">
             <i class="bi bi-person-plus"></i>
             Adicionar
           </button>
-          <button type="button" class="btn btn-danger btn-sm col-md-2" id="removeMembro">
-            <i class="bi bi-x"></i>
+          <button type="button" class="btn btn-outline-secondary btn-sm col-md-2" id="removeMembro">
+            <i class="bi bi-eraser-fill"></i>
             Remover
           </button>
         </form>
       </div>
 
       <div class="modal-footer">
-        <button type="submit" class="btn btn-success" id="btn_cadastro_equipe">Salvar Equipe</button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-outline-primary" id="btn_cadastro_equipe">Salvar Equipe</button>
       </div>
     </div>
   </div>
@@ -61,11 +65,11 @@
       <form id="formAvaliacao">
         <div class="modal-header bg-dark text-white" style="background-color: #366341 !important">
           <h5 class="modal-title" id="modalAvaliacaoLabel">
-            <i class="bi bi-star-fill me-2"></i>
-            Avaliar membro do
+            <i class="bi bi-star-fill ms-1 me-2"></i>
+            Avaliar Membro do
             <span id="nome_equipe_single"></span>
           </h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          <button type="button" class="btn-close btn-close-white me-1" data-bs-dismiss="modal" aria-label="Fechar"></button>
         </div>
 
         <div class="modal-body" id="MembrosAvaliacao">
@@ -75,7 +79,7 @@
               <select name="membro" id="membro" class="form-select" required></select>
             </div>
             <div class="col-md-6">
-              <label>Função</label>
+              <label>Período</label>
               <select name="sprint" id="sprint" class="form-select" required>
                 <option value="" selected disabled>Selecione a sprint</option>
                 <option value="1">Sprint 1</option>
@@ -120,8 +124,8 @@
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-success">Salvar Avaliação</button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-outline-primary">Salvar Avaliação</button>
         </div>
       </form>
     </div>
@@ -129,7 +133,7 @@
 </div>
 
 <div class="content row">
-  <h2 class="col-12 col-md-12">Minha equipe</h2>
+  <h2 class="col-12 col-md-12">Minha Equipe</h2>
   <div class="col-12 col-md-12 px-3 mb-5 row">
     <table class="table table-responsive col-6 col-md-9 mt-3">
       <thead>
@@ -139,19 +143,13 @@
         </tr>
       </thead>
     </table>
-    <button class="btn btn-dark col-4 col-md-2" data-bs-toggle="modal" data-bs-target="#modal_avaliacao" style="background-color: #366341 !important">
+    <center><button class="btn btn-outline-primary col-4 col-md-3" data-bs-toggle="modal" data-bs-target="#modal_avaliacao">
       <i class="bi bi-star"></i>
-      Avaliar membro
-    </button>
+      Avaliar Membros
+    </button></center>
   </div>
 
-  <h2 class="col-12 col-md-9">Todas as equipes</h2>
-  <div class="col-6 col-md-3 row">
-    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modal_equipe" style="background-color: #366341 !important">
-      <i class="bi bi-plus"></i>
-      Cadastrar equipe
-    </button>
-  </div>
+  <h2 class="col-12 col-md-9">Todas as Equipes</h2>
   <div class="col-12 col-md-12">
     <table id="tabela-equipes" class="table table-striped table-bordered">
       <thead class="thead-dark">
@@ -164,10 +162,16 @@
         <!-- Vai ser preenchido via JS -->
       </tbody>
     </table>
+
+    <center><button class="btn btn-outline-primary col-4 col-md-3" data-bs-toggle="modal" data-bs-target="#modal_equipe">
+      <i class="bi bi-person-plus"></i>
+      Cadastrar Equipe
+    </button></center>
   </div>
 
   <input type="hidden" value="" />
 </div>
+
 <script>
   const USER_ID = "{{ session['RA'] }}";
 </script>
