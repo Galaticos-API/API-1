@@ -33,21 +33,23 @@
     width: 50%;
     min-height: 100%;
 
-    border: 1px solid #212529;
+    border: 3px solid #366341;
     border-radius: 10px;
 
     text-align: center;
+    font-size: 22px;
+    font-weight: 700;
 
     /*essa parte faz parecer um botão*/
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.25s;
     user-select: none;
     text-decoration: none;
-    color: black;
+    color: #366341;
     &:hover {
         text-decoration: none;
-        color: black;
-        background: #ebebeb;
+        color: #ebebeb;
+        background: #366341;
     }   
     
     i {
@@ -85,7 +87,7 @@
     }
 }
 
-button{
+button {
     background-color: #41644A;
 }
 
