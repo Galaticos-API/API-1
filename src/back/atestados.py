@@ -1,4 +1,4 @@
-from flask import Blueprint, request, session, jsonify, flash
+from flask import Blueprint, request, session, jsonify, flash, send_from_directory
 import json
 import os
 import time
@@ -99,40 +99,29 @@ def upload_file():
 
 
 @atestados_bp.route('/lista/', methods=['GET'])
-# @login_required (exige login)
 def recuperar_atestados():
     # Carrega os dados
     if not os.path.exists(JSON_FILE):
-        return jsonify({"mensagem": "Nenhum atestado encontrado."}), 200
+        return jsonify([]), 200
 
     try:
         with open(JSON_FILE, 'r', encoding='utf-8') as f:
             atestados = json.load(f)
 
-        # Filtros
-        aluno = request.args.get('aluno', '').lower()
-        data = request.args.get('data', '')
+        # Adiciona campos necessários para o frontend
+        for atestado in atestados:
+            atestado['name'] = atestado['filename']
+            atestado['date'] = atestado['timestamp']
+            atestado['file_url'] = f"/atestado/uploads/{atestado['filename']}"
 
-        if aluno:
-            atestados = [a for a in atestados if aluno in a.get('aluno', '').lower()]
-        if data:
-            atestados = [a for a in atestados if a.get('data') == data]
-
-        # Paginação
-        pagina = int(request.args.get('pagina', 1))
-        tamanho = int(request.args.get('tamanho', 10))
-        inicio = (pagina - 1) * tamanho
-        fim = inicio + tamanho
-        atestados_paginados = atestados[inicio:fim]
-
-        return jsonify({
-            "total": len(atestados),
-            "pagina": pagina,
-            "tamanho": tamanho,
-            "dados": atestados_paginados
-        }), 200
+        return jsonify(atestados), 200
 
     except json.JSONDecodeError:
-        return jsonify({"erro": "Erro ao buscar os atestados."}), 500
+        return jsonify([]), 500
     except Exception as e:
         return jsonify({"erro": f"Erro interno do servidor: {str(e)}"}), 500
+
+# Rota para servir arquivos da pasta uploads
+@atestados_bp.route('/uploads/<filename>', methods=['GET'])
+def serve_uploaded_file(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)

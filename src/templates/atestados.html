@@ -2,21 +2,37 @@
 {% extends "base.html" %} {% block title %}Atestados{% endblock %} {% block content %}
 <div class="content">
   <h1>Atestados</h1>
-  <form class="formAtestado mb-3" method="POST" enctype="multipart/form-data">
-    <input class="mb-3" type="file" name="file" id="file" accept=".pdf" required />
+  <form class="formAtestado mb-3" id="formAtestadoJ" method="POST" enctype="multipart/form-data">
+    <input class="btn-upload mb-3" type="file" name="file" id="file" accept=".pdf" required />
+    <h6 class="duracao">Duração do Atestado</h6>
     <input type="number" name="duration" id="duration" required />
-    <button class="btn btn-dark" type="submit">Enviar</button>
+    <button class="btn btn-outline-primary" id="botao-do-submit" type="submit">Enviar</button>
   </form>
 
   <nav class="search-container mb-3">
     <input type="number" id="search" placeholder="Buscar por RA..." oninput="filterDocuments()" />
     <select id="category" onchange="filterDocuments()">
-      <option value="nameaz">Nome de A-Z</option>
-      <option value="nameza">Nome de Z-A</option>
+      <option value="durationasc">Menor Duração</option>
+      <option value="durationdesc">Maior Duração</option>
       <option value="dateolder">Mais Antigo</option>
       <option value="datenewer">Mais Recente</option>
     </select>
   </nav>
+
+  <table id="atestadosTable" class="table table-striped">
+    <thead>
+      <tr>
+        <th>Nome do Documento</th>
+        <th>RA do Aluno</th>
+        <th>Data de Envio</th>
+        <th>Duração do Atestado</th>
+        <th>Abrir o Arquivo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Os dados dos atestados serão inseridos aqui -->
+    </tbody>
+  </table>
 </div>
 
 <script>
@@ -24,19 +40,40 @@
     function filterDocuments() {
       let searchInput = document.getElementById("search").value.toLowerCase();
       let categoryFilter = document.getElementById("category").value;
-      let documents = document.querySelectorAll(".document");
+      let rows = document.querySelectorAll("#atestadosTable tbody tr");
 
-      documents.forEach((doc) => {
-        let text = doc.textContent.toLowerCase();
-        let category = doc.getAttribute("data-category");
+      // Converte as linhas para um array para facilitar a ordenação
+      let rowsArray = Array.from(rows);
 
-        if ((text.includes(searchInput) || searchInput === "") && (categoryFilter === "all" || category === categoryFilter)) {
-          doc.style.display = "block";
-        } else {
-          doc.style.display = "none";
-        }
+      // Filtro de busca por RA
+      rowsArray.forEach((row) => {
+        let ra = row.cells[1].textContent.toLowerCase();
+        row.style.display = ra.includes(searchInput) ? "" : "none";
       });
+
+      // Ordenação com base no filtro selecionado
+      if (categoryFilter === "nameaz") {
+        rowsArray.sort((a, b) => a.cells[0].textContent.localeCompare(b.cells[0].textContent));
+      } else if (categoryFilter === "nameza") {
+        rowsArray.sort((a, b) => b.cells[0].textContent.localeCompare(a.cells[0].textContent));
+      } else if (categoryFilter === "dateolder") {
+        rowsArray.sort((a, b) => new Date(a.cells[2].textContent) - new Date(b.cells[2].textContent));
+      } else if (categoryFilter === "datenewer") {
+        rowsArray.sort((a, b) => new Date(b.cells[2].textContent) - new Date(a.cells[2].textContent));
+      } else if (categoryFilter === "durationdesc") {
+        rowsArray.sort((a, b) => b.cells[3].textContent.localeCompare(a.cells[3].textContent));
+      } else if (categoryFilter === "durationasc") {
+        rowsArray.sort((a, b) => a.cells[3].textContent.localeCompare(b.cells[3].textContent));
+      }
+
+      // Reorganiza as linhas na tabela
+      let tableBody = document.querySelector("#atestadosTable tbody");
+      rowsArray.forEach((row) => tableBody.appendChild(row));
     }
+
+    // Adiciona eventos para filtrar instantaneamente
+    document.getElementById("search").addEventListener("input", filterDocuments);
+    document.getElementById("category").addEventListener("change", filterDocuments);
 
     $(".formAtestado").on("submit", function (e) {
       e.preventDefault(); // evita que a página recarregue
@@ -58,6 +95,37 @@
         },
       });
     });
+
+    // Função para buscar e exibir os atestados em uma tabela
+    function fetchAtestados() {
+      $.ajax({
+        url: "/atestado/lista/",
+        type: "GET",
+        success: function (response) {
+          let tableBody = $("#atestadosTable tbody");
+          tableBody.empty(); // Limpa a tabela antes de adicionar os dados
+
+          response.forEach((atestado) => {
+            let row = $(
+              `<tr>
+                <td>${atestado.name}</td>
+                <td>${atestado.uploaded_by}</td>
+                <td>${atestado.date}</td>
+                <td>${atestado.duration} dias</td>
+                <td><a href='${atestado.file_url}' target='_blank'>Visualizar</a></td>
+              </tr>`
+            );
+            tableBody.append(row);
+          });
+        },
+        error: function (xhr, status, error) {
+          console.error(xhr.responseText);
+        },
+      });
+    }
+
+    // Chama a função para buscar os atestados ao carregar a página
+    fetchAtestados();
   });
 </script>
 

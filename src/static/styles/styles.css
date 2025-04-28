@@ -179,7 +179,27 @@ button {
     border-radius: 10px;
     width: 12%;
     height: 40px;
+    width: 165px;
     font-family: Helvetica;
+}
+
+#duration {
+    background-color: white;
+    border: 1px solid #212529;
+    padding: 0px 15px 0px 15px;
+    color: #757575; 
+    border-radius: 10px;
+    width: 12%;
+    height: 40px;
+    width: 165px;
+    font-family: Helvetica;
+    margin-bottom: 10px;
+}
+
+.duracao {
+    margin-top: 10px;
+    font-weight: 400;
+    font-size: 18px;
 }
 
 select:hover {
@@ -197,4 +217,9 @@ select:hover {
     text-decoration: underline;
     font-weight: 500;
     color: black;
+}
+
+#atestadosTable th, #atestadosTable td {
+  text-align: center;
+  vertical-align: middle;
 }
