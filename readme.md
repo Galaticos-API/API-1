@@ -26,7 +26,7 @@ O objetivo é desenvolver um sistema web para o registro e gestão de atestados 
 <br>
 
 <ul>
-<li> <h6>Wireframe inicial: <a href="#">FIGMA</a></h6> </li>
+<li> <h6>Wireframe inicial: <a href="https://www.figma.com/proto/usvs8u86jhjHeELI54Wwyn/Untitled?node-id=39-22&t=sZmLWbW5VmAn2YGR-1">FIGMA</a></h6> </li>
 </ul>
 
 <hr>
