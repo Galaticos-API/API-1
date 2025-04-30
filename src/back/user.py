@@ -37,14 +37,15 @@ def validar_email(email):
 # Função para validar a força da senha
 def validar_senha(senha):
     if len(senha) < 6:
-        return False
+        return [False, "A senha deve ter pelo menos 6 caracteres"]
     if not re.search(r'[A-Za-z]', senha):  # Pelo menos uma letra
-        return False
+        return [False, "A senha deve conter pelo menos uma letra"]
     if not re.search(r'\d', senha):        # Pelo menos um número
-        return False
+        return [False, "A senha deve conter pelo menos um número"]
     if not re.search(r'[!@#$%^&*(),.?":{}|<>]', senha):  # Pelo menos um caractere especial
-        return False
-    return True
+        return [False, "A senha deve conter pelo menos um caractere especial"]
+    
+    return [True, "Senha válida"]
 
 @usuarios_bp.route('/add', methods=['POST'])
 def add():
@@ -70,9 +71,10 @@ def add():
         return jsonify({"message": "RA já cadastrado"}), 400
     
     # Validação da senha
-    if not validar_senha(senha):
-        flash("A senha deve ter pelo menos 6 caracteres", "error")
-        return jsonify({"message": "A senha deve ter pelo menos 6 caracteres"}), 400
+    senha_valida = validar_senha(senha)
+    if not senha_valida[0]:
+        flash(senha_valida[1], "error")
+        return jsonify({"message": senha_valida[1]}), 400
 
     # Criptografar a senha
     hashed_senha = bcrypt.hashpw(senha.encode('utf-8'), bcrypt.gensalt())

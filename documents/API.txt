@@ -1,0 +1,9 @@
+Nome do time: NinjaDevs
+Repositório: https://github.com/NinjaDevs-API/NinjaDevs
+Nomes:
+1-Giovanni Alvarenga Moretto (SM)
+2-Gustavo Bueno da Silva (PO)
+3-Gustavo Monteiro Greco (ST)
+4-Gabriel dos Santos Lasaro (ST)
+5-Alice Alves (ST)
+6-Rafael Giordano Matesco (ST)
