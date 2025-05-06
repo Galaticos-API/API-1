@@ -120,4 +120,19 @@ Na raiz do repositório é providenciado um arquivo de dependencias para o geren
 
 Sobre a politica de execuçao do Windows [^1]
 
-[^1]: https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.5
+Para instalar as dependências, apenas passe o arquivo requirements.txt com o parametro -r para o pip:
+
+```bash
+pip instal -r requirements.txt
+```
+
+#### Iniciando a aplicação
+
+Apos instaladas as dependências, a aplicação Flask já está pronta para ser iniciada. Apenas entre este comando para iniciar o servidor com o endereço padrão ```http://127.0.0.1:5000```:
+
+```Bash
+cd .\src
+Flask run
+```
+
+[^1]: <https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.5>
