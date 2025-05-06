@@ -1,12 +1,12 @@
 # API - 1° Semestre ADS - FATEC SJC
 
-# Objetivo do Projeto
+## Objetivo do Projeto
 
 O objetivo é desenvolver um sistema web para o registro e gestão de atestados médicos de alunos, facilitando a comunicação entre estudantes, professores e a coordenação acadêmica, além de permitir a avaliação contínua de equipes ágeis em projetos de desenvolvimento de software. A plataforma garantirá um armazenamento seguro e organizado dos atestados, possibilitando consultas rápidas e emissão de relatórios sobre afastamentos. Paralelamente, permitirá a avaliação individual dos membros de equipes Scrum, analisando métricas como colaboração, proatividade e entrega de resultados, fornecendo relatórios analíticos para acompanhamento da evolução das equipes ao longo do tempo.
 
 <hr>
 
-## Sprints
+### Sprints
 
 | Sprint               | Previsão                | Status    |
 | -------------------- | ----------------------- | --------- |
@@ -19,7 +19,7 @@ O objetivo é desenvolver um sistema web para o registro e gestão de atestados 
 
 <hr>
 
-# MVP
+## MVP
 
 <p align="center">
       <img src="/documents/mvp.jpg" alt="MVP do Projeto" width=550 height=310>
@@ -31,7 +31,7 @@ O objetivo é desenvolver um sistema web para o registro e gestão de atestados 
 
 <hr>
 
-# Demonstrações das sprints
+## Demonstrações das sprints
 
 <a href="https://www.youtube.com/watch?v=Aag2fdVSDXw">
   <img src="documents\logo.jpg" alt="Logo do Time" width="300" />
@@ -41,7 +41,7 @@ O objetivo é desenvolver um sistema web para o registro e gestão de atestados 
 
 <hr>
 
-# Backlog do produto
+## Backlog do produto
 
 | Rank | Backlog                                                                         | User Story                                                                                                                                                                                                                             | Prioridade | Sprint |
 | ---- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ------ |
@@ -71,14 +71,13 @@ O objetivo é desenvolver um sistema web para o registro e gestão de atestados 
 | 24   | Corrigir bug de login inexistente.                                              | Como **usuário**, quero receber mensagens claras ao tentar logar com um usuário inexistente, para melhorar a usabilidade e segurança do sistema.                                                                                       | Alta       | 2      |
 | 25   | Correção de bugs em validações de campos obrigatórios.                          | Como **desenvolvedor**, quero corrigir as validações de campos obrigatórios, para evitar o cadastro de dados incompletos ou inválidos.                                                                                                  | Baixa      | 2      |
 
-
 <hr>
 
-# Tecnologias utilizadas
+## Tecnologias utilizadas
 
 ![My Skills](https://go-skill-icons.vercel.app/api/icons?i=git,github,vscode,html,css,bootstrap,js,python,flask,figma)
 
-# Autores
+## Autores
 
 |    Função     | Nome                      |                                                                    GitHub                                                                     |
 | :-----------: | :------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------: |
@@ -88,35 +87,37 @@ O objetivo é desenvolver um sistema web para o registro e gestão de atestados 
 |   Dev Team    | Gabriel dos Santos Lasaro |   [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/Sashxjssx)   |
 |   Dev Team    | Alice Azambuja            | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/AlicePenrose)  |
 
-# Instalação
+## Instalação
 
 - Dependências:
 - - Python > 3.7
 - - Flask
 - - bcyrpt
 
-## Windows
+### Windows
 
-### Baixando o repositório
+#### Baixando o repositório
 
 Baixe o repositório e extraia ele no diretório desejado ou clone o repositório caso tenha Git instalado utilizando o comando:
+
 ```Bash
 git clone https://github.com/NinjaDevs-API/NinjaDevs.git
 ```
 
 Acesse o repositório criado a partir do terminal:
+
 ```ps
 cd \caminho\para_o\repositorio\
 ```
 
-### Instalando as dependências
+#### Instalando as dependências
 
 Na raiz do repositório é providenciado um arquivo de dependencias para o gerenciador de pacotes incluido no Python. É recomendavel que se crie um ambiente virtual, porêm este passo é opcional:
 
-    ```ps
-    python -m venv venv
-    .\venv\Scripts\activate
-    ```
+```ps
+python -m venv venv
+.\venv\Scripts\activate
+```
 
 Sobre a politica de execuçao do Windows [^1]
 
