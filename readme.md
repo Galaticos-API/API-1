@@ -83,12 +83,41 @@ O objetivo é desenvolver um sistema web para o registro e gestão de atestados 
 |    Função     | Nome                      |                                                                    GitHub                                                                     |
 | :-----------: | :------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------: |
 | Scrum Master  | Giovanni Moretto          |   [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/Giomoret)    |
-| Product Owner | Gustavo Bueno             |  [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/Darkghostly)  |
 |   Dev Team    | Rafael Giordano Matesco   |  [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/RafaMatesco)  |
 |   Dev Team    | Gustavo Monteiro Greco    | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/GustavoMGreco) |
 |   Dev Team    | Gabriel dos Santos Lasaro |   [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/Sashxjssx)   |
 |   Dev Team    | Alice Azambuja            | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/AlicePenrose)  |
 
-# Instalação de bibliotecas necessárias
+# Instalação
 
-`pip install -r requirements.txt`
+- Dependências:
+- - Python > 3.7
+- - Flask
+- - bcyrpt
+
+## Windows
+
+### Baixando o repositório
+
+Baixe o repositório e extraia ele no diretório desejado ou clone o repositório caso tenha Git instalado utilizando o comando:
+```Bash
+git clone https://github.com/NinjaDevs-API/NinjaDevs.git
+```
+
+Acesse o repositório criado a partir do terminal:
+```ps
+cd \caminho\para_o\repositorio\
+```
+
+### Instalando as dependências
+
+Na raiz do repositório é providenciado um arquivo de dependencias para o gerenciador de pacotes incluido no Python. É recomendavel que se crie um ambiente virtual, porêm este passo é opcional:
+
+    ```ps
+    python -m venv venv
+    .\venv\Scripts\activate
+    ```
+
+Sobre a politica de execuçao do Windows [^1]
+
+[^1]: https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.5
