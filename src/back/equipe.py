@@ -111,7 +111,7 @@ def get_minha_equipe():
                     membro_id = membro.get("id_usuario")
                     nome = usuarios_dict.get(membro_id, "Desconhecido")
                     nome = nome.split()
-                    membro["nome"] = nome[0] + " " + nome[-1] if len(nome) > 1 else nome[0]
+                    membro["nome"] = (nome[0] + ' ' + nome[-1] if len(nome) > 1 else nome[0]) +' (' +membro.get("cargo") + ')'
 
                 # Verifica se esse usuário faz parte da equipe
                 if any(m["id_usuario"] == id_usuario for m in equipe.get("membros", [])):
