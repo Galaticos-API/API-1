@@ -31,6 +31,7 @@ try:
 except FileNotFoundError:
     users = []
 
+
 @equipes_bp.route('/add', methods=['POST'])
 def add():
     if request.method == "POST":
@@ -45,8 +46,7 @@ def add():
             "nome": nome,
             "membros": membros
         }
-        
-        
+
         try:
             # Deixar todos os dados registrados em um arquivo JSON
             if os.path.exists(EQUIPES_FILE_PATH) and os.path.getsize(EQUIPES_FILE_PATH) > 0:
@@ -182,11 +182,19 @@ def listar_avaliacoes_por_usuario(id_usuario):
         # Filtra avaliações pelo ID do usuário
         filtradas = [av for av in avaliacoes if str(av.get("id_usuario")) == str(id_usuario)]
 
-        return jsonify(filtradas), 200
+        # Estrutura os dados para se adequar ao formato do Highcharts
+        formatted_data = {}
+
+        for avaliacao in filtradas:
+            sprint_name = f"Sprint{avaliacao.get('sprint', 0)}"
+            notas = list(avaliacao.get("avaliacao", {}).values())
+            if sprint_name not in formatted_data:
+                formatted_data[sprint_name] = notas
+
+        return jsonify(formatted_data), 200
     except Exception as e:
         return jsonify({"message": f"Erro ao filtrar avaliações: {str(e)}"}), 500
 
-        
     
 
 @equipes_bp.route('/check_equipes_file', methods=['GET'])
