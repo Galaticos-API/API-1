@@ -182,14 +182,16 @@ def listar_avaliacoes_por_usuario(id_usuario):
         # Filtra avaliações pelo ID do usuário
         filtradas = [av for av in avaliacoes if str(av.get("id_usuario")) == str(id_usuario)]
 
+        # Sprints pré-definidas
+        sprints = ["Sprint1", "Sprint2", "Sprint3"]
+        
         # Estrutura os dados para se adequar ao formato do Highcharts
-        formatted_data = {}
+        formatted_data = {sprint: [] for sprint in sprints}
 
         for avaliacao in filtradas:
             sprint_name = f"Sprint{avaliacao.get('sprint', 0)}"
-            notas = list(avaliacao.get("avaliacao", {}).values())
-            if sprint_name not in formatted_data:
-                formatted_data[sprint_name] = notas
+            if sprint_name in formatted_data:
+                formatted_data[sprint_name] = list(avaliacao.get("avaliacao", {}).values())
 
         return jsonify(formatted_data), 200
     except Exception as e:
