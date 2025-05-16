@@ -31,6 +31,7 @@ try:
 except FileNotFoundError:
     users = []
 
+
 @equipes_bp.route('/add', methods=['POST'])
 def add():
     if request.method == "POST":
@@ -45,8 +46,7 @@ def add():
             "nome": nome,
             "membros": membros
         }
-        
-        
+
         try:
             # Deixar todos os dados registrados em um arquivo JSON
             if os.path.exists(EQUIPES_FILE_PATH) and os.path.getsize(EQUIPES_FILE_PATH) > 0:
@@ -111,7 +111,7 @@ def get_minha_equipe():
                     membro_id = membro.get("id_usuario")
                     nome = usuarios_dict.get(membro_id, "Desconhecido")
                     nome = nome.split()
-                    membro["nome"] = nome[0] + " " + nome[-1] if len(nome) > 1 else nome[0]
+                    membro["nome"] = (nome[0] + ' ' + nome[-1] if len(nome) > 1 else nome[0]) +' (' +membro.get("cargo") + ')'
 
                 # Verifica se esse usuário faz parte da equipe
                 if any(m["id_usuario"] == id_usuario for m in equipe.get("membros", [])):
@@ -182,11 +182,21 @@ def listar_avaliacoes_por_usuario(id_usuario):
         # Filtra avaliações pelo ID do usuário
         filtradas = [av for av in avaliacoes if str(av.get("id_usuario")) == str(id_usuario)]
 
-        return jsonify(filtradas), 200
+        # Sprints pré-definidas
+        sprints = ["Sprint1", "Sprint2", "Sprint3"]
+        
+        # Estrutura os dados para se adequar ao formato do Highcharts
+        formatted_data = {sprint: [] for sprint in sprints}
+
+        for avaliacao in filtradas:
+            sprint_name = f"Sprint{avaliacao.get('sprint', 0)}"
+            if sprint_name in formatted_data:
+                formatted_data[sprint_name] = list(avaliacao.get("avaliacao", {}).values())
+
+        return jsonify(formatted_data), 200
     except Exception as e:
         return jsonify({"message": f"Erro ao filtrar avaliações: {str(e)}"}), 500
 
-        
     
 
 @equipes_bp.route('/check_equipes_file', methods=['GET'])

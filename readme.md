@@ -14,7 +14,7 @@ O objetivo é desenvolver um sistema web para o registro e gestão de atestados 
 | Kick Off 1° Semestre | 02/09/2024 - 06/09/2024 | concluído |
 | 01                   | 10/03/2025 - 30/03/2025 | Concluído |
 | 02                   | 07/04/2025 - 27/04/2025 | Concluído |
-| 03                   | 05/05/2025 - 25/05/2025 | A começar |
+| 03                   | 05/05/2025 - 25/05/2025 | Em curso  |
 | Feira de Soluções    | 29/05/2024              | A começar |
 
 <hr>

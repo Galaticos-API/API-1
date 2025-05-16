@@ -106,4 +106,4 @@ app.register_blueprint(atestados_bp, url_prefix="/atestado/")
 app.register_blueprint(equipes_bp, url_prefix="/equipe/")
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
