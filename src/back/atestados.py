@@ -41,9 +41,10 @@ def save_to_json(filename, file_path, user, duration):
         "filename": filename,
         "uploaded_by": user,
         "timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        "duration": int(duration)
+        "duration": int(duration),
+        "status": 'undefined'
     })
-
+    data.extend
     with open(JSON_FILE, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=4)  # Salva os dados atualizados
 
@@ -55,6 +56,28 @@ def is_duplicate(filename, user):
     else:
         with open(JSON_FILE, 'w') as f:
             json.dump([], f)  # Cria uma lista vazia no JSON
+
+def checkValidate(validation, filename):
+    with open(JSON_FILE, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+
+        entry_updated = False
+        for entry in data:
+            if entry['filename'] == filename:
+                if validation == 'accept':
+                    entry['status'] = 'accepted'
+                elif validation == 'deny':
+                    entry['status'] == 'denied'
+                entry_updated = True
+            else:
+                return f"entry {filename} not found", 404
+    
+    with open(JSON_FILE, 'w', encoding='utf-8') as f:
+        if entry_updated:
+            json.dump(data, f)
+            return f"Entry {filename} updated successfuly!", 201
+        else:
+            return f"Entry {filename} not updated", 400
 
 @atestados_bp.route('/upload/', methods=['POST'])
 def upload_file():
@@ -120,7 +143,7 @@ def recuperar_atestados():
         return jsonify([]), 500
     except Exception as e:
         return jsonify({"erro": f"Erro interno do servidor: {str(e)}"}), 500
-
+#ADD A WAY TO VERIFY IF ADMIN AND RETURN EXTRA VALIDATE OPTION
 # Rota para servir arquivos da pasta uploads
 @atestados_bp.route('/uploads/<filename>', methods=['GET'])
 def serve_uploaded_file(filename):
