@@ -65,9 +65,9 @@ def add():
             }), 400
         
         #objeto da equipe
-        equipe_id = str(uuid.uuid4())
+        id_equipe = str(uuid.uuid4())
         equipe = {
-            "id": equipe_id,
+            "id": id_equipe,
             "nome": nome,
             "membros": membros
         }
@@ -92,7 +92,39 @@ def add():
     
     return jsonify({"message": "Erro ao receber dados"}), 400
 
+@equipes_bp.route('/remove_user', methods=['GET'])
+def remove_user():
+    ra = request.args.get("ra")
+    id_equipe = request.args.get("id_equipe")
+    
+    try:
+        if os.path.exists(EQUIPES_FILE_PATH) and os.path.getsize(EQUIPES_FILE_PATH) > 0:
+            with open(EQUIPES_FILE_PATH, 'r') as file:
+                equipes = json.load(file)
+        else:
+            equipes = []
 
+        usuario_removido = False
+        for equipe in equipes:
+            if equipe.get("id") == id_equipe:
+                membros_antes = len(equipe["membros"])
+                equipe["membros"] = [m for m in equipe["membros"] if str(m.get("id_usuario")) != str(ra)]
+                if len(equipe["membros"]) < membros_antes:
+                    usuario_removido = True
+                break  # já encontrou a equipe, pode sair do loop
+
+        with open(EQUIPES_FILE_PATH, 'w') as file:
+            json.dump(equipes, file)
+
+        if usuario_removido:
+            return jsonify({"message": "Usuário removido da equipe com sucesso"}), 200
+        else:
+            return jsonify({"message": "Usuário não encontrado na equipe"}), 404
+
+    except Exception as e:
+        return jsonify({"message": f"Erro ao remover usuário: {str(e)}"}), 500
+    
+    return jsonify({"message": "Erro ao receber dados"}), 400
 
 @equipes_bp.route('/get_equipes', methods=['GET'])
 def get_equipes():
@@ -102,7 +134,6 @@ def get_equipes():
                 equipes = json.load(file)
             
             usuarios_dict = {u["ra"]: u["nome"] for u in users}
-            #print(usuarios_dict)
             for equipe in equipes:
                 for membro in equipe.get("membros", []):
                     id_usuario = membro.get("id_usuario")
@@ -143,7 +174,7 @@ def get_minha_equipe():
                     return jsonify({"equipe": equipe}), 200
 
         return jsonify({"error": "Equipe não encontrada para esse usuário"}), 404
-
+    
     except FileNotFoundError:
         return jsonify({"error": "Arquivo de equipes não encontrado"}), 500
 
