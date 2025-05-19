@@ -1,4 +1,4 @@
-from flask import Flask, session, redirect, url_for, render_template, request, flash
+from flask import Flask, jsonify, session, redirect, url_for, render_template, request, flash
 #from cryptography.fernet import Fernet
 import secrets
 import json
@@ -92,13 +92,18 @@ def cadastro():
         return render_template(url_for("home")) # se tiver, envia para a rota do parametro
     else:
         return render_template("/user/cadastro.html") 
-    
 
 @app.route("/logout/")
 def logout():
     session.clear()  # Remove todos os dados da sessão
     return redirect(url_for("home"))
 
+@equipes_bp.route('/flash-message', methods=['POST'])
+def flash_message():
+    data = request.get_json()
+    message = data.get('message', 'Algo deu errado!')
+    category = data.get('category', 'info')
+    return jsonify({"success": True, "message": message, "category": category}), 200
 
 # Pega as rotas da parte de controlar usuarios e adiciona o prefixo /usuario
 app.register_blueprint(usuarios_bp, url_prefix="/usuario/")

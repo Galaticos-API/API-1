@@ -31,7 +31,6 @@ try:
 except FileNotFoundError:
     users = []
 
-
 @equipes_bp.route('/add', methods=['POST'])
 def add():
     if request.method == "POST":
@@ -39,8 +38,34 @@ def add():
         nome = data.get("nome")
         membros = data.get("membros")  # lista de dicts com id_usuario e cargo
         
-        # Armazenar os dados de usuários
-        equipe_id = str(uuid.uuid4())  # se quiser algo tipo: '2ff4-8be2...'
+        #recupera o JSON de equipes
+        if os.path.exists(EQUIPES_FILE_PATH) and os.path.getsize(EQUIPES_FILE_PATH) > 0:
+            with open(EQUIPES_FILE_PATH, 'r') as file:
+                equipes = json.load(file)
+        else:
+            equipes = []
+        
+        # Verifica conflitos de usuários em diversos grupos
+        conflitos = []
+        for membro in membros:
+            id_usuario = membro.get("id_usuario")
+            
+            for equipe in equipes:
+                membros_equipe = equipe.get("membros")
+                for me in membros_equipe:
+                    if id_usuario == me.get("id_usuario"): conflitos.append({"id_usuario": id_usuario, "nome": membro.get("nome")})
+        
+        # Se houver conflitos, retornamos erro
+        if len(conflitos) > 0:
+            flash("Conflitos ao criar equipe, algum usuário já está em outra equipe", "error")
+            return jsonify({
+                "success": False,
+                "message": "Alguns membros já estão em outra equipe.",
+                "conflitos": conflitos
+            }), 400
+        
+        #objeto da equipe
+        equipe_id = str(uuid.uuid4())
         equipe = {
             "id": equipe_id,
             "nome": nome,

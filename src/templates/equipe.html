@@ -1,5 +1,6 @@
 <!-- templates/atestados.html -->
 {% extends "base.html" %} {% block title %}Minha equipe{% endblock %} {% block content %}
+<div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 9999"></div>
 <div class="modal fade" id="modal_equipe" tabindex="-1" role="dialog" aria-labelledby="modalEquipeLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
@@ -179,7 +180,7 @@
 <div class="content row">
   <h2 class="col-12 col-md-12 mb-3">Minha Equipe</h2>
   <div class="col-12 col-md-12 px-3 mb-4 row">
-    <div class="card border-success mb-3 col-3 col-md-3">
+    <div class="card border-success mb-3 col-6 col-md-6">
       <div class="card-header text-success" style="background-color: #fff">
         <i class="bi bi-person"></i>
         <span style="font-size: 1.5rem" id="nome_equipe_single2"></span>
@@ -189,7 +190,7 @@
       </div>
     </div>
 
-    <center class="col-4 col-md-4">
+    <center class="col-3 col-md-3">
       <div class="mb-3">
         <button class="btn btn-outline-primary col-12 col-md-12" data-bs-toggle="modal" data-bs-target="#modal_avaliacao">
           <i class="bi bi-star"></i>
@@ -200,6 +201,12 @@
         <button class="btn btn-outline-primary col-12 col-md-12" data-bs-toggle="modal" data-bs-target="#modal_metrica">
           <i class="bi bi-bar-chart"></i>
           Painel de desempenho
+        </button>
+      </div>
+      <div class="mb-3">
+        <button class="btn btn-outline-danger col-12 col-md-12">
+          <i class="bi bi-box-arrow-right"></i>
+          Sair do grupo
         </button>
       </div>
     </center>
@@ -287,20 +294,19 @@
           }
         });
       } else {
-        alert("Uma equipe ágil pode ter apenas de 5 até 9 membros");
+        showToast("Uma equipe ágil pode ter apenas de 5 até 9 membros", "danger");
       }
     });
     for (let index = 0; index < 4; index++) {
       $("#addMembro").click();
     }
-
     $("#removeMembro").on("click", function () {
       const $membros = $("#membrosContainer .membro");
       if ($membros.length > 5) {
         $membros.last().remove();
         contadorMembros--;
       } else {
-        alert("Uma equipe ágil pode ter apenas de 5 até 9 membros");
+        showToast("Uma equipe ágil pode ter apenas de 5 até 9 membros", "danger");
       }
     });
 
@@ -311,7 +317,7 @@
 
       // Verifica se o nome da equipe foi preenchido
       if (!nomeEquipe) {
-        alert("Por favor, insira um nome para a equipe");
+        showToast("Insira um nome para a equipe", "danger");
         return;
       }
 
@@ -327,9 +333,24 @@
         cargos.push($(this).val());
       });
 
+      // Verifica se há membros repetidos
+      let membrosSet = new Set(membros.filter((m) => m));
+      if (membrosSet.size !== membros.filter((m) => m).length) {
+        showToast("Não é permitido selecionar o mesmo membro mais de uma vez.", "danger");
+        return;
+      }
+
+      if (cargos.filter((c) => c == "Product Owner").length != 1) {
+        showToast("Selecione exatamente um Product Owner", "danger");
+        return;
+      } else if (cargos.filter((c) => c == "Scrum Master").length != 1) {
+        showToast("Selecione exatamente um Scrum Master", "danger");
+        return;
+      }
+
       // Verifica se há pelo menos 5 membros e cargos preenchidos
       if (membros.filter((m) => m !== null && m !== "").length < 5 || cargos.filter((c) => c !== null && c !== "").length < 5) {
-        alert("Preencha ao menos 5 membros e seus respectivos cargos");
+        showToast("Preencha ao menos 5 membros e seus respectivos cargos", "danger");
         return;
       }
 
@@ -353,7 +374,9 @@
         },
         error: function (response) {
           let responseJson = response.responseJSON;
-          console.error(responseJson);
+          console.error(responseJson.message);
+
+          window.location.reload();
         },
       });
     });
@@ -523,10 +546,39 @@
       });
     }
 
+    // Função para exibir o toast
+    function showToast(message, category) {
+      const toastContainer = document.getElementById("toastContainer");
+      const toast = document.createElement("div");
+
+      toast.className = `toast align-items-center text-bg-${category} border-0 mt-2`;
+      toast.style = "font-size: large";
+      toast.setAttribute("role", "alert");
+      toast.setAttribute("aria-live", "assertive");
+      toast.setAttribute("aria-atomic", "true");
+      toast.innerHTML = `
+      <div class="d-flex">
+        <div class="toast-body">
+          ${message}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    `;
+
+      toastContainer.appendChild(toast);
+      const bsToast = new bootstrap.Toast(toast);
+      bsToast.show();
+
+      // Remover o toast da DOM após fechar
+      toast.addEventListener("hidden.bs.toast", () => {
+        toast.remove();
+      });
+    }
+
     function barChart_sprints(av) {
-      const lighter = '#8dc79c'
-      const mid = '#4ba160'
-      const dark = '#2d643a'
+      const lighter = "#8dc79c";
+      const mid = "#4ba160";
+      const dark = "#2d643a";
       Highcharts.chart("container", {
         chart: {
           type: "column",
