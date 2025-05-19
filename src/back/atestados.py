@@ -27,7 +27,7 @@ ALLOWED_EXTENSIONS = {'pdf'}  # Definição das extensões permitidas
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def save_to_json(filename, file_path, user, duration):
+def save_to_json(filename, file_path, user, duration, filetype):
     if os.path.exists(JSON_FILE) and os.path.getsize(JSON_FILE) > 0:
         with open(JSON_FILE, 'r', encoding='utf-8') as f:
             data = json.load(f)  # Carrega os dados existentes
@@ -42,7 +42,8 @@ def save_to_json(filename, file_path, user, duration):
         "uploaded_by": user,
         "timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         "duration": int(duration),
-        "status": 'undefined'
+        "status": 'undefined',
+        "type": filetype
     })
     data.extend
     with open(JSON_FILE, 'w', encoding='utf-8') as f:
@@ -94,6 +95,10 @@ def upload_file():
     if  not request.values.get('duration'): # verifica se a duração foi recebida
         return "duração não recebida", 400
     
+    if not request.values.get('filetype') or request.values.get('filetype') == 'unspecified':
+        return "Tipo não especificado!", 400
+    
+    filetype = request.values.get('filetype')
     duration = request.values.get('duration') # Salva a duração
     
     if duration == 0: # Verifica se a duração é igual a zero
@@ -116,7 +121,7 @@ def upload_file():
     file.save(file_path)  # Salva o arquivo na pasta
 
     # Salva os detalhes do arquivo no JSON, incluindo o usuário logado
-    save_to_json(file.filename, file_path, user, duration)
+    save_to_json(file.filename, file_path, user, duration, filetype)
     flash(f"Documento {file.filename} enviado com sucesso!", "success")
     return jsonify({"message": f"Documento {file.filename} enviado com sucesso!"}), 201
 
