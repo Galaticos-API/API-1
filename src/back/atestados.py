@@ -43,7 +43,7 @@ def save_to_json(filename, file_path, user, duration, filetype):
         "timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         "duration": int(duration),
         "status": 'undefined',
-        "type": filetype
+        "filetype": filetype
     })
     data.extend
     with open(JSON_FILE, 'w', encoding='utf-8') as f:
@@ -95,7 +95,7 @@ def upload_file():
     if  not request.values.get('duration'): # verifica se a duração foi recebida
         return "duração não recebida", 400
     
-    if not request.values.get('filetype') or request.values.get('filetype') == 'unspecified':
+    if not request.values.get('filetype') or request.values.get('filetype') == 'undefined':
         return "Tipo não especificado!", 400
     
     filetype = request.values.get('filetype')
