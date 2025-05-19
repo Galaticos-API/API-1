@@ -1,7 +1,6 @@
 <!-- templates/atestados.html -->
 {% extends "base.html" %} {% block title %}Minha equipe{% endblock %} {% block content %}
-<div class="modal fade" id="modal_equipe" tabindex="-1" role="dialog" aria-labelledby="modalEquipeLabel"
-  aria-hidden="true">
+<div class="modal fade" id="modal_equipe" tabindex="-1" role="dialog" aria-labelledby="modalEquipeLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header bg-dark text-white" style="background-color: #366341 !important">
@@ -9,8 +8,7 @@
           <i class="bi bi-person-plus-fill ms-1 me-2"></i>
           Cadastrar uma Nova Equipe
         </h1>
-        <button type="button" class="btn-close btn-close-white me-1" data-bs-dismiss="modal"
-          aria-label="Close"></button>
+        <button type="button" class="btn-close btn-close-white me-1" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
       <div class="modal-body">
@@ -71,8 +69,7 @@
             Avaliar Membro do
             <span id="nome_equipe_single"></span>
           </h5>
-          <button type="button" class="btn-close btn-close-white me-1" data-bs-dismiss="modal"
-            aria-label="Fechar"></button>
+          <button type="button" class="btn-close btn-close-white me-1" data-bs-dismiss="modal" aria-label="Fechar"></button>
         </div>
 
         <div class="modal-body" id="MembrosAvaliacao">
@@ -143,8 +140,7 @@
           <i class="bi bi-bar-chart ms-1 me-2"></i>
           Painel de desempenho
         </h5>
-        <button type="button" class="btn-close btn-close-white me-1" data-bs-dismiss="modal"
-          aria-label="Fechar"></button>
+        <button type="button" class="btn-close btn-close-white me-1" data-bs-dismiss="modal" aria-label="Fechar"></button>
       </div>
 
       <div class="modal-body" id="Membrosmetrica">
@@ -195,14 +191,13 @@
 
     <center class="col-4 col-md-4">
       <div class="mb-3">
-        <button class="btn btn-outline-primary col-12 col-md-12 btn-avaliar" data-bs-toggle="modal"
-          data-bs-target="#modal_avaliacao">
+        <button class="btn btn-outline-primary col-12 col-md-12" data-bs-toggle="modal" data-bs-target="#modal_avaliacao">
           <i class="bi bi-star"></i>
           Avaliar Membro
         </button>
       </div>
       <div class="mb-3">
-        <button class="btn btn-outline-primary col-12 col-md-12 btn-metricas" data-bs-toggle="modal" data-bs-target="#modal_metrica">
+        <button class="btn btn-outline-primary col-12 col-md-12" data-bs-toggle="modal" data-bs-target="#modal_metrica">
           <i class="bi bi-bar-chart"></i>
           Painel de desempenho
         </button>
@@ -487,12 +482,6 @@
         error: function (response) {
           let responseJson = response.responseJSON;
           console.error(responseJson);
-          $("#nome_equipe_single").append("Nenhuma equipe");
-          $("#nome_equipe_single2").append("Nenhuma equipe");
-
-          $(".btn-avaliar").hide()
-          $(".btn-metricas").hide()
-          
         },
       });
     }
