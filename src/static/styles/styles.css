@@ -135,6 +135,10 @@ button {
     border-color: #9b0d0d !important;
 }
 
+.btn-outline-success {
+  margin-left: 1.6%;
+}
+
 .modal-open .modal-backdrop {
     backdrop-filter: blur(5px);
     background-color: rgba(0, 0, 0, 0.5);

@@ -155,6 +155,7 @@
         <h6 id="noData" class="text-danger mx-2" style="display: none">Dados insuficientes para montar o gráfico</h6>
 
         <div class="col-md-12 col-12 row">
+          <button id="exportarGraficos" class="btn btn-outline-success mb-3 col-md-3 col-6">Exportar Gráficos</button>
           <figure class="highcharts-figure col-md-12">
             <div id="container"></div>
             <p class="highcharts-description"></p>
@@ -895,7 +896,32 @@
         ],
       });
     }
+
+    $("#exportarGraficos").on("click", async function () {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ orientation: "portrait", unit: "px", format: "a4" });
+      const chartIds = ["container", "container2", "container3"];
+      let y = 20;
+      for (let i = 0; i < chartIds.length; i++) {
+        const chartDiv = document.getElementById(chartIds[i]);
+        await html2canvas(chartDiv, { backgroundColor: '#fff' }).then(function (canvas) {
+          const imgData = canvas.toDataURL("image/png");
+          const pageWidth = pdf.internal.pageSize.getWidth() - 40;
+          const imgProps = pdf.getImageProperties(imgData);
+          const imgHeight = (imgProps.height * pageWidth) / imgProps.width;
+          pdf.addImage(imgData, 'PNG', 20, y, pageWidth, imgHeight);
+          y += imgHeight + 20;
+          if (i < chartIds.length - 1 && y + imgHeight > pdf.internal.pageSize.getHeight()) {
+            pdf.addPage();
+            y = 20;
+          }
+        });
+      }
+      pdf.save("graficos-equipe.pdf");
+    });
   });
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 {% endblock %}
