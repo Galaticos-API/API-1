@@ -227,3 +227,126 @@ select:hover {
 .card-equipe-single{
     background-color: #366341 !important;
 }
+
+/*Responsividade teste */
+
+@media (max-width: 768px) {
+  .contIndex {
+    grid-template-columns: 1fr !important;
+    gap: 20px;
+  }
+
+  .contIndex > a {
+    width: 80% !important;
+    font-size: 18px;
+  }
+
+  #search, #category, #duration {
+    width: 100% !important;
+    margin-right: 0 !important;
+    margin-bottom: 10px !important;
+  }
+
+  .search-container {
+    flex-direction: column;
+    height: auto;
+    padding: 10px;
+  }
+
+  .minhaEquipe {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar .nav-link {
+    font-size: 1rem;
+  }
+
+  .btn-outline-primary, .btn-outline-secondary {
+    font-size: 16px !important;
+  }
+
+  .fas {
+    font-size: 80px !important;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .contIndex {
+    grid-template-columns: 1fr !important;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .contIndex > a {
+    width: 80% !important;
+    font-size: 18px;
+    padding: 20px 0;
+  }
+
+  .contIndex > a i {
+    font-size: 80px !important;
+  }
+}
+
+/* Garante que o header ocupe toda a largura */
+.navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #366341;
+  padding: 10px 20px;
+  box-sizing: border-box;
+}
+
+/* Garante que os itens fiquem alinhados horizontalmente */
+.navbar .navbar-brand,
+.navbar .nav-item,
+.navbar .nav-link {
+  display: flex;
+  align-items: center;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 8px 12px;
+  }
+
+  .navbar .navbar-brand {
+    font-size: 14px !important;
+  }
+
+  .navbar .nav-link {
+    font-size: 12px !important;
+    padding: 6px 8px !important;
+  }
+
+  .navbar .fas {
+    font-size: 16px !important;
+    margin: 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 6px 10px;
+  }
+
+  .navbar .fas {
+    font-size: 14px !important;
+  }
+
+  .navbar .navbar-brand {
+    font-size: 12px !important;
+  }
+
+  .navbar .nav-link {
+    font-size: 10px !important;
+    padding: 4px 6px !important;
+  }
+}
