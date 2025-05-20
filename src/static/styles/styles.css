@@ -67,7 +67,8 @@
 
     .nav-link {
         color: white;
-        text-align: center;
+        justify-content: center;
+        padding: 8px;
         font-size: 1.2rem;
         transition: 100ms;
         border-radius: 10px;
