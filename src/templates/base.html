@@ -57,9 +57,10 @@
 
           <ul class="navbar-nav mb-2 mb-lg-0">
             <li class="nav-item user-select-none align-content-center">
-              {% if "nome" in session %}
               <i class="fas fa-user"></i>
-              {{ session["nome"] }}{% endif %}
+              {% if "nome" in session %} {{ session["nome"] }}{% endif %}
+              <span></span>
+              {% if session.get('RA') == 'admin' %} Administrador {% endif %}
             </li>
             {% if "RA" not in session %}
             <li class="nav-item">

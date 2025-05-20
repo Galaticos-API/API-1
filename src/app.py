@@ -1,5 +1,4 @@
 from flask import Flask, jsonify, session, redirect, url_for, render_template, request, flash
-#from cryptography.fernet import Fernet
 import secrets
 import json
 import os
@@ -9,8 +8,6 @@ from back.user import usuarios_bp
 from back.atestados import atestados_bp
 from back.equipe import equipes_bp
 
-#key = Fernet.generate_key() # Gera a chave de criptografia
-#cipher_suite = Fernet(key)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 caminho_json  = os.path.join(BASE_DIR, 'back/JSON/users.json')
@@ -35,7 +32,7 @@ app.secret_key = secrets.token_hex(32)
     
 @app.route('/') # isso define uma rota
 def home(): # funcao que é executada quando está na rota
-   return verifyLogin("index.html") #envia o caminho do arquivo para a função verifyLogin
+    return verifyLogin("index.html") #envia o caminho do arquivo para a função verifyLogin
     
 @app.route('/atestados/')
 def atestado():
@@ -55,7 +52,7 @@ def login():
             senha = request.form["senhaADM"]
             #print("Login de administrador detectado!")
             
-            if senha == "teste":
+            if senha == "admin123":
                 session["RA"] = ra  # Armazena o RA na sessão
                 flash("Login de ADMINISTRADOR realizado com sucesso!", "success")
                 return redirect(url_for("home"))

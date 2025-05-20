@@ -92,11 +92,42 @@ def add():
     
     return jsonify({"message": "Erro ao receber dados"}), 400
 
-@equipes_bp.route('/remove_user', methods=['GET'])
+@equipes_bp.route('/remove', methods=['POST'])
+def remove_equipe():
+    data = request.get_json()
+    id_equipe = data.get("id")
+    if not id_equipe:
+        return jsonify({"message": "ID da equipe não informado"}), 400
+
+    try:
+        if os.path.exists(EQUIPES_FILE_PATH) and os.path.getsize(EQUIPES_FILE_PATH) > 0:
+            with open(EQUIPES_FILE_PATH, 'r') as file:
+                equipes = json.load(file)
+        else:
+            equipes = []
+
+        novas_equipes = [e for e in equipes if e.get("id") != id_equipe]
+
+        if len(novas_equipes) == len(equipes):
+            return jsonify({"message": "Equipe não encontrada"}), 404
+
+        with open(EQUIPES_FILE_PATH, 'w') as file:
+            json.dump(novas_equipes, file)
+
+        return jsonify({"message": "Equipe removida com sucesso"}), 200
+
+    except Exception as e:
+        return jsonify({"message": f"Erro ao remover equipe: {str(e)}"}), 500
+
+@equipes_bp.route('/remove_user', methods=['POST'])
 def remove_user():
-    ra = request.args.get("ra")
-    id_equipe = request.args.get("id_equipe")
-    
+    data = request.get_json()
+    ra = data.get("ra")
+    id_equipe = data.get("equipe_id")
+
+    if not ra or not id_equipe:
+        return jsonify({"message": "Parâmetros obrigatórios não informados"}), 400
+
     try:
         if os.path.exists(EQUIPES_FILE_PATH) and os.path.getsize(EQUIPES_FILE_PATH) > 0:
             with open(EQUIPES_FILE_PATH, 'r') as file:
@@ -111,7 +142,7 @@ def remove_user():
                 equipe["membros"] = [m for m in equipe["membros"] if str(m.get("id_usuario")) != str(ra)]
                 if len(equipe["membros"]) < membros_antes:
                     usuario_removido = True
-                break  # já encontrou a equipe, pode sair do loop
+                break
 
         with open(EQUIPES_FILE_PATH, 'w') as file:
             json.dump(equipes, file)
@@ -124,8 +155,6 @@ def remove_user():
     except Exception as e:
         return jsonify({"message": f"Erro ao remover usuário: {str(e)}"}), 500
     
-    return jsonify({"message": "Erro ao receber dados"}), 400
-
 @equipes_bp.route('/get_equipes', methods=['GET'])
 def get_equipes():
     try:
