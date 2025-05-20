@@ -93,6 +93,7 @@ button {
 }
 
 .btn-outline-primary {
+    margin-top: 1%;
     color: #366341 !important;
     background-color: #ffffff !important;
     padding: auto, 20px !important;
