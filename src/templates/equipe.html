@@ -218,7 +218,7 @@
 <div class="content row">
   <h2 class="col-12 col-md-12 mb-3">Minha Equipe</h2>
   <div class="col-12 col-md-12 px-3 mb-4 row">
-    <div class="card border-success mb-3 col-9 col-md-9">
+    <div class="card border-success mb-3 col-12 col-md-9">
       <div class="card-header text-success" style="background-color: #fff">
         <i class="bi bi-person"></i>
         <span style="font-size: 1.5rem" id="nome_equipe_single2"></span>
@@ -228,7 +228,7 @@
       </div>
     </div>
 
-    <center id="btn-equipe-functions" class="col-3 col-md-3">
+    <center id="btn-equipe-functions" class="col-12 col-md-3">
       <div class="mb-3">
         <button class="btn btn-outline-primary col-12 col-md-12" data-bs-toggle="modal" data-bs-target="#modal_avaliacao">
           <i class="bi bi-star"></i>
@@ -249,7 +249,7 @@
       </div>
     </center>
   </div>
-
+  <hr />
   <h2 class="col-12 col-md-9 mb-3">Todas as Equipes</h2>
   <div class="col-12 col-md-12">
     <table id="tabela-equipes" class="table table-striped table-bordered">
@@ -259,7 +259,7 @@
     </table>
 
     <center>
-      <button class="btn btn-outline-primary col-4 col-md-3" data-bs-toggle="modal" data-bs-target="#modal_equipe">
+      <button class="btn btn-outline-primary col-12 col-md-3" data-bs-toggle="modal" data-bs-target="#modal_equipe">
         <i class="bi bi-person-plus"></i>
         Cadastrar Equipe
       </button>
@@ -904,12 +904,12 @@
       let y = 20;
       for (let i = 0; i < chartIds.length; i++) {
         const chartDiv = document.getElementById(chartIds[i]);
-        await html2canvas(chartDiv, { backgroundColor: '#fff' }).then(function (canvas) {
+        await html2canvas(chartDiv, { backgroundColor: "#fff" }).then(function (canvas) {
           const imgData = canvas.toDataURL("image/png");
           const pageWidth = pdf.internal.pageSize.getWidth() - 40;
           const imgProps = pdf.getImageProperties(imgData);
           const imgHeight = (imgProps.height * pageWidth) / imgProps.width;
-          pdf.addImage(imgData, 'PNG', 20, y, pageWidth, imgHeight);
+          pdf.addImage(imgData, "PNG", 20, y, pageWidth, imgHeight);
           y += imgHeight + 20;
           if (i < chartIds.length - 1 && y + imgHeight > pdf.internal.pageSize.getHeight()) {
             pdf.addPage();

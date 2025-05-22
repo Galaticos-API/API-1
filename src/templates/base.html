@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+<html lang="en" data-bs-bs-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -34,21 +34,23 @@
   <body>
     <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
-        <a class="nav-link mx-3" href="/" style="width: 5%"><i class="fas fa-home"></i></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="nav-link mx-3" href="/">
+          <i class="fas fa-home"></i> Home
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <i class="fas fa-bars"></i>
         </button>
 
-        <div class="collapse navbar-collapse justify-content-between" id="navbarResponsive">
+        <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link w-auto mx-3" href="/atestados">
+              <a class="nav-link mx-3" href="/atestados">
                 <i class="fas fa-file-medical-alt"></i>
                 Atestados
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link w-auto mx-3" href="/equipe">
+              <a class="nav-link mx-3" href="/equipe">
                 <i class="fas fa-users"></i>
                 Equipes
               </a>
@@ -57,10 +59,12 @@
 
           <ul class="navbar-nav mb-2 mb-lg-0">
             <li class="nav-item user-select-none align-content-center">
-              <i class="fas fa-user"></i>
-              {% if "nome" in session %} {{ session["nome"] }}{% endif %}
-              <span></span>
-              {% if session.get('RA') == 'admin' %} Administrador {% endif %}
+              <div class="mx-4">
+                <i class="fas fa-user"></i>
+                {% if "nome" in session %} {{ session["nome"] }}{% endif %}
+                <span></span>
+                {% if session.get('RA') == 'admin' %} Administrador {% endif %}
+              </div>
             </li>
             {% if "RA" not in session %}
             <li class="nav-item">
@@ -78,7 +82,10 @@
 
             {% else %}
             <li class="nav-item">
-              <a class="nav-link mx-3" href="/logout/"><i class="fas fa-sign-out-alt"></i></a>
+              <a class="nav-link mx-3" href="/logout/">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+              </a>
             </li>
             {% endif %}
           </ul>
@@ -95,11 +102,11 @@
         role="alert"
         aria-live="assertive"
         aria-atomic="true"
-        data-delay="3000"
+        data-bs-delay="3000"
       >
         <div class="d-flex">
           <div class="toast-body">{{ message }}</div>
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-bs-dismiss="toast" aria-label="Close"></button>
         </div>
       </div>
       {% endfor %}

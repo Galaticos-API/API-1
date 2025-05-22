@@ -2,19 +2,37 @@
 {% extends "base.html" %} {% block title %}Atestados{% endblock %} {% block content %}
 <div class="content">
   <h1>Atestados</h1>
-  <form class="formAtestado mb-3" id="formAtestadoJ" method="POST" enctype="multipart/form-data">
-    <input class="btn-upload mb-3" type="file" name="file" id="file" accept=".pdf" required />
-    <h6 class="duracao">Duração do Atestado (em dias)</h6>
-    <input type="number" name="duration" id="duration" required />
-    <select id="filetype" name="filetype">
-      <option value="undefined"> Selecione um tipo</option>
-      <option value="TIPO1"> TIPO1 </option>
-      <option value="TIPO2"> TIPO2 </option>
-      <option value="TIPO3"> TIPO3 </option>
-    </select>
-    <button class="btn btn-outline-primary" id="botao-do-submit" type="submit">Enviar</button>
+  <hr />
+  <h4>Envio de documento</h4>
+  <form class="formAtestado row my-3" id="formAtestadoJ" method="POST" enctype="multipart/form-data">
+    <div class="col-md-4 col-12">
+      <label for="inputGroupFile02" class="form-label">Selecionar arquivo</label>
+      <div class="input-group mb-3">
+        <input class="form-control" type="file" name="file" id="file" accept=".pdf" required />
+      </div>
+    </div>
+    <div class="col-md-4 col-6">
+      <label for="duration" class="form-label">Duração do Atestado (em dias)</label>
+      <div class="input-group">
+        <input type="text" class="form-control" name="duration" id="duration" />
+      </div>
+    </div>
+    <div class="col-md-4 col-6">
+      <label for="filetype" class="form-label">Tipo de atestado</label>
+      <div class="input-group mb-3">
+        <select class="form-select" id="filetype" name="filetype">
+          <option value="undefined">Selecione um tipo</option>
+          <option value="TIPO1">TIPO1</option>
+          <option value="TIPO2">TIPO2</option>
+          <option value="TIPO3">TIPO3</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-outline-primary col-md-4 col-6 mx-2 mb-3" id="botao-do-submit" type="submit">Enviar</button>
   </form>
 
+  <hr />
+  <h4>Atestados enviados</h4>
   <nav class="search-container mb-3">
     <input type="number" id="search" placeholder="Buscar por RA..." oninput="filterDocuments()" />
     <select id="category" onchange="filterDocuments()">
@@ -25,7 +43,7 @@
     </select>
   </nav>
 
-  <table id="atestadosTable" class="table table-striped">
+  <table id="atestadosTable" class="table table-striped px-0">
     <thead>
       <tr>
         <th>Nome do Documento</th>
@@ -94,7 +112,7 @@
         processData: false, // impede que o jQuery processe os dados
         contentType: false, // deixa o browser decidir o tipo (multipart/form-data)
         success: function (response) {
-          window.location.reload()
+          window.location.reload();
         },
         error: function (xhr, status, error) {
           console.error(xhr.responseText);
