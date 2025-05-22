@@ -1,3 +1,13 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
 :root {
   --light_main_color: #6cb6f3;
   --middle_main_color: #157fd7;
@@ -58,6 +68,7 @@
 .navbar {
   background-color: #366341;
   color: white;
+  width: 110%;
 
   .nav-link {
     color: white;
@@ -286,4 +297,10 @@ select:hover {
 .navbar .nav-link {
   display: flex;
   align-items: center;
+}
+th {
+  white-space: normal; /* Permite que o texto quebre */
+  word-wrap: break-word;
+  text-align: center;
+  padding: 8px;
 }
