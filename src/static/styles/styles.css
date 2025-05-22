@@ -356,3 +356,28 @@ select:hover {
     padding: 4px 6px !important;
   }
 }
+body {
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+input,
+select,
+button,
+textarea {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+.container,
+.content,
+.main {
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+}
