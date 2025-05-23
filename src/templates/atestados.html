@@ -71,6 +71,7 @@
           <div id="metricasConteudo">
             <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Carregando...</span></div>
           </div>
+          <button type="button" class="btn btn-outline-success" id="btnExportarPDF">Exportar PDF</button>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
@@ -232,6 +233,23 @@
       });
     });
   });
+
+  document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("btnExportarPDF").addEventListener("click", function () {
+    const element = document.getElementById("metricasConteudo");
+
+    const opt = {
+      margin:       0.5,
+      filename:     `metricas_atestados_${new Date().toISOString().slice(0,10)}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().from(element).set(opt).save();
+  });
+});
+
 </script>
 
 {% endblock %}
