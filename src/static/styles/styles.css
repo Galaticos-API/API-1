@@ -172,38 +172,32 @@ button {
 
 #search {
   background-color: white;
-  border: 1px solid #212529;
+  border: 1px solid #dee2e6;
   padding: 0px 15px 0px 15px;
   color: #757575;
-  border-radius: 10px;
+  border-radius: 7px;
   width: 30%;
   height: 40px;
-  font-family: Helvetica;
   margin-right: 10px;
+  font-family: Helvetica;
 }
 
 #category {
   background-color: white;
-  border: 1px solid #212529;
-  padding: 0px 15px 0px 15px;
   color: #757575;
-  border-radius: 10px;
   width: 12%;
   height: 40px;
-  width: 165px;
-  font-family: Helvetica;
 }
 
 #duration {
   background-color: white;
-  border: 1px solid #212529;
+  border: 1px solid #dee2e6;
   padding: 0px 15px 0px 15px;
   color: #757575;
-  border-radius: 10px;
+  border-radius: 7px;
   width: 12%;
   height: 40px;
   width: 165px;
-  font-family: Helvetica;
   margin-bottom: 10px;
 }
 

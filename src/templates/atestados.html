@@ -28,19 +28,20 @@
         </select>
       </div>
     </div>
-    <button class="btn btn-outline-primary col-md-4 col-6 mx-2 mb-3" id="botao-do-submit" type="submit">Enviar</button>
+    <button class="btn btn-outline-primary col-md-2 col-4 mx-auto mb-6" id="botao-do-submit" type="submit">Enviar</button>
   </form>
 
   <hr />
   <h4>Atestados enviados</h4>
-  <nav class="search-container mb-3">
+  <nav class="search-container mb-3 d-flex align-items-center gap-2">
     <input type="number" id="search" placeholder="Buscar por RA..." oninput="filterDocuments()" />
-    <select id="category" onchange="filterDocuments()">
+    <select class="form-select w-auto" id="category" onchange="filterDocuments()">
       <option value="durationasc">Menor Duração</option>
       <option value="durationdesc">Maior Duração</option>
       <option value="dateolder">Mais Antigo</option>
       <option value="datenewer">Mais Recente</option>
     </select>
+    <button class="btn btn-outline-primary ms-auto" id="btn-metricas" type="button" data-bs-toggle="modal" data-bs-target="#modalMetricas">Relatório</button>
   </nav>
 
   <table id="atestadosTable" class="table table-striped px-0">
@@ -50,13 +51,33 @@
         <th>RA do Aluno</th>
         <th>Data de Envio</th>
         <th>Duração do Atestado</th>
-        <th>Abrir o Arquivo</th>
+        <th>Tipo de Atestado</th>
       </tr>
     </thead>
     <tbody>
       <!-- Os dados dos atestados serão inseridos aqui -->
     </tbody>
   </table>
+
+  <!-- Modal Métricas -->
+  <div class="modal fade" id="modalMetricas" tabindex="-1" aria-labelledby="modalMetricasLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color: #366341; color: #fff;">
+          <h5 class="modal-title" id="modalMetricasLabel">Métricas dos Atestados</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar" style="filter: invert(1);"></button>
+        </div>
+        <div class="modal-body">
+          <div id="metricasConteudo">
+            <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Carregando...</span></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -132,11 +153,11 @@
           response.forEach((atestado) => {
             let row = $(
               `<tr>
-                <td>${atestado.name}</td>
+                <td><a href='${atestado.file_url}' target='_blank'>${atestado.name}</a></td>
                 <td>${atestado.uploaded_by}</td>
                 <td>${atestado.date}</td>
                 <td>${atestado.duration} dias</td>
-                <td><a href='${atestado.file_url}' target='_blank'>Visualizar</a></td>
+                <td>${atestado.filetype || ''}</td>
               </tr>`
             );
             tableBody.append(row);
@@ -150,6 +171,66 @@
 
     // Chama a função para buscar os atestados ao carregar a página
     fetchAtestados();
+
+    // Função para calcular e exibir métricas
+    function calcularMetricas(atestados) {
+      // Contagem por tipo
+      let tipos = {};
+      let duracoes = {};
+      let agora = new Date();
+      let count7 = 0, count30 = 0, countTotal = atestados.length;
+      atestados.forEach(a => {
+        // Tipo
+        if (a.filetype) tipos[a.filetype] = (tipos[a.filetype] || 0) + 1;
+        // Duração
+        let dur = (a.duration || '').toString().replace(/\D/g, '');
+        if (dur) duracoes[dur] = (duracoes[dur] || 0) + 1;
+        // Datas
+        let data = new Date(a.date);
+        let diff = (agora - data) / (1000 * 60 * 60 * 24);
+        if (diff <= 7) count7++;
+        if (diff <= 30) count30++;
+      });
+      // Tipo mais recebido
+      let tipoMais = Object.entries(tipos).sort((a,b)=>b[1]-a[1])[0] || ["-",0];
+      // Duração mais comum
+      let durMais = Object.entries(duracoes).sort((a,b)=>b[1]-a[1])[0] || ["-",0];
+      // Monta HTML em tabelas
+      let html = `<h6>Tipo de atestado mais recebido: <b>${tipoMais[0]}</b> (${tipoMais[1]})</h6>`;
+      html += `<table class='table table-bordered'><thead><tr><th>Tipo de Atestado</th><th>Quantidade</th></tr></thead><tbody>`;
+      Object.entries(tipos).forEach(([tipo, qtd]) => {
+        html += `<tr><td>${tipo}</td><td><b>${qtd}</b></td></tr>`;
+      });
+      html += `</tbody></table>`;
+      html += `<h6>Duração mais comum: <b>${durMais[0]} dias</b> (${durMais[1]})</h6>`;
+      html += `<table class='table table-bordered'><thead><tr><th>Duração (dias)</th><th>Quantidade</th></tr></thead><tbody>`;
+      Object.entries(duracoes).forEach(([dur, qtd]) => {
+        html += `<tr><td>${dur}</td><td><b>${qtd}</b></td></tr>`;
+      });
+      html += `</tbody></table>`;
+      html += `<h6>Número de atestados enviados:</h6>`;
+      html += `<table class='table table-bordered'><thead><tr><th>Período</th><th>Quantidade</th></tr></thead><tbody>`;
+      html += `<tr><td>Últimos 7 dias</td><td><b>${count7}</b></td></tr>`;
+      html += `<tr><td>Últimos 30 dias</td><td><b>${count30}</b></td></tr>`;
+      html += `<tr><td>Todo o período</td><td><b>${countTotal}</b></td></tr>`;
+      html += `</tbody></table>`;
+      return html;
+    }
+
+    // Evento para abrir o modal e buscar métricas
+    $('#modalMetricas').on('show.bs.modal', function () {
+      $('#metricasConteudo').html('<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Carregando...</span></div>');
+      $.ajax({
+        url: "/atestado/lista/",
+        type: "GET",
+        success: function (response) {
+          $('#metricasConteudo').html(calcularMetricas(response));
+        },
+        error: function () {
+          $('#metricasConteudo').html('<div class="alert alert-danger">Erro ao carregar métricas.</div>');
+        }
+      });
+    });
   });
 </script>
 
