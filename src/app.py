@@ -12,7 +12,6 @@ from back.equipe import equipes_bp
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 caminho_json  = os.path.join(BASE_DIR, 'back/JSON/users.json')
 
-
 def carregar_usuarios(): # Função para carregar os usuários cadastrados
     try:
         with open(caminho_json, "r", encoding="utf-8") as arquivo:
