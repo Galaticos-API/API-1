@@ -133,6 +133,7 @@
   </div>
 </div>
 
+<!-- MODAL DE PAINEL DE DESEMPENHO -->
 <div class="modal fade" id="modal_metrica" tabindex="-1" aria-labelledby="modalmetricaLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
@@ -216,9 +217,11 @@
 </div>
 
 <div class="content row">
-  <h2 class="col-12 col-md-12 mb-3">Minha Equipe</h2>
+  <h1>Equipes</h1>
+  <hr />
+  <h4 id="minha-equipe-title" class="col-12 col-md-12 mb-3">Minha Equipe</h4>
   <div class="col-12 col-md-12 px-3 mb-4 row">
-    <div class="card border-success mb-3 col-12 col-md-9">
+    <div id="minha-equipe-card" class="card border-success mb-3 col-12 col-md-9">
       <div class="card-header text-success" style="background-color: #fff">
         <i class="bi bi-person"></i>
         <span style="font-size: 1.5rem" id="nome_equipe_single2"></span>
@@ -229,28 +232,33 @@
     </div>
 
     <center id="btn-equipe-functions" class="col-12 col-md-3">
+      {% if session['RA'] != 'admin' %}
       <div class="mb-3">
         <button class="btn btn-outline-primary col-12 col-md-12" data-bs-toggle="modal" data-bs-target="#modal_avaliacao">
           <i class="bi bi-star"></i>
           Avaliar Membro
         </button>
       </div>
+      {% endif %}
+
       <div class="mb-3">
         <button class="btn btn-outline-primary col-12 col-md-12" data-bs-toggle="modal" data-bs-target="#modal_metrica">
           <i class="bi bi-bar-chart"></i>
           Painel de desempenho
         </button>
       </div>
+      {% if session['RA'] != 'admin' %}
       <div class="mb-3">
         <button id="btn-sair" class="btn btn-outline-danger col-12 col-md-12">
           <i class="bi bi-box-arrow-right"></i>
           Sair da equipe
         </button>
       </div>
+      {% endif %}
     </center>
   </div>
   <hr />
-  <h2 class="col-12 col-md-9 mb-3">Todas as Equipes</h2>
+  <h4 class="col-12 col-md-9 mb-3">Todas as Equipes</h4>
   <div class="col-12 col-md-12">
     <table id="tabela-equipes" class="table table-striped table-bordered">
       <tbody>
@@ -286,9 +294,13 @@
 
     getUsers();
     mostrarValor_ranges();
-    getEquipes(); // carrega os dados depois
-    getEquipeSingle(USER_ID);
+    getEquipes();
     getAvaliacoes(USER_ID);
+    USER_ID != "admin" ? getEquipeSingle(USER_ID) : hide_single();
+
+    $("#modal_metrica").on("show.bs.modal", function () {
+      preencherSelectMembrosMetricas();
+    });
 
     $("#membro_metrica").change(function () {
       const selectedUserId = $(this).val();
@@ -472,6 +484,30 @@
       });
     }
 
+    function preencherSelectMembrosMetricas() {
+      const $select = $("#membro_metrica");
+      $select.empty();
+      $select.append('<option value="" disabled selected>Selecione uma pessoa</option>');
+
+      if (USER_ID === "admin") {
+        let membrosUnicos = {};
+        equipes.forEach((equipe) => {
+          equipe.membros.forEach((membro) => {
+            membrosUnicos[membro.id_usuario] = membro.nome;
+          });
+        });
+        Object.entries(membrosUnicos)
+          .sort((a, b) => a[1].localeCompare(b[1]))
+          .forEach(([id, nome]) => {
+            $select.append(`<option value="${id}">${nome}</option>`);
+          });
+      } else if (minha_equipe && minha_equipe.membros) {
+        minha_equipe.membros.forEach((membro) => {
+          $select.append(`<option value="${membro.id_usuario}">${membro.nome}</option>`);
+        });
+      }
+    }
+
     function preencherTabelaEquipes(equipes) {
       if (USER_ID != "admin") {
         $("#tabela-equipes").html(`
@@ -622,6 +658,11 @@
       });
     }
 
+    function hide_single() {
+      $("#minha-equipe-title").html(`Analisar métricas`);
+      $("#minha-equipe-card").hide();
+    }
+
     function getEquipeSingle(id_usuario) {
       $.ajax({
         url: "/equipe/get_equipe_single?id_usuario=" + id_usuario,
@@ -633,17 +674,13 @@
           $("#nome_equipe_single2").append(minha_equipe.nome);
 
           const selects = $("#MembrosAvaliacao select[name='membro']");
-          const selects_metricas = $("#Membrosmetrica select[name='membro_metrica']");
           selects.append('<option value="" disabled selected>Selecione uma pessoa</option>'); // adiciona a opção padrão
-          selects_metricas.append('<option value="" disabled selected>Selecione uma pessoa</option>'); // adiciona a opção padrão
           minha_equipe.membros.forEach((membro) => {
             $("#membros_equipe_single").append('<span style="font-size: 1rem" class="badge text-bg-light me-1">' + membro.nome + "</span>");
             if (membro.id_usuario == USER_ID) {
               selects.append(`<option disabled value="${membro.id_usuario}">${membro.nome}</option>`);
-              selects_metricas.append(`<option selected value="${membro.id_usuario}">${membro.nome}</option>`);
             } else {
               selects.append(`<option value="${membro.id_usuario}">${membro.nome}</option>`);
-              selects_metricas.append(`<option value="${membro.id_usuario}">${membro.nome}</option>`);
             }
           });
         },
@@ -654,7 +691,6 @@
           $("#nome_equipe_single2").append(minha_equipe);
           $("#membros_equipe_single").append(`Entre em uma equipe para ver os dados dela aqui`);
           $("#btn-equipe-functions").hide();
-          // console.error(responseJson);
         },
       });
     }
@@ -706,13 +742,13 @@
       toast.setAttribute("aria-live", "assertive");
       toast.setAttribute("aria-atomic", "true");
       toast.innerHTML = `
-      <div class="d-flex">
-        <div class="toast-body">
-          ${message}
+        <div class="d-flex">
+          <div class="toast-body">
+            ${message}
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-    `;
+      `;
 
       toastContainer.appendChild(toast);
       const bsToast = new bootstrap.Toast(toast);

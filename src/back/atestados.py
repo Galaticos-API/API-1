@@ -11,12 +11,12 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 atestados_FILE_PATH = os.path.join(BASE_DIR+"\\JSON\\", 'atestados.json')
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
 JSON_FILE = os.path.join(BASE_DIR+"\\JSON\\", 'uploads.json')
+USERS_FILE = os.path.join(BASE_DIR+"\\JSON\\", 'users.json')
 
 if not os.path.exists(BASE_DIR+"/JSON/"):
     os.makedirs(BASE_DIR+"/JSON/")  # Cria a pasta se ela não existir
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)  # Cria a pasta se ela não existir
-# Garante que o arquivo JSON existe
 if not os.path.exists(JSON_FILE):
     with open(JSON_FILE, 'w') as f:
         json.dump([], f)  # Cria uma lista vazia no JSON
@@ -68,10 +68,9 @@ def checkValidate(validation, filename):
                 if validation == 'accept':
                     entry['status'] = 'accepted'
                 elif validation == 'deny':
-                    entry['status'] == 'denied'
+                    entry['status'] = 'denied'
                 entry_updated = True
-            else:
-                return f"entry {filename} not found", 404
+                break
     
     with open(JSON_FILE, 'w', encoding='utf-8') as f:
         if entry_updated:
@@ -79,6 +78,27 @@ def checkValidate(validation, filename):
             return f"Entry {filename} updated successfuly!", 201
         else:
             return f"Entry {filename} not updated", 400
+def get_user_dict():
+    if os.path.exists(USERS_FILE) and os.path.getsize(USERS_FILE) > 0:
+        with open(USERS_FILE, 'r', encoding='utf-8') as f:
+            users = json.load(f)
+        # Cria um dicionário {ra: nome}
+        return {str(user['ra']): user['nome'] for user in users}
+    return {}
+
+
+@atestados_bp.route('/validate/', methods=['POST'])
+def validate_atestado():
+    data = request.get_json()
+    filename = data.get("filename")
+    validation = data.get("validation")  # 'accept' ou 'deny'
+
+    if not filename or validation not in ['accept', 'deny']:
+        return jsonify({"message": "Parâmetros inválidos"}), 400
+
+    msg, status = checkValidate(validation, filename)
+    flash(f"Atestado {'aprovado' if validation == 'accept' else 'reprovado'} com sucesso!", "success") if status == 201 else flash(f"Erro ao realizar ação: {msg}", "danger")
+    return jsonify({"message": msg}), status
 
 @atestados_bp.route('/upload/', methods=['POST'])
 def upload_file():
@@ -131,16 +151,18 @@ def recuperar_atestados():
     # Carrega os dados
     if not os.path.exists(JSON_FILE):
         return jsonify([]), 200
-
     try:
         with open(JSON_FILE, 'r', encoding='utf-8') as f:
             atestados = json.load(f)
+
+        user_dict = get_user_dict()
 
         # Adiciona campos necessários para o frontend
         for atestado in atestados:
             atestado['name'] = atestado['filename']
             atestado['date'] = atestado['timestamp']
             atestado['file_url'] = f"/atestado/uploads/{atestado['filename']}"
+            atestado['uploaded_by'] = user_dict.get(str(atestado.get('uploaded_by')), atestado.get('uploaded_by'))
 
         return jsonify(atestados), 200
 
@@ -148,7 +170,34 @@ def recuperar_atestados():
         return jsonify([]), 500
     except Exception as e:
         return jsonify({"erro": f"Erro interno do servidor: {str(e)}"}), 500
-#ADD A WAY TO VERIFY IF ADMIN AND RETURN EXTRA VALIDATE OPTION
+    
+@atestados_bp.route('/lista_aluno/<ra>', methods=['GET'])
+def recuperar_atestados_aluno(ra):
+    # Carrega os dados
+    if not os.path.exists(JSON_FILE):
+        return jsonify([]), 200
+    try:
+        with open(JSON_FILE, 'r', encoding='utf-8') as f:
+            atestados = json.load(f)
+
+        user_dict = get_user_dict()
+
+        atestados_aluno = [a for a in atestados if str(a.get("uploaded_by")) == str(ra)]
+        # Adiciona campos necessários para o frontend
+        for atestado in atestados_aluno:
+            atestado['name'] = atestado['filename']
+            atestado['date'] = atestado['timestamp']
+            atestado['file_url'] = f"/atestado/uploads/{atestado['filename']}"
+            atestado['uploaded_by'] = user_dict.get(str(ra), ra)
+
+        return jsonify(atestados_aluno), 200
+
+    except json.JSONDecodeError:
+        return jsonify([]), 500
+    except Exception as e:
+        return jsonify({"erro": f"Erro interno do servidor: {str(e)}"}), 500
+    
+    
 # Rota para servir arquivos da pasta uploads
 @atestados_bp.route('/uploads/<filename>', methods=['GET'])
 def serve_uploaded_file(filename):

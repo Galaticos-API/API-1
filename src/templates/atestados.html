@@ -1,7 +1,9 @@
 <!-- templates/atestados.html -->
 {% extends "base.html" %} {% block title %}Atestados{% endblock %} {% block content %}
+<div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 9999"></div>
 <div class="content">
   <h1>Atestados</h1>
+  {% if session['RA'] != 'admin' %}
   <hr />
   <h4>Envio de documento</h4>
   <form class="formAtestado row my-3" id="formAtestadoJ" method="POST" enctype="multipart/form-data">
@@ -30,6 +32,7 @@
     </div>
     <button class="btn btn-outline-primary col-md-2 col-4 mx-auto mb-6" id="botao-do-submit" type="submit">Enviar</button>
   </form>
+  {% endif %}
 
   <hr />
   <h4>Atestados enviados</h4>
@@ -41,17 +44,24 @@
       <option value="dateolder">Mais Antigo</option>
       <option value="datenewer">Mais Recente</option>
     </select>
+    {% if session['RA'] == 'admin' %}
     <button class="btn btn-outline-primary ms-auto" id="btn-metricas" type="button" data-bs-toggle="modal" data-bs-target="#modalMetricas">Relatório</button>
+    {% endif %}
   </nav>
 
   <table id="atestadosTable" class="table table-striped px-0">
     <thead>
       <tr>
         <th>Nome do Documento</th>
-        <th>RA do Aluno</th>
+        <th>Aluno</th>
         <th>Data de Envio</th>
         <th>Duração do Atestado</th>
         <th>Tipo de Atestado</th>
+        {% if session['RA'] == 'admin' %}
+        <th>Ações</th>
+        {% else %}
+        <th>Status</th>
+        {% endif %}
       </tr>
     </thead>
     <tbody>
@@ -59,13 +69,31 @@
     </tbody>
   </table>
 
+  <!-- Modal Validação atestado -->
+  <div class="modal fade" id="modalValidarAtestado" tabindex="-1" aria-labelledby="modalValidarAtestadoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color: #366341; color: #fff">
+          <h5 class="modal-title" id="modalValidarAtestadoLabel">Validar Atestado</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <p>Deseja aprovar ou reprovar este atestado?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" id="btnReprovarAtestado">Reprovar</button>
+          <button type="button" class="btn btn-success" id="btnAprovarAtestado">Aprovar</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- Modal Métricas -->
   <div class="modal fade" id="modalMetricas" tabindex="-1" aria-labelledby="modalMetricasLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
-        <div class="modal-header" style="background-color: #366341; color: #fff;">
+        <div class="modal-header" style="background-color: #366341; color: #fff">
           <h5 class="modal-title" id="modalMetricasLabel">Métricas dos Atestados</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar" style="filter: invert(1);"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar" style="filter: invert(1)"></button>
         </div>
         <div class="modal-body">
           <div id="metricasConteudo">
@@ -80,7 +108,9 @@
     </div>
   </div>
 </div>
-
+<script>
+  const USER_ID = "{{ session['RA'] }}";
+</script>
 <script>
   $(document).ready(function () {
     function filterDocuments() {
@@ -142,25 +172,99 @@
       });
     });
 
+    let filenameParaValidar = null;
+
+    $("#atestadosTable").on("click", ".btn-validar", function () {
+      filenameParaValidar = $(this).data("filename");
+      const modal = new bootstrap.Modal(document.getElementById("modalValidarAtestado"));
+      modal.show();
+    });
+
+    function validateAtestado(filenameParaValidar, validation) {
+      $.ajax({
+        url: "/atestado/validate/",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ filename: filenameParaValidar, validation: validation }),
+        success: function (response) {
+          window.location.reload();
+        },
+        error: function () {
+          showToast("Erro ao aprovar atestado.", "danger");
+        },
+      });
+    }
+
+    $("#btnAprovarAtestado").on("click", function () {
+      if (filenameParaValidar) {
+        validateAtestado(filenameParaValidar, "accept");
+      }
+      bootstrap.Modal.getInstance(document.getElementById("modalValidarAtestado")).hide();
+    });
+
+    $("#btnReprovarAtestado").on("click", function () {
+      if (filenameParaValidar) {
+        validateAtestado(filenameParaValidar, "deny");
+      }
+      bootstrap.Modal.getInstance(document.getElementById("modalValidarAtestado")).hide();
+    });
+
     // Função para buscar e exibir os atestados em uma tabela
     function fetchAtestados() {
+      let url;
+      if (USER_ID === "admin") {
+        url = "/atestado/lista/";
+      } else {
+        url = `/atestado/lista_aluno/${USER_ID}`;
+      }
       $.ajax({
-        url: "/atestado/lista/",
+        url: url,
         type: "GET",
         success: function (response) {
           let tableBody = $("#atestadosTable tbody");
-          tableBody.empty(); // Limpa a tabela antes de adicionar os dados
+          tableBody.empty();
 
           response.forEach((atestado) => {
-            let row = $(
-              `<tr>
-                <td><a href='${atestado.file_url}' target='_blank'>${atestado.name}</a></td>
-                <td>${atestado.uploaded_by}</td>
-                <td>${atestado.date}</td>
-                <td>${atestado.duration} dias</td>
-                <td>${atestado.filetype || ''}</td>
-              </tr>`
-            );
+            let row;
+            if (USER_ID === "admin") {
+              let btnValidar;
+              if (atestado.status !== "undefined") {
+                btnValidar = `<button class="btn btn-success btn-sm" disabled>Validado!</button>`;
+              } else {
+                btnValidar = `<button class="btn btn-outline-primary btn-sm btn-validar" data-filename="${atestado.name}">
+                                Validar
+                              </button>`;
+              }
+              row = $(`
+                      <tr>
+                        <td><a href='${atestado.file_url}' target='_blank'>${atestado.name}</a></td>
+                        <td>${atestado.uploaded_by}</td>
+                        <td>${atestado.date}</td>
+                        <td>${atestado.duration} dias</td>
+                        <td>${atestado.filetype || ""}</td>
+                        <td>
+                          ${btnValidar}
+                        </td>
+                      </tr>
+                    `);
+            } else {
+              let statusText =
+                atestado.status === "accepted"
+                  ? '<span class="badge bg-success">Aprovado</span>'
+                  : atestado.status === "denied"
+                  ? '<span class="badge bg-danger">Reprovado</span>'
+                  : '<span class="badge bg-secondary">Pendente</span>';
+              row = $(`
+            <tr>
+              <td><a href='${atestado.file_url}' target='_blank'>${atestado.name}</a></td>
+              <td>${atestado.uploaded_by}</td>
+              <td>${atestado.date}</td>
+              <td>${atestado.duration} dias</td>
+              <td>${atestado.filetype || ""}</td>
+              <td>${statusText}</td>
+            </tr>
+          `);
+            }
             tableBody.append(row);
           });
         },
@@ -169,7 +273,6 @@
         },
       });
     }
-
     // Chama a função para buscar os atestados ao carregar a página
     fetchAtestados();
 
@@ -179,12 +282,14 @@
       let tipos = {};
       let duracoes = {};
       let agora = new Date();
-      let count7 = 0, count30 = 0, countTotal = atestados.length;
-      atestados.forEach(a => {
+      let count7 = 0,
+        count30 = 0,
+        countTotal = atestados.length;
+      atestados.forEach((a) => {
         // Tipo
         if (a.filetype) tipos[a.filetype] = (tipos[a.filetype] || 0) + 1;
         // Duração
-        let dur = (a.duration || '').toString().replace(/\D/g, '');
+        let dur = (a.duration || "").toString().replace(/\D/g, "");
         if (dur) duracoes[dur] = (duracoes[dur] || 0) + 1;
         // Datas
         let data = new Date(a.date);
@@ -193,9 +298,9 @@
         if (diff <= 30) count30++;
       });
       // Tipo mais recebido
-      let tipoMais = Object.entries(tipos).sort((a,b)=>b[1]-a[1])[0] || ["-",0];
+      let tipoMais = Object.entries(tipos).sort((a, b) => b[1] - a[1])[0] || ["-", 0];
       // Duração mais comum
-      let durMais = Object.entries(duracoes).sort((a,b)=>b[1]-a[1])[0] || ["-",0];
+      let durMais = Object.entries(duracoes).sort((a, b) => b[1] - a[1])[0] || ["-", 0];
       // Monta HTML em tabelas
       let html = `<h6>Tipo de atestado mais recebido: <b>${tipoMais[0]}</b> (${tipoMais[1]})</h6>`;
       html += `<table class='table table-bordered'><thead><tr><th>Tipo de Atestado</th><th>Quantidade</th></tr></thead><tbody>`;
@@ -219,37 +324,64 @@
     }
 
     // Evento para abrir o modal e buscar métricas
-    $('#modalMetricas').on('show.bs.modal', function () {
-      $('#metricasConteudo').html('<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Carregando...</span></div>');
+    $("#modalMetricas").on("show.bs.modal", function () {
+      $("#metricasConteudo").html('<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Carregando...</span></div>');
       $.ajax({
         url: "/atestado/lista/",
         type: "GET",
         success: function (response) {
-          $('#metricasConteudo').html(calcularMetricas(response));
+          $("#metricasConteudo").html(calcularMetricas(response));
         },
         error: function () {
-          $('#metricasConteudo').html('<div class="alert alert-danger">Erro ao carregar métricas.</div>');
-        }
+          $("#metricasConteudo").html('<div class="alert alert-danger">Erro ao carregar métricas.</div>');
+        },
       });
     });
   });
 
   document.addEventListener("DOMContentLoaded", function () {
-  document.getElementById("btnExportarPDF").addEventListener("click", function () {
-    const element = document.getElementById("metricasConteudo");
+    document.getElementById("btnExportarPDF").addEventListener("click", function () {
+      const element = document.getElementById("metricasConteudo");
 
-    const opt = {
-      margin:       0.5,
-      filename:     `metricas_atestados_${new Date().toISOString().slice(0,10)}.pdf`,
-      image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2 },
-      jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-    };
+      const opt = {
+        margin: 0.5,
+        filename: `metricas_atestados_${new Date().toISOString().slice(0, 10)}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+      };
 
-    html2pdf().from(element).set(opt).save();
+      html2pdf().from(element).set(opt).save();
+    });
   });
-});
 
+  function showToast(message, category) {
+    const toastContainer = document.getElementById("toastContainer");
+    const toast = document.createElement("div");
+
+    toast.className = `toast align-items-center text-bg-${category} border-0 mt-2`;
+    toast.style = "font-size: large";
+    toast.setAttribute("role", "alert");
+    toast.setAttribute("aria-live", "assertive");
+    toast.setAttribute("aria-atomic", "true");
+    toast.innerHTML = `
+        <div class="d-flex">
+          <div class="toast-body">
+            ${message}
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      `;
+
+    toastContainer.appendChild(toast);
+    const bsToast = new bootstrap.Toast(toast);
+    bsToast.show();
+
+    // Remover o toast da DOM após fechar
+    toast.addEventListener("hidden.bs.toast", () => {
+      toast.remove();
+    });
+  }
 </script>
 
 {% endblock %}

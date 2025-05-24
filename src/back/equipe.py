@@ -147,14 +147,27 @@ def remove_user():
         with open(EQUIPES_FILE_PATH, 'w') as file:
             json.dump(equipes, file)
 
+        # --- Remover avaliações do usuário removido ---
         if usuario_removido:
-            return jsonify({"message": "Usuário removido da equipe com sucesso"}), 200
+            if os.path.exists(AVALIACOES_FILE_PATH) and os.path.getsize(AVALIACOES_FILE_PATH) > 0:
+                with open(AVALIACOES_FILE_PATH, 'r') as file:
+                    avaliacoes = json.load(file)
+            else:
+                avaliacoes = []
+
+            # Filtra todas as avaliações que NÃO são do usuário removido
+            avaliacoes_filtradas = [av for av in avaliacoes if str(av.get("id_usuario")) != str(ra)]
+
+            with open(AVALIACOES_FILE_PATH, 'w') as file:
+                json.dump(avaliacoes_filtradas, file)
+
+            return jsonify({"message": "Usuário removido da equipe e avaliações excluídas com sucesso"}), 200
         else:
             return jsonify({"message": "Usuário não encontrado na equipe"}), 404
 
     except Exception as e:
         return jsonify({"message": f"Erro ao remover usuário: {str(e)}"}), 500
-    
+
 @equipes_bp.route('/get_equipes', methods=['GET'])
 def get_equipes():
     try:
