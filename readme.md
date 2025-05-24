@@ -36,7 +36,7 @@ O objetivo é desenvolver um sistema web para o registro e gestão de atestados 
 | -------- | ---------------------------------------------------------- |
 | Sprint 1 | [Clique aqui](https://www.youtube.com/watch?v=Aag2fdVSDXw) |
 | Sprint 2 | [Clique aqui](https://www.youtube.com/watch?v=LrEpRZ4XQmg) |
-| Sprint 3 | `WIP`                                                      |
+| Sprint 3 | [Clique aqui](https://www.youtube.com/watch?v=2vUJxWFI6WU) |
 
 <hr>
 
