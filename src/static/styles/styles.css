@@ -239,6 +239,11 @@ select:hover {
   display: none !important;
 }
 
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
 /*Responsividade teste */
 
 @media (max-width: 768px) {

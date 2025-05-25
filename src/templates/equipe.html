@@ -260,11 +260,13 @@
   <hr />
   <h4 class="col-12 col-md-9 mb-3">Todas as Equipes</h4>
   <div class="col-12 col-md-12">
-    <table id="tabela-equipes" class="table table-striped table-bordered">
-      <tbody>
-        <!-- Vai ser preenchido via JS -->
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table id="tabela-equipes" class="table table-striped table-bordered">
+        <tbody>
+          <!-- Vai ser preenchido via JS -->
+        </tbody>
+      </table>
+    </div>
 
     <center>
       <button class="btn btn-outline-primary col-12 col-md-3" data-bs-toggle="modal" data-bs-target="#modal_equipe">
@@ -719,9 +721,9 @@
           avaliacoes = response;
           if (avaliacoes.Sprint1.length == 0 && avaliacoes.Sprint2.length == 0 && avaliacoes.Sprint3.length == 0) {
             showToast("Dados insuficientes para geração de métricas", "danger");
-            $('#charts').hide();
+            $("#charts").hide();
           } else {
-            $('#charts').show();
+            $("#charts").show();
             barChart_sprints(avaliacoes);
           }
         },

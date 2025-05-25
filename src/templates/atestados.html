@@ -61,7 +61,7 @@
       <option value="dateolder">Mais Antigo</option>
       <option value="datenewer">Mais Recente</option>
     </select>
-    <select class="form-select w-auto" id="tipoAtestado" onchange="filterDocuments()">
+    <select class="form-select" id="tipoAtestado" onchange="filterDocuments()">
       <option value="" selected disabled>Selecione um tipo de atestado</option>
       <option value="">Todos os Tipos</option>
       <option value="atestado_medico_comum">Atestado Médico Comum</option>
@@ -90,26 +90,28 @@
     {% endif %}
   </nav>
 
-  <table id="atestadosTable" class="table table-striped px-0">
-    <thead>
-      <tr>
-        <th style="display: none">RA</th>
-        <th>Nome do Documento</th>
-        <th>Aluno</th>
-        <th>Data de Envio</th>
-        <th>Duração do Atestado</th>
-        <th>Tipo de Atestado</th>
-        {% if session['RA'] == 'admin' %}
-        <th>Ações</th>
-        {% else %}
-        <th>Status</th>
-        {% endif %}
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Os dados dos atestados serão inseridos aqui -->
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table id="atestadosTable" class="table table-striped px-0">
+      <thead>
+        <tr>
+          <th style="display: none">RA</th>
+          <th>Nome do Documento</th>
+          <th>Aluno</th>
+          <th>Data de Envio</th>
+          <th>Duração do Atestado</th>
+          <th>Tipo de Atestado</th>
+          {% if session['RA'] == 'admin' %}
+          <th>Ações</th>
+          {% else %}
+          <th>Status</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Os dados dos atestados serão inseridos aqui -->
+      </tbody>
+    </table>
+  </div>
 
   <!-- Modal Validação atestado -->
   <div class="modal fade" id="modalValidarAtestado" tabindex="-1" aria-labelledby="modalValidarAtestadoLabel" aria-hidden="true">
@@ -164,7 +166,7 @@
       let ra = $(row).find("td").eq(0).text().toLowerCase();
       let tipo = $(row).find("td").eq(5).text(); // coluna tipo de atestado
       let show = ra.includes(searchInput);
-      
+
       if (tipoAtestado && tipo !== "" && tipo !== undefined) {
         show = show && tipo === $("#tipoAtestado option:selected").val();
       }
