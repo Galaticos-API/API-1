@@ -109,7 +109,7 @@ O objetivo é desenvolver um sistema web para o registro e gestão de atestados 
 - - Flask
 - - bcyrpt
 
-### Para Windows:
+### Para Windows ou Linux:
 
 #### Baixando o repositório
 
@@ -150,5 +150,4 @@ Apos instaladas as dependências, a aplicação Flask já está pronta para ser 
 cd .\src
 Flask run
 ```
-
 [^1]: <https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.5>
