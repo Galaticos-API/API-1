@@ -61,6 +61,30 @@
       <option value="dateolder">Mais Antigo</option>
       <option value="datenewer">Mais Recente</option>
     </select>
+    <select class="form-select w-auto" id="tipoAtestado" onchange="filterDocuments()">
+      <option value="" selected disabled>Selecione um tipo de atestado</option>
+      <option value="">Todos os Tipos</option>
+      <option value="atestado_medico_comum">Atestado Médico Comum</option>
+      <option value="comparecimento_medico">Atestado de Comparecimento Médico</option>
+      <option value="internacao_hospitalar">Atestado de Internação Hospitalar</option>
+      <option value="acompanhamento_paciente">Atestado de Acompanhamento de Paciente</option>
+      <option value="doenca_infectocontagiosa">Atestado de Doença Infectocontagiosa</option>
+      <option value="gestacao">Atestado de Gestação</option>
+      <option value="licenca_maternidade">Atestado de Licença Maternidade</option>
+      <option value="licenca_paternidade">Atestado de Licença Paternidade</option>
+      <option value="psicologico">Atestado Psicológico</option>
+      <option value="odontologico">Atestado Odontológico</option>
+      <option value="fisioterapeutico">Atestado Fisioterapêutico</option>
+      <option value="doacao_sangue">Atestado de Doação de Sangue</option>
+      <option value="comparecimento_judicial">Atestado de Comparecimento Judicial</option>
+      <option value="falecimento_familiar">Atestado de Falecimento de Familiar</option>
+      <option value="servico_militar">Atestado de Serviço Militar</option>
+      <option value="evento_academico">Atestado de Participação em Evento Acadêmico</option>
+      <option value="competicao_esportiva">Atestado de Participação em Competição Esportiva</option>
+      <option value="tratamento_prolongado">Atestado de Tratamento Prolongado</option>
+      <option value="readaptacao_restricao">Atestado de Readaptação ou Restrição de Atividades</option>
+      <option value="incapacidade_temporaria">Atestado de Incapacidade Temporária</option>
+    </select>
     {% if session['RA'] == 'admin' %}
     <button class="btn btn-outline-primary ms-auto" id="btn-metricas" type="button" data-bs-toggle="modal" data-bs-target="#modalMetricas">Relatório</button>
     {% endif %}
@@ -69,6 +93,7 @@
   <table id="atestadosTable" class="table table-striped px-0">
     <thead>
       <tr>
+        <th style="display: none">RA</th>
         <th>Nome do Documento</th>
         <th>Aluno</th>
         <th>Data de Envio</th>
@@ -129,41 +154,44 @@
   const USER_ID = "{{ session['RA'] }}";
 </script>
 <script>
-  $(document).ready(function () {
-    function filterDocuments() {
-      let searchInput = document.getElementById("search").value.toLowerCase();
-      let categoryFilter = document.getElementById("category").value;
-      let rows = document.querySelectorAll("#atestadosTable tbody tr");
+  function filterDocuments() {
+    let searchInput = $("#search").val().toLowerCase();
+    let categoryFilter = $("#category").val();
+    let tipoAtestado = $("#tipoAtestado").val();
+    let rows = $("#atestadosTable tbody tr").toArray();
 
-      // Converte as linhas para um array para facilitar a ordenação
-      let rowsArray = Array.from(rows);
-
-      // Filtro de busca por RA
-      rowsArray.forEach((row) => {
-        let ra = row.cells[1].textContent.toLowerCase();
-        row.style.display = ra.includes(searchInput) ? "" : "none";
-      });
-
-      // Ordenação com base no filtro selecionado
-      if (categoryFilter === "nameaz") {
-        rowsArray.sort((a, b) => a.cells[0].textContent.localeCompare(b.cells[0].textContent));
-      } else if (categoryFilter === "nameza") {
-        rowsArray.sort((a, b) => b.cells[0].textContent.localeCompare(a.cells[0].textContent));
-      } else if (categoryFilter === "dateolder") {
-        rowsArray.sort((a, b) => new Date(a.cells[2].textContent) - new Date(b.cells[2].textContent));
-      } else if (categoryFilter === "datenewer") {
-        rowsArray.sort((a, b) => new Date(b.cells[2].textContent) - new Date(a.cells[2].textContent));
-      } else if (categoryFilter === "durationdesc") {
-        rowsArray.sort((a, b) => b.cells[3].textContent.localeCompare(a.cells[3].textContent));
-      } else if (categoryFilter === "durationasc") {
-        rowsArray.sort((a, b) => a.cells[3].textContent.localeCompare(b.cells[3].textContent));
+    rows.forEach((row) => {
+      let ra = $(row).find("td").eq(0).text().toLowerCase();
+      let tipo = $(row).find("td").eq(5).text(); // coluna tipo de atestado
+      let show = ra.includes(searchInput);
+      
+      if (tipoAtestado && tipo !== "" && tipo !== undefined) {
+        show = show && tipo === $("#tipoAtestado option:selected").val();
       }
 
-      // Reorganiza as linhas na tabela
-      let tableBody = document.querySelector("#atestadosTable tbody");
-      rowsArray.forEach((row) => tableBody.appendChild(row));
+      $(row).toggle(show);
+    });
+
+    // Ordenação com base no filtro selecionado
+    if (categoryFilter === "nameaz") {
+      rows.sort((a, b) => $(a).find("td").eq(1).text().localeCompare($(b).find("td").eq(1).text()));
+    } else if (categoryFilter === "nameza") {
+      rows.sort((a, b) => $(b).find("td").eq(1).text().localeCompare($(a).find("td").eq(1).text()));
+    } else if (categoryFilter === "dateolder") {
+      rows.sort((a, b) => new Date($(a).find("td").eq(3).text()) - new Date($(b).find("td").eq(3).text()));
+    } else if (categoryFilter === "datenewer") {
+      rows.sort((a, b) => new Date($(b).find("td").eq(3).text()) - new Date($(a).find("td").eq(3).text()));
+    } else if (categoryFilter === "durationasc") {
+      rows.sort((a, b) => $(b).find("td").eq(4).text().localeCompare($(a).find("td").eq(4).text()));
+    } else if (categoryFilter === "durationdesc") {
+      rows.sort((a, b) => $(a).find("td").eq(4).text().localeCompare($(b).find("td").eq(4).text()));
     }
 
+    // Reorganiza as linhas na tabela
+    let tableBody = $("#atestadosTable tbody");
+    rows.forEach((row) => tableBody.append(row));
+  }
+  $(document).ready(function () {
     // Adiciona eventos para filtrar instantaneamente
     document.getElementById("search").addEventListener("input", filterDocuments);
     document.getElementById("category").addEventListener("change", filterDocuments);
@@ -254,8 +282,9 @@
               }
               row = $(`
                       <tr>
+                        <td style="display:none">${atestado.uploaded_by}</td>
                         <td><a href='${atestado.file_url}' target='_blank'>${atestado.name}</a></td>
-                        <td>${atestado.uploaded_by}</td>
+                        <td>${atestado.username}</td>
                         <td>${atestado.date}</td>
                         <td>${atestado.duration} dias</td>
                         <td>${atestado.filetype || ""}</td>
@@ -272,15 +301,16 @@
                   ? '<span class="badge bg-danger">Reprovado</span>'
                   : '<span class="badge bg-secondary">Pendente</span>';
               row = $(`
-            <tr>
-              <td><a href='${atestado.file_url}' target='_blank'>${atestado.name}</a></td>
-              <td>${atestado.uploaded_by}</td>
-              <td>${atestado.date}</td>
-              <td>${atestado.duration} dias</td>
-              <td>${atestado.filetype || ""}</td>
-              <td>${statusText}</td>
-            </tr>
-          `);
+                <tr>
+                  <td style="display:none">${atestado.uploaded_by}</td>
+                  <td><a href='${atestado.file_url}' target='_blank'>${atestado.name}</a></td>
+                  <td>${atestado.username}</td>
+                  <td>${atestado.date}</td>
+                  <td>${atestado.duration} dias</td>
+                  <td>${atestado.filetype || ""}</td>
+                  <td>${statusText}</td>
+                </tr>
+              `);
             }
             tableBody.append(row);
           });

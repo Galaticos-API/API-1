@@ -155,7 +155,7 @@
 
         <h6 id="noData" class="text-danger mx-2" style="display: none">Dados insuficientes para montar o gráfico</h6>
 
-        <div class="col-md-12 col-12 row">
+        <div id="charts" class="col-md-12 col-12 row">
           <button id="exportarGraficos" class="btn btn-outline-success mb-3 col-md-3 col-6">Exportar Gráficos</button>
           <figure class="highcharts-figure col-md-12">
             <div id="container"></div>
@@ -295,7 +295,7 @@
     getUsers();
     mostrarValor_ranges();
     getEquipes();
-    getAvaliacoes(USER_ID);
+    //getAvaliacoes(USER_ID);
     USER_ID != "admin" ? getEquipeSingle(USER_ID) : hide_single();
 
     $("#modal_metrica").on("show.bs.modal", function () {
@@ -717,13 +717,13 @@
         type: "GET",
         success: function (response) {
           avaliacoes = response;
-          if (!avaliacoes.Sprint1) {
-            $("#noData").show();
+          if (avaliacoes.Sprint1.length == 0 && avaliacoes.Sprint2.length == 0 && avaliacoes.Sprint3.length == 0) {
+            showToast("Dados insuficientes para geração de métricas", "danger");
+            $('#charts').hide();
           } else {
-            $("#noData").hide();
+            $('#charts').show();
+            barChart_sprints(avaliacoes);
           }
-
-          barChart_sprints(avaliacoes);
         },
         error: function (response) {
           let responseJson = response.responseJSON;

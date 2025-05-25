@@ -27,7 +27,7 @@ ALLOWED_EXTENSIONS = {'pdf'}  # Definição das extensões permitidas
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def save_to_json(filename, file_path, user, duration, filetype):
+def save_to_json(filename, file_path, ra, duration, filetype):
     if os.path.exists(JSON_FILE) and os.path.getsize(JSON_FILE) > 0:
         with open(JSON_FILE, 'r', encoding='utf-8') as f:
             data = json.load(f)  # Carrega os dados existentes
@@ -39,7 +39,7 @@ def save_to_json(filename, file_path, user, duration, filetype):
     # Adiciona um novo registro com informações do usuário
     data.append({
         "filename": filename,
-        "uploaded_by": user,
+        "uploaded_by": ra,
         "timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         "duration": int(duration),
         "status": 'undefined',
@@ -162,7 +162,7 @@ def recuperar_atestados():
             atestado['name'] = atestado['filename']
             atestado['date'] = atestado['timestamp']
             atestado['file_url'] = f"/atestado/uploads/{atestado['filename']}"
-            atestado['uploaded_by'] = user_dict.get(str(atestado.get('uploaded_by')), atestado.get('uploaded_by'))
+            atestado['username'] = user_dict.get(str(atestado.get('uploaded_by')), atestado.get('uploaded_by'))
 
         return jsonify(atestados), 200
 
@@ -188,7 +188,7 @@ def recuperar_atestados_aluno(ra):
             atestado['name'] = atestado['filename']
             atestado['date'] = atestado['timestamp']
             atestado['file_url'] = f"/atestado/uploads/{atestado['filename']}"
-            atestado['uploaded_by'] = user_dict.get(str(ra), ra)
+            atestado['username'] = user_dict.get(str(ra), ra)
 
         return jsonify(atestados_aluno), 200
 

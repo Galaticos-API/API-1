@@ -4,7 +4,8 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   overflow-x: hidden;
 }
@@ -231,6 +232,11 @@ select:hover {
 
 .card-equipe-single {
   background-color: #366341 !important;
+}
+
+#atestadosTable th[style*="display:none"],
+#atestadosTable td[style*="display:none"] {
+  display: none !important;
 }
 
 /*Responsividade teste */
