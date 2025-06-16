@@ -1,0 +1,965 @@
+<!-- templates/atestados.html -->
+{% extends "base.html" %} {% block title %}Minha equipe{% endblock %} {% block content %}
+<div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 9999"></div>
+<div class="modal fade" id="modal_equipe" tabindex="-1" role="dialog" aria-labelledby="modalEquipeLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-white" style="background-color: #366341 !important">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          <i class="bi bi-person-plus-fill ms-1 me-2"></i>
+          Cadastrar uma Nova Equipe
+        </h1>
+        <button type="button" class="btn-close btn-close-white me-1" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form class="row" method="POST" id="formEquipe">
+          <!-- Nome da Equipe -->
+          <div class="form-group col-md-6">
+            <label for="nomeEquipe">Nome da Equipe</label>
+            <input type="text" class="form-control" id="nomeEquipe" name="nomeEquipe" required />
+          </div>
+
+          <!-- Membros da Equipe -->
+          <div id="membrosContainer" class="col-md-12">
+            <div class="membro row mb-2">
+              <div class="col-md-6">
+                <label>Membro</label>
+                <select name="membros[]" class="form-select" required>
+                  <option value="" selected disabled>Selecione uma pessoa</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label>Função</label>
+                <select name="cargos[]" class="form-select" required>
+                  <option value="" selected disabled>Selecione o cargo</option>
+                  <option value="Scrum Master">Scrum Master</option>
+                  <option value="Product Owner">Product Owner</option>
+                  <option value="Dev Team">Dev Team</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-sm btn-outline-primary col-md-2 mx-3" id="addMembro">
+            <i class="bi bi-person-plus"></i>
+            Adicionar
+          </button>
+          <button type="button" class="btn btn-outline-secondary btn-sm col-md-2" id="removeMembro">
+            <i class="bi bi-eraser-fill"></i>
+            Remover
+          </button>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-outline-primary" id="btn_cadastro_equipe">Salvar Equipe</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal_avaliacao" tabindex="-1" aria-labelledby="modalAvaliacaoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <form id="formAvaliacao">
+        <div class="modal-header bg-dark text-white" style="background-color: #366341 !important">
+          <h5 class="modal-title" id="modalAvaliacaoLabel">
+            <i class="bi bi-star-fill ms-1 me-2"></i>
+            Avaliar Membro do
+            <span id="nome_equipe_single"></span>
+          </h5>
+          <button type="button" class="btn-close btn-close-white me-1" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+
+        <div class="modal-body" id="MembrosAvaliacao">
+          <div class="mb-3 row">
+            <div class="col-md-6">
+              <label>Membro</label>
+              <select name="membro" id="membro" class="form-select" required></select>
+            </div>
+            <div class="col-md-6">
+              <label>Período</label>
+              <select name="sprint" id="sprint" class="form-select" required>
+                <option value="" selected disabled>Selecione a sprint</option>
+                <option value="1">Sprint 1</option>
+                <option value="2">Sprint 2</option>
+                <option value="3">Sprint 3</option>
+              </select>
+            </div>
+          </div>
+
+          <hr />
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Entrega de Resultados</label>
+              <input type="range" class="form-range" min="0" max="3" step=".5" name="resultados" required />
+              <span id="valor-resultados"></span>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Colaboração</label>
+              <input type="range" class="form-range" min="0" max="3" step=".5" name="colaboracao" required />
+              <span id="valor-colaboracao"></span>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Proatividade</label>
+              <input type="range" class="form-range" min="0" max="3" step=".5" name="proatividade" required />
+              <span id="valor-proatividade"></span>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Autonomia</label>
+              <input type="range" class="form-range" min="0" max="3" step=".5" name="autonomia" required />
+              <span id="valor-autonomia"></span>
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <label for="observacoes" class="form-label">Observações (opcional)</label>
+            <textarea class="form-control" id="observacoes" name="observacoes" rows="2" placeholder=". . ."></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-outline-primary">Salvar Avaliação</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE PAINEL DE DESEMPENHO -->
+<div class="modal fade" id="modal_metrica" tabindex="-1" aria-labelledby="modalmetricaLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-white" style="background-color: #366341 !important">
+        <h5 class="modal-title" id="modalmetricaLabel">
+          <i class="bi bi-bar-chart ms-1 me-2"></i>
+          Painel de desempenho
+        </h5>
+        <button type="button" class="btn-close btn-close-white me-1" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+
+      <div class="modal-body" id="Membrosmetrica">
+        <div class="mb-3 row">
+          <div class="col-md-6">
+            <label>Membro</label>
+            <select name="membro_metrica" id="membro_metrica" class="form-select" required></select>
+          </div>
+        </div>
+
+        <h6 id="noData" class="text-danger mx-2" style="display: none">Dados insuficientes para montar o gráfico</h6>
+
+        <div id="charts" class="col-md-12 col-12 row">
+          <button id="exportarGraficos" class="btn btn-outline-success mb-3 col-md-3 col-6">Exportar Gráficos</button>
+          <figure class="highcharts-figure col-md-12">
+            <div id="container"></div>
+            <p class="highcharts-description"></p>
+          </figure>
+          <figure class="highcharts-figure col-md-12">
+            <div id="container2"></div>
+            <p class="highcharts-description"></p>
+          </figure>
+          <figure class="highcharts-figure col-md-12">
+            <div id="container3"></div>
+            <p class="highcharts-description"></p>
+          </figure>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de confirmação de remoção de equipe -->
+<div class="modal fade" id="modalRemoverEquipe" tabindex="-1" aria-labelledby="modalRemoverEquipeLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-white" style="background-color: #366341 !important">
+        <h5 class="modal-title" id="modalRemoverEquipeLabel">Remover Equipe</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body">Tem certeza que deseja remover esta equipe?</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="confirmRemoverEquipe">Remover</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de editar equipe -->
+<div class="modal fade" id="modalEditarEquipe" tabindex="-1" aria-labelledby="modalEditarEquipeLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-white" style="background-color: #366341 !important">
+        <h5 class="modal-title" id="modalEditarEquipeLabel">Editar Equipe</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body">
+        <label for="selectMembroRemover">Selecione o membro para remover:</label>
+        <select id="selectMembroRemover" class="form-select mb-3"></select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="btnRemoverMembroEquipe">Remover Membro</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content row">
+  <h1>Equipes</h1>
+  <hr />
+  <h4 id="minha-equipe-title" class="col-12 col-md-12 mb-3">Minha Equipe</h4>
+  <div class="col-12 col-md-12 px-3 mb-4 row">
+    <div id="minha-equipe-card" class="card border-success mb-3 col-12 col-md-9">
+      <div class="card-header text-success" style="background-color: #fff">
+        <i class="bi bi-person"></i>
+        <span style="font-size: 1.5rem" id="nome_equipe_single2"></span>
+      </div>
+      <div class="card-body text-success">
+        <p class="card-text" id="membros_equipe_single"></p>
+      </div>
+    </div>
+
+    <center id="btn-equipe-functions" class="col-12 col-md-3">
+      {% if session['RA'] != 'admin' %}
+      <div class="mb-3">
+        <button class="btn btn-outline-primary col-12 col-md-12" data-bs-toggle="modal" data-bs-target="#modal_avaliacao">
+          <i class="bi bi-star"></i>
+          Avaliar Membro
+        </button>
+      </div>
+      {% endif %}
+
+      <div class="mb-3">
+        <button class="btn btn-outline-primary col-12 col-md-12" data-bs-toggle="modal" data-bs-target="#modal_metrica">
+          <i class="bi bi-bar-chart"></i>
+          Painel de desempenho
+        </button>
+      </div>
+      {% if session['RA'] != 'admin' %}
+      <div class="mb-3">
+        <button id="btn-sair" class="btn btn-outline-danger col-12 col-md-12">
+          <i class="bi bi-box-arrow-right"></i>
+          Sair da equipe
+        </button>
+      </div>
+      {% endif %}
+    </center>
+  </div>
+  <hr />
+  <h4 class="col-12 col-md-9 mb-3">Todas as Equipes</h4>
+  <div class="col-12 col-md-12">
+    <div class="table-responsive">
+      <table id="tabela-equipes" class="table table-striped table-bordered">
+        <tbody>
+          <!-- Vai ser preenchido via JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <center>
+      <button class="btn btn-outline-primary col-12 col-md-3" data-bs-toggle="modal" data-bs-target="#modal_equipe">
+        <i class="bi bi-person-plus"></i>
+        Cadastrar Equipe
+      </button>
+    </center>
+  </div>
+
+  <input type="hidden" value="" />
+</div>
+
+<script>
+  const USER_ID = "{{ session['RA'] }}";
+</script>
+
+<script>
+  $(document).ready(function () {
+    var EQUIPE_ID = "";
+    let contadorMembros = 0;
+    var users = [];
+    var equipes = [];
+    var minha_equipe = [];
+    var avaliacoes = [];
+
+    let equipeIdParaRemover = null;
+
+    getUsers();
+    mostrarValor_ranges();
+    getEquipes();
+    //getAvaliacoes(USER_ID);
+    USER_ID != "admin" ? getEquipeSingle(USER_ID) : hide_single();
+
+    $("#modal_metrica").on("show.bs.modal", function () {
+      preencherSelectMembrosMetricas();
+    });
+
+    $("#membro_metrica").change(function () {
+      const selectedUserId = $(this).val();
+
+      getAvaliacoes(selectedUserId);
+    });
+
+    // Esse jQuery serve pra adicionar membros na interface de criação de equipe
+    $("#addMembro").on("click", function () {
+      if (contadorMembros < 8) {
+        const $container = $("#membrosContainer");
+        const $membro = $container.find(".membro").first();
+        const $clone = $membro.clone();
+
+        // Limpa os selects dentro do clone
+        $clone.find("select").val("");
+
+        // Adiciona no container
+        $container.append($clone);
+        contadorMembros++;
+
+        // Adiciona validação para garantir que ambos os campos sejam preenchidos
+        $clone.find("select[name='membros[]'], select[name='cargos[]']").on("change", function () {
+          const membroVal = $clone.find("select[name='membros[]']").val();
+          const cargoVal = $clone.find("select[name='cargos[]']").val();
+
+          if ((membroVal && !cargoVal) || (!membroVal && cargoVal)) {
+            $clone.find("select[name='membros[]'], select[name='cargos[]']").addClass("incomplete");
+          } else {
+            $clone.find("select[name='membros[]'], select[name='cargos[]']").removeClass("incomplete");
+          }
+        });
+      } else {
+        showToast("Uma equipe ágil pode ter apenas de 5 até 9 membros", "danger");
+      }
+    });
+    for (let index = 0; index < 4; index++) {
+      $("#addMembro").click();
+    }
+    $("#removeMembro").on("click", function () {
+      const $membros = $("#membrosContainer .membro");
+      if ($membros.length > 5) {
+        $membros.last().remove();
+        contadorMembros--;
+      } else {
+        showToast("Uma equipe ágil pode ter apenas de 5 até 9 membros", "danger");
+      }
+    });
+
+    $("#btn_cadastro_equipe").on("click", function (event) {
+      event.preventDefault(); // Impede o envio padrão
+
+      let nomeEquipe = $("#nomeEquipe").val().trim();
+
+      // Verifica se o nome da equipe foi preenchido
+      if (!nomeEquipe) {
+        showToast("Insira um nome para a equipe", "danger");
+        return;
+      }
+
+      let membros = [];
+      let cargos = [];
+
+      // Coleta todos os valores dos selects de membros e cargos
+      $("select[name='membros[]']").each(function () {
+        membros.push($(this).val());
+      });
+
+      $("select[name='cargos[]']").each(function () {
+        cargos.push($(this).val());
+      });
+
+      // Verifica se há membros repetidos
+      let membrosSet = new Set(membros.filter((m) => m));
+      if (membrosSet.size !== membros.filter((m) => m).length) {
+        showToast("Não é permitido selecionar o mesmo membro mais de uma vez.", "danger");
+        return;
+      }
+
+      if (cargos.filter((c) => c == "Product Owner").length != 1) {
+        showToast("Selecione exatamente um Product Owner", "danger");
+        return;
+      } else if (cargos.filter((c) => c == "Scrum Master").length != 1) {
+        showToast("Selecione exatamente um Scrum Master", "danger");
+        return;
+      }
+
+      // Verifica se há pelo menos 5 membros e cargos preenchidos
+      if (membros.filter((m) => m !== null && m !== "").length < 5 || cargos.filter((c) => c !== null && c !== "").length < 5) {
+        showToast("Preencha ao menos 5 membros e seus respectivos cargos", "danger");
+        return;
+      }
+
+      // Junta membros e cargos em uma lista de objetos
+      let equipeFinal = membros.map((id, index) => ({
+        id_usuario: id,
+        cargo: cargos[index],
+      }));
+
+      // Envia via AJAX pro Flask
+      $.ajax({
+        url: "/equipe/add",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          nome: nomeEquipe,
+          membros: equipeFinal,
+        }),
+        success: function (response) {
+          window.location.reload();
+        },
+        error: function (response) {
+          let responseJson = response.responseJSON;
+          console.error(responseJson.message);
+
+          window.location.reload();
+        },
+      });
+    });
+
+    $("#btn-sair").on("click", function () {
+      $.ajax({
+        url: `/equipe/remove_user?ra=${USER_ID}&id_equipe=${EQUIPE_ID}`,
+        type: "GET",
+        success: function (response) {
+          window.location.reload();
+        },
+        error: function (response) {
+          let responseJson = response.responseJSON;
+          // console.error(responseJson.message);
+
+          window.location.reload();
+        },
+      });
+    });
+
+    $("#formAvaliacao").on("submit", function (event) {
+      event.preventDefault(); // Impede o envio padrão
+
+      let membro = $("#membro").val();
+      let sprint = $("#sprint").val();
+      let avaliacao = {
+        resultados: parseFloat($('input[name="resultados"]').val()),
+        colaboracao: parseFloat($('input[name="colaboracao"]').val()),
+        proatividade: parseFloat($('input[name="proatividade"]').val()),
+        autonomia: parseFloat($('input[name="autonomia"]').val()),
+      };
+      let observacoes = $("#observacoes").val();
+
+      // Envia via AJAX pro Flask
+      $.ajax({
+        url: "/equipe/avaliar",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          membro: membro,
+          sprint: sprint,
+          avaliacao: avaliacao,
+          obs: observacoes,
+        }),
+        success: function (response) {
+          window.location.reload();
+        },
+        error: function (response) {
+          let responseJson = response.responseJSON;
+          // console.error(responseJson);
+        },
+      });
+    });
+
+    function preencherSelectMembros() {
+      const selects = $("#membrosContainer select[name='membros[]']");
+      selects.each(function () {
+        const select = $(this);
+        select.empty(); // limpa as opções
+        select.append('<option value="" disabled selected>Selecione uma pessoa</option>'); // adiciona a opção padrão
+
+        users.forEach((user) => {
+          select.append(`<option value="${user.ra}">${user.nome}</option>`);
+        });
+      });
+    }
+
+    function preencherSelectMembrosMetricas() {
+      const $select = $("#membro_metrica");
+      $select.empty();
+      $select.append('<option value="" disabled selected>Selecione uma pessoa</option>');
+
+      if (USER_ID === "admin") {
+        let membrosUnicos = {};
+        equipes.forEach((equipe) => {
+          equipe.membros.forEach((membro) => {
+            membrosUnicos[membro.id_usuario] = membro.nome;
+          });
+        });
+        Object.entries(membrosUnicos)
+          .sort((a, b) => a[1].localeCompare(b[1]))
+          .forEach(([id, nome]) => {
+            $select.append(`<option value="${id}">${nome}</option>`);
+          });
+      } else if (minha_equipe && minha_equipe.membros) {
+        minha_equipe.membros.forEach((membro) => {
+          $select.append(`<option value="${membro.id_usuario}">${membro.nome}</option>`);
+        });
+      }
+    }
+
+    function preencherTabelaEquipes(equipes) {
+      if (USER_ID != "admin") {
+        $("#tabela-equipes").html(`
+          <thead class="thead-dark">
+            <tr>
+              <th>Nome</th>
+              <th>Membros</th>
+            </tr>
+          </thead>`);
+      } else {
+        $("#tabela-equipes").html(`
+          <thead class="thead-dark">
+            <tr>
+              <th>Nome</th>
+              <th>Membros</th>
+              <th>Ações</th>
+            </tr>
+          </thead>`);
+      }
+
+      const $tabela = $("#tabela-equipes").DataTable({
+        dom: '<"top"f>rt<"bottom"ip><"clear">',
+        lengthChange: false,
+        info: true,
+        paging: false,
+      });
+      $tabela.clear(); // limpa dados antigos
+
+      if (equipes.length > 0) {
+        var membrosText = [];
+        equipes.forEach((equipe) => {
+          // Cria as badges com o nome dos membros
+          const membrosText = equipe.membros
+            .map((membro) => {
+              return `<span style="font-size:1rem" class="badge text-bg-light me-1 my-1">${membro.nome}</span>`;
+            })
+            .join(" "); // separa por espaço
+          if (USER_ID != "admin") {
+            $tabela.row.add([equipe.nome, membrosText]);
+          } else {
+            const btnEditar = `<button class="btn btn-outline-primary btn-sm btn-editar-equipe me-1" data-id="${equipe.id}" title="Editar equipe">
+                                <i class="bi bi-pencil"></i>
+                              </button>`;
+            const btnRemover = `<button class="btn btn-outline-danger btn-sm btn-remover-equipe" data-id="${equipe.id}" title="Remover equipe">
+                                  <i class="bi bi-trash"></i>
+                                </button>`;
+            $tabela.row.add([equipe.nome, membrosText, btnEditar + btnRemover]);
+          }
+        });
+        $tabela.draw();
+
+        $("#tabela-equipes tbody").on("click", ".btn-remover-equipe", function () {
+          equipeIdParaRemover = $(this).data("id");
+          const modal = new bootstrap.Modal(document.getElementById("modalRemoverEquipe"));
+          modal.show();
+        });
+
+        $("#confirmRemoverEquipe").on("click", function () {
+          if (equipeIdParaRemover) {
+            $.ajax({
+              url: `/equipe/remove`,
+              type: "POST",
+              contentType: "application/json",
+              data: JSON.stringify({ id: equipeIdParaRemover }),
+              success: function (response) {
+                window.location.reload();
+              },
+              error: function (response) {
+                showToast("Erro ao remover equipe.", "danger");
+              },
+            });
+          }
+          // Fecha o modal
+          bootstrap.Modal.getInstance(document.getElementById("modalRemoverEquipe")).hide();
+        });
+
+        let equipeIdParaEditar = null;
+        let membrosEquipeAtual = [];
+
+        $("#tabela-equipes tbody").on("click", ".btn-editar-equipe", function () {
+          equipeIdParaEditar = $(this).data("id");
+          // Busca a equipe pelo id
+          const equipe = equipes.find((eq) => eq.id === equipeIdParaEditar);
+          membrosEquipeAtual = equipe ? equipe.membros : [];
+          // Preenche o select
+          const $select = $("#selectMembroRemover");
+          $select.empty();
+          membrosEquipeAtual.forEach((membro) => {
+            $select.append(`<option value="${membro.id_usuario}">${membro.nome}</option>`);
+          });
+          // Abre o modal
+          const modal = new bootstrap.Modal(document.getElementById("modalEditarEquipe"));
+          modal.show();
+        });
+
+        $("#btnRemoverMembroEquipe").on("click", function () {
+          const ra = $("#selectMembroRemover").val();
+          if (equipeIdParaEditar && ra) {
+            $.ajax({
+              url: `/equipe/remove_user`,
+              type: "POST",
+              contentType: "application/json",
+              data: JSON.stringify({ equipe_id: equipeIdParaEditar, ra: ra }),
+              success: function (response) {
+                window.location.reload();
+              },
+              error: function (response) {
+                showToast("Erro ao remover membro da equipe.", "danger");
+              },
+            });
+          }
+          // Fecha o modal
+          bootstrap.Modal.getInstance(document.getElementById("modalEditarEquipe")).hide();
+        });
+      } else {
+        $tabela.clear();
+      }
+    }
+
+    function getUsers() {
+      $.ajax({
+        url: "/usuario/get_users",
+        type: "GET",
+        success: function (response) {
+          users = response.users;
+          users.sort((a, b) => a.nome.localeCompare(b.nome));
+          preencherSelectMembros(); // chama a função ao carregar
+        },
+        error: function (response) {
+          let responseJson = response.responseJSON;
+          // console.error(responseJson);
+        },
+      });
+    }
+
+    function getEquipes() {
+      $.ajax({
+        url: "/equipe/get_equipes",
+        type: "GET",
+        success: function (response) {
+          equipes = response.equipes;
+          preencherTabelaEquipes(equipes);
+        },
+        error: function (response) {
+          let responseJson = response.responseJSON;
+          // console.error(responseJson);
+        },
+      });
+    }
+
+    function hide_single() {
+      $("#minha-equipe-title").html(`Analisar métricas`);
+      $("#minha-equipe-card").hide();
+    }
+
+    function getEquipeSingle(id_usuario) {
+      $.ajax({
+        url: "/equipe/get_equipe_single?id_usuario=" + id_usuario,
+        type: "GET",
+        success: function (response) {
+          minha_equipe = response.equipe;
+          EQUIPE_ID = minha_equipe.id;
+          $("#nome_equipe_single").append(minha_equipe.nome);
+          $("#nome_equipe_single2").append(minha_equipe.nome);
+
+          const selects = $("#MembrosAvaliacao select[name='membro']");
+          selects.append('<option value="" disabled selected>Selecione uma pessoa</option>'); // adiciona a opção padrão
+          minha_equipe.membros.forEach((membro) => {
+            $("#membros_equipe_single").append('<span style="font-size: 1rem" class="badge text-bg-light me-1">' + membro.nome + "</span>");
+            if (membro.id_usuario == USER_ID) {
+              selects.append(`<option disabled value="${membro.id_usuario}">${membro.nome}</option>`);
+            } else {
+              selects.append(`<option value="${membro.id_usuario}">${membro.nome}</option>`);
+            }
+          });
+        },
+        error: function (response) {
+          let responseJson = response.responseJSON;
+          minha_equipe = "Nenhuma equipe";
+          $("#nome_equipe_single").append(minha_equipe);
+          $("#nome_equipe_single2").append(minha_equipe);
+          $("#membros_equipe_single").append(`Entre em uma equipe para ver os dados dela aqui`);
+          $("#btn-equipe-functions").hide();
+        },
+      });
+    }
+
+    function mostrarValor_ranges() {
+      const ranges = document.querySelectorAll('input[type="range"]');
+      ranges.forEach((range) => {
+        const valorSpan = document.getElementById("valor-" + range.name);
+        const atualizarValor = () => {
+          valorSpan.textContent = range.value;
+        };
+
+        // Atualiza no load inicial
+        atualizarValor();
+
+        // Atualiza ao mudar
+        range.addEventListener("input", atualizarValor);
+      });
+    }
+
+    function getAvaliacoes(id_usuario) {
+      $.ajax({
+        url: "/equipe/avaliacoes/" + id_usuario,
+        type: "GET",
+        success: function (response) {
+          avaliacoes = response;
+          if (avaliacoes.Sprint1.length == 0 && avaliacoes.Sprint2.length == 0 && avaliacoes.Sprint3.length == 0) {
+            showToast("Dados insuficientes para geração de métricas", "danger");
+            $("#charts").hide();
+          } else {
+            $("#charts").show();
+            barChart_sprints(avaliacoes);
+          }
+        },
+        error: function (response) {
+          let responseJson = response.responseJSON;
+          // console.error(responseJson);
+        },
+      });
+    }
+
+    function showToast(message, category) {
+      const toastContainer = document.getElementById("toastContainer");
+      const toast = document.createElement("div");
+
+      toast.className = `toast align-items-center text-bg-${category} border-0 mt-2`;
+      toast.style = "font-size: large";
+      toast.setAttribute("role", "alert");
+      toast.setAttribute("aria-live", "assertive");
+      toast.setAttribute("aria-atomic", "true");
+      toast.innerHTML = `
+        <div class="d-flex">
+          <div class="toast-body">
+            ${message}
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      `;
+
+      toastContainer.appendChild(toast);
+      const bsToast = new bootstrap.Toast(toast);
+      bsToast.show();
+
+      // Remover o toast da DOM após fechar
+      toast.addEventListener("hidden.bs.toast", () => {
+        toast.remove();
+      });
+    }
+
+    function barChart_sprints(av) {
+      const lighter = "#8dc79c";
+      const mid = "#4ba160";
+      const dark = "#2d643a";
+      Highcharts.chart("container", {
+        chart: {
+          type: "column",
+        },
+        title: {
+          text: "Métricas individuais PACER, em cada sprint",
+        },
+        subtitle: {
+          text: "",
+        },
+        xAxis: {
+          categories: ["Entrega de resultados", "Colaboração", "Proatividade", "Autonomia"],
+          crosshair: true,
+          accessibility: {
+            description: "Skills do PACER",
+          },
+        },
+        yAxis: {
+          min: 0,
+          max: 3,
+          title: {
+            text: "Nota (0-3)",
+          },
+        },
+        tooltip: {
+          valuePrefix: "Nota ",
+        },
+        plotOptions: {
+          column: {
+            pointPadding: 0.2,
+            borderWidth: 0,
+          },
+        },
+        series: [
+          {
+            name: "Sprint-1",
+            data: av.Sprint1,
+            color: lighter,
+          },
+          {
+            name: "Sprint-2",
+            data: av.Sprint2,
+            color: mid,
+          },
+          {
+            name: "Sprint-3",
+            data: av.Sprint3,
+            color: dark,
+          },
+        ],
+      });
+      Highcharts.chart("container2", {
+        chart: {
+          polar: true,
+          type: "line",
+        },
+        title: {
+          text: "Comparativo de Métricas por Sprint",
+        },
+        pane: {
+          size: "80%",
+        },
+        xAxis: {
+          categories: ["Entrega de resultados", "Colaboração", "Proatividade", "Autonomia"],
+          tickmarkPlacement: "on",
+          lineWidth: 0,
+        },
+        yAxis: {
+          gridLineInterpolation: "polygon",
+          lineWidth: 0,
+          min: 0,
+          max: 3,
+          title: {
+            text: "Nota (0-3)",
+          },
+        },
+        tooltip: {
+          shared: true,
+          pointFormat: "<span style='color:{series.color}'>{series.name}: {point.y:.1f}</span><br/>",
+        },
+        series: [
+          {
+            name: "Sprint-1",
+            data: av.Sprint1,
+            pointPlacement: "on",
+            color: lighter,
+          },
+          {
+            name: "Sprint-2",
+            data: av.Sprint2,
+            pointPlacement: "on",
+            color: mid,
+          },
+          {
+            name: "Sprint-3",
+            data: av.Sprint3,
+            pointPlacement: "on",
+            color: dark,
+          },
+        ],
+      });
+      Highcharts.chart("container3", {
+        chart: {
+          type: "heatmap",
+          marginTop: 40,
+          marginBottom: 40,
+          plotBorderWidth: 1,
+        },
+        title: {
+          text: "Análise de Sprint x Métrica",
+        },
+        xAxis: {
+          categories: ["Sprint 1", "Sprint 2", "Sprint 3"],
+        },
+        yAxis: {
+          categories: ["Entrega de resultados", "Colaboração", "Proatividade", "Autonomia"],
+          title: null,
+        },
+        colorAxis: {
+          min: 0,
+          max: 3,
+          stops: [
+            [0, "#ffcccc"],
+            [0.5, "#ffffcc"],
+            [1, "#c6efc6"],
+          ],
+        },
+        legend: {
+          align: "right",
+          layout: "vertical",
+          margin: 0,
+          verticalAlign: "top",
+          y: 25,
+          symbolHeight: 280,
+        },
+        tooltip: {
+          formatter: function () {
+            return `<b>${this.series.xAxis.categories[this.point.x]}</b> → <b>${this.series.yAxis.categories[this.point.y]}</b>: ${this.point.value}`;
+          },
+        },
+        series: [
+          {
+            name: "Métricas",
+            borderWidth: 1,
+            data: [
+              [0, 0, av.Sprint1.length > 0 ? av.Sprint1[0] : []], // Sprint 1 - Resultados
+              [0, 1, av.Sprint1.length > 0 ? av.Sprint1[1] : []], // Sprint 1 - Colaboração
+              [0, 2, av.Sprint1.length > 0 ? av.Sprint1[2] : []], // Sprint 1 - Proatividade
+              [0, 3, av.Sprint1.length > 0 ? av.Sprint1[3] : []], // Sprint 1 - Autonomia
+
+              [1, 0, av.Sprint2.length > 0 ? av.Sprint2[0] : []], // Sprint 2 - Resultados
+              [1, 1, av.Sprint2.length > 0 ? av.Sprint2[1] : []], // Sprint 2 - Colaboração
+              [1, 2, av.Sprint2.length > 0 ? av.Sprint2[2] : []], // Sprint 2 - Proatividade
+              [1, 3, av.Sprint2.length > 0 ? av.Sprint2[3] : []], // Sprint 2 - Autonomia
+
+              [2, 0, av.Sprint3.length > 0 ? av.Sprint3[0] : []], // Sprint 3 - Resultados
+              [2, 1, av.Sprint3.length > 0 ? av.Sprint3[1] : []], // Sprint 3 - Colaboração
+              [2, 2, av.Sprint3.length > 0 ? av.Sprint3[2] : []], // Sprint 3 - Proatividade
+              [2, 3, av.Sprint3.length > 0 ? av.Sprint3[3] : []], // Sprint 3 - Autonomia
+            ],
+            dataLabels: {
+              enabled: true,
+              color: "#000000",
+            },
+          },
+        ],
+      });
+    }
+
+    $("#exportarGraficos").on("click", async function () {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ orientation: "portrait", unit: "px", format: "a4" });
+      const chartIds = ["container", "container2", "container3"];
+      let y = 20;
+      for (let i = 0; i < chartIds.length; i++) {
+        const chartDiv = document.getElementById(chartIds[i]);
+        await html2canvas(chartDiv, { backgroundColor: "#fff" }).then(function (canvas) {
+          const imgData = canvas.toDataURL("image/png");
+          const pageWidth = pdf.internal.pageSize.getWidth() - 40;
+          const imgProps = pdf.getImageProperties(imgData);
+          const imgHeight = (imgProps.height * pageWidth) / imgProps.width;
+          pdf.addImage(imgData, "PNG", 20, y, pageWidth, imgHeight);
+          y += imgHeight + 20;
+          if (i < chartIds.length - 1 && y + imgHeight > pdf.internal.pageSize.getHeight()) {
+            pdf.addPage();
+            y = 20;
+          }
+        });
+      }
+      pdf.save("graficos-equipe.pdf");
+    });
+  });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+{% endblock %}

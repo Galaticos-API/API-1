@@ -1,0 +1,48 @@
+<!-- templates/atestados.html -->
+{% extends "base.html" %} {% block title %}Atestados{% endblock %} {% block content %}
+<div class="modal fade" id="modal_adm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Entre como Administrador</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="POST">
+        <div class="modal-body">
+          <label for="senha" class="form-label">Senha</label>
+          <input type="password" class="form-control" id="senhaADM" name="senhaADM" required />
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-outline-primary">Entrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="content text-center">
+  <h1 class="mb-1">Sistema AVATAR</h1>
+  <h4 class="mb-5">Avaliação de Times Ágeis e Registro de Atestados</h4>
+  <hr />
+  <h1 class="mb-3">Entre na sua Conta</h1>
+  <form id="loginForm" class="row justify-content-center text-start" method="POST">
+    <div class="mb-3 col-7">
+      <label for="login" class="form-label">Login</label>
+      <input type="text" class="form-control" id="login" name="login" required />
+      <div id="loginHelp" class="form-text">*Número do seu RA</div>
+    </div>
+    <div class="mb-3 col-7">
+      <label for="senha" class="form-label">Senha</label>
+      <input type="password" class="form-control" id="senha" name="senha" required />
+    </div>
+    <div class="mb-3 col-7">
+      <center><button type="submit" class="btn btn-outline-primary mt-4 px-5">Entrar</button></center>
+    </div>
+    <div class="col-7">
+      <span>
+        <center><a id="btn_modal_adm" data-bs-toggle="modal" data-bs-target="#modal_adm">Login como Administrador</a></center>
+      </span>
+    </div>
+  </form>
+</div>
+{% endblock %}

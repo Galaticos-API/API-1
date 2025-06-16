@@ -1,0 +1,436 @@
+<!-- templates/atestados.html -->
+{% extends "base.html" %} {% block title %}Atestados{% endblock %} {% block content %}
+<div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 9999"></div>
+<div class="content">
+  <h1>Atestados</h1>
+  {% if session['RA'] != 'admin' %}
+  <hr />
+  <h4>Envio de documento</h4>
+  <form class="formAtestado row my-3" id="formAtestadoJ" method="POST" enctype="multipart/form-data">
+    <div class="col-md-4 col-12">
+      <label for="inputGroupFile02" class="form-label">Selecionar arquivo</label>
+      <div class="input-group mb-3">
+        <input class="form-control" type="file" name="file" id="file" accept=".pdf" required />
+      </div>
+    </div>
+    <div class="col-md-4 col-6">
+      <label for="duration" class="form-label">Duração do Atestado (em dias)</label>
+      <div class="input-group">
+        <input type="text" class="form-control" name="duration" id="duration" />
+      </div>
+    </div>
+    <div class="col-md-4 col-6">
+      <label for="filetype" class="form-label">Tipo de atestado</label>
+      <div class="input-group mb-3">
+        <select class="form-select" id="filetype" name="filetype">
+          <option value="undefined">Selecione um tipo</option>
+          <option value="atestado_medico_comum">Atestado Médico Comum</option>
+          <option value="comparecimento_medico">Atestado de Comparecimento Médico</option>
+          <option value="internacao_hospitalar">Atestado de Internação Hospitalar</option>
+          <option value="acompanhamento_paciente">Atestado de Acompanhamento de Paciente</option>
+          <option value="doenca_infectocontagiosa">Atestado de Doença Infectocontagiosa</option>
+          <option value="gestacao">Atestado de Gestação</option>
+          <option value="licenca_maternidade">Atestado de Licença Maternidade</option>
+          <option value="licenca_paternidade">Atestado de Licença Paternidade</option>
+          <option value="psicologico">Atestado Psicológico</option>
+          <option value="odontologico">Atestado Odontológico</option>
+          <option value="fisioterapeutico">Atestado Fisioterapêutico</option>
+          <option value="doacao_sangue">Atestado de Doação de Sangue</option>
+          <option value="comparecimento_judicial">Atestado de Comparecimento Judicial</option>
+          <option value="falecimento_familiar">Atestado de Falecimento de Familiar</option>
+          <option value="servico_militar">Atestado de Serviço Militar</option>
+          <option value="evento_academico">Atestado de Participação em Evento Acadêmico</option>
+          <option value="competicao_esportiva">Atestado de Participação em Competição Esportiva</option>
+          <option value="tratamento_prolongado">Atestado de Tratamento Prolongado</option>
+          <option value="readaptacao_restricao">Atestado de Readaptação ou Restrição de Atividades</option>
+          <option value="incapacidade_temporaria">Atestado de Incapacidade Temporária</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-outline-primary col-md-2 col-4 mx-auto mb-6" id="botao-do-submit" type="submit">Enviar</button>
+  </form>
+  {% endif %}
+
+  <hr />
+  <h4>Atestados enviados</h4>
+  <nav class="search-container mb-3 d-flex align-items-center gap-2">
+    <input type="number" id="search" placeholder="Buscar por RA..." oninput="filterDocuments()" />
+    <select class="form-select w-auto" id="category" onchange="filterDocuments()">
+      <option value="durationasc">Menor Duração</option>
+      <option value="durationdesc">Maior Duração</option>
+      <option value="dateolder">Mais Antigo</option>
+      <option value="datenewer">Mais Recente</option>
+    </select>
+    <select class="form-select" id="tipoAtestado" onchange="filterDocuments()">
+      <option value="" selected disabled>Selecione um tipo de atestado</option>
+      <option value="">Todos os Tipos</option>
+      <option value="atestado_medico_comum">Atestado Médico Comum</option>
+      <option value="comparecimento_medico">Atestado de Comparecimento Médico</option>
+      <option value="internacao_hospitalar">Atestado de Internação Hospitalar</option>
+      <option value="acompanhamento_paciente">Atestado de Acompanhamento de Paciente</option>
+      <option value="doenca_infectocontagiosa">Atestado de Doença Infectocontagiosa</option>
+      <option value="gestacao">Atestado de Gestação</option>
+      <option value="licenca_maternidade">Atestado de Licença Maternidade</option>
+      <option value="licenca_paternidade">Atestado de Licença Paternidade</option>
+      <option value="psicologico">Atestado Psicológico</option>
+      <option value="odontologico">Atestado Odontológico</option>
+      <option value="fisioterapeutico">Atestado Fisioterapêutico</option>
+      <option value="doacao_sangue">Atestado de Doação de Sangue</option>
+      <option value="comparecimento_judicial">Atestado de Comparecimento Judicial</option>
+      <option value="falecimento_familiar">Atestado de Falecimento de Familiar</option>
+      <option value="servico_militar">Atestado de Serviço Militar</option>
+      <option value="evento_academico">Atestado de Participação em Evento Acadêmico</option>
+      <option value="competicao_esportiva">Atestado de Participação em Competição Esportiva</option>
+      <option value="tratamento_prolongado">Atestado de Tratamento Prolongado</option>
+      <option value="readaptacao_restricao">Atestado de Readaptação ou Restrição de Atividades</option>
+      <option value="incapacidade_temporaria">Atestado de Incapacidade Temporária</option>
+    </select>
+    {% if session['RA'] == 'admin' %}
+    <button class="btn btn-outline-primary ms-auto" id="btn-metricas" type="button" data-bs-toggle="modal" data-bs-target="#modalMetricas">Relatório</button>
+    {% endif %}
+  </nav>
+
+  <div class="table-responsive">
+    <table id="atestadosTable" class="table table-striped px-0">
+      <thead>
+        <tr>
+          <th style="display: none">RA</th>
+          <th>Nome do Documento</th>
+          <th>Aluno</th>
+          <th>Data de Envio</th>
+          <th>Duração do Atestado</th>
+          <th>Tipo de Atestado</th>
+          {% if session['RA'] == 'admin' %}
+          <th>Ações</th>
+          {% else %}
+          <th>Status</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Os dados dos atestados serão inseridos aqui -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal Validação atestado -->
+  <div class="modal fade" id="modalValidarAtestado" tabindex="-1" aria-labelledby="modalValidarAtestadoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color: #366341; color: #fff">
+          <h5 class="modal-title" id="modalValidarAtestadoLabel">Validar Atestado</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <p>Deseja aprovar ou reprovar este atestado?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" id="btnReprovarAtestado">Reprovar</button>
+          <button type="button" class="btn btn-success" id="btnAprovarAtestado">Aprovar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal Métricas -->
+  <div class="modal fade" id="modalMetricas" tabindex="-1" aria-labelledby="modalMetricasLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color: #366341; color: #fff">
+          <h5 class="modal-title" id="modalMetricasLabel">Métricas dos Atestados</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar" style="filter: invert(1)"></button>
+        </div>
+        <div class="modal-body">
+          <div id="metricasConteudo">
+            <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Carregando...</span></div>
+          </div>
+          <button type="button" class="btn btn-outline-success" id="btnExportarPDF">Exportar PDF</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const USER_ID = "{{ session['RA'] }}";
+</script>
+<script>
+  function filterDocuments() {
+    let searchInput = $("#search").val().toLowerCase();
+    let categoryFilter = $("#category").val();
+    let tipoAtestado = $("#tipoAtestado").val();
+    let rows = $("#atestadosTable tbody tr").toArray();
+
+    rows.forEach((row) => {
+      let ra = $(row).find("td").eq(0).text().toLowerCase();
+      let tipo = $(row).find("td").eq(5).text(); // coluna tipo de atestado
+      let show = ra.includes(searchInput);
+
+      if (tipoAtestado && tipo !== "" && tipo !== undefined) {
+        show = show && tipo === $("#tipoAtestado option:selected").val();
+      }
+
+      $(row).toggle(show);
+    });
+
+    // Ordenação com base no filtro selecionado
+    if (categoryFilter === "nameaz") {
+      rows.sort((a, b) => $(a).find("td").eq(1).text().localeCompare($(b).find("td").eq(1).text()));
+    } else if (categoryFilter === "nameza") {
+      rows.sort((a, b) => $(b).find("td").eq(1).text().localeCompare($(a).find("td").eq(1).text()));
+    } else if (categoryFilter === "dateolder") {
+      rows.sort((a, b) => new Date($(a).find("td").eq(3).text()) - new Date($(b).find("td").eq(3).text()));
+    } else if (categoryFilter === "datenewer") {
+      rows.sort((a, b) => new Date($(b).find("td").eq(3).text()) - new Date($(a).find("td").eq(3).text()));
+    } else if (categoryFilter === "durationasc") {
+      rows.sort((a, b) => $(b).find("td").eq(4).text().localeCompare($(a).find("td").eq(4).text()));
+    } else if (categoryFilter === "durationdesc") {
+      rows.sort((a, b) => $(a).find("td").eq(4).text().localeCompare($(b).find("td").eq(4).text()));
+    }
+
+    // Reorganiza as linhas na tabela
+    let tableBody = $("#atestadosTable tbody");
+    rows.forEach((row) => tableBody.append(row));
+  }
+  $(document).ready(function () {
+    // Adiciona eventos para filtrar instantaneamente
+    document.getElementById("search").addEventListener("input", filterDocuments);
+    document.getElementById("category").addEventListener("change", filterDocuments);
+
+    $(".formAtestado").on("submit", function (e) {
+      e.preventDefault(); // evita que a página recarregue
+
+      let form = $(this)[0]; // pega o form HTML
+      let formData = new FormData(form); // cria um FormData com os dados do form (inclusive o arquivo!)
+
+      $.ajax({
+        url: "/atestado/upload/",
+        type: "POST",
+        data: formData,
+        processData: false, // impede que o jQuery processe os dados
+        contentType: false, // deixa o browser decidir o tipo (multipart/form-data)
+        success: function (response) {
+          window.location.reload();
+        },
+        error: function (xhr, status, error) {
+          console.error(xhr.responseText);
+        },
+      });
+    });
+
+    let filenameParaValidar = null;
+
+    $("#atestadosTable").on("click", ".btn-validar", function () {
+      filenameParaValidar = $(this).data("filename");
+      const modal = new bootstrap.Modal(document.getElementById("modalValidarAtestado"));
+      modal.show();
+    });
+
+    function validateAtestado(filenameParaValidar, validation) {
+      $.ajax({
+        url: "/atestado/validate/",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ filename: filenameParaValidar, validation: validation }),
+        success: function (response) {
+          window.location.reload();
+        },
+        error: function () {
+          showToast("Erro ao aprovar atestado.", "danger");
+        },
+      });
+    }
+
+    $("#btnAprovarAtestado").on("click", function () {
+      if (filenameParaValidar) {
+        validateAtestado(filenameParaValidar, "accept");
+      }
+      bootstrap.Modal.getInstance(document.getElementById("modalValidarAtestado")).hide();
+    });
+
+    $("#btnReprovarAtestado").on("click", function () {
+      if (filenameParaValidar) {
+        validateAtestado(filenameParaValidar, "deny");
+      }
+      bootstrap.Modal.getInstance(document.getElementById("modalValidarAtestado")).hide();
+    });
+
+    // Função para buscar e exibir os atestados em uma tabela
+    function fetchAtestados() {
+      let url;
+      if (USER_ID === "admin") {
+        url = "/atestado/lista/";
+      } else {
+        url = `/atestado/lista_aluno/${USER_ID}`;
+      }
+      $.ajax({
+        url: url,
+        type: "GET",
+        success: function (response) {
+          let tableBody = $("#atestadosTable tbody");
+          tableBody.empty();
+
+          response.forEach((atestado) => {
+            let row;
+            if (USER_ID === "admin") {
+              let btnValidar;
+              if (atestado.status !== "undefined") {
+                btnValidar = `<button class="btn btn-success btn-sm" disabled>Validado!</button>`;
+              } else {
+                btnValidar = `<button class="btn btn-outline-primary btn-sm btn-validar" data-filename="${atestado.name}">
+                                Validar
+                              </button>`;
+              }
+              row = $(`
+                      <tr>
+                        <td style="display:none">${atestado.uploaded_by}</td>
+                        <td><a href='${atestado.file_url}' target='_blank'>${atestado.name}</a></td>
+                        <td>${atestado.username}</td>
+                        <td>${atestado.date}</td>
+                        <td>${atestado.duration} dias</td>
+                        <td>${atestado.filetype || ""}</td>
+                        <td>
+                          ${btnValidar}
+                        </td>
+                      </tr>
+                    `);
+            } else {
+              let statusText =
+                atestado.status === "accepted"
+                  ? '<span class="badge bg-success">Aprovado</span>'
+                  : atestado.status === "denied"
+                  ? '<span class="badge bg-danger">Reprovado</span>'
+                  : '<span class="badge bg-secondary">Pendente</span>';
+              row = $(`
+                <tr>
+                  <td style="display:none">${atestado.uploaded_by}</td>
+                  <td><a href='${atestado.file_url}' target='_blank'>${atestado.name}</a></td>
+                  <td>${atestado.username}</td>
+                  <td>${atestado.date}</td>
+                  <td>${atestado.duration} dias</td>
+                  <td>${atestado.filetype || ""}</td>
+                  <td>${statusText}</td>
+                </tr>
+              `);
+            }
+            tableBody.append(row);
+          });
+        },
+        error: function (xhr, status, error) {
+          console.error(xhr.responseText);
+        },
+      });
+    }
+    // Chama a função para buscar os atestados ao carregar a página
+    fetchAtestados();
+
+    // Função para calcular e exibir métricas
+    function calcularMetricas(atestados) {
+      // Contagem por tipo
+      let tipos = {};
+      let duracoes = {};
+      let agora = new Date();
+      let count7 = 0,
+        count30 = 0,
+        countTotal = atestados.length;
+      atestados.forEach((a) => {
+        // Tipo
+        if (a.filetype) tipos[a.filetype] = (tipos[a.filetype] || 0) + 1;
+        // Duração
+        let dur = (a.duration || "").toString().replace(/\D/g, "");
+        if (dur) duracoes[dur] = (duracoes[dur] || 0) + 1;
+        // Datas
+        let data = new Date(a.date);
+        let diff = (agora - data) / (1000 * 60 * 60 * 24);
+        if (diff <= 7) count7++;
+        if (diff <= 30) count30++;
+      });
+      // Tipo mais recebido
+      let tipoMais = Object.entries(tipos).sort((a, b) => b[1] - a[1])[0] || ["-", 0];
+      // Duração mais comum
+      let durMais = Object.entries(duracoes).sort((a, b) => b[1] - a[1])[0] || ["-", 0];
+      // Monta HTML em tabelas
+      let html = `<h6>Tipo de atestado mais recebido: <b>${tipoMais[0]}</b> (${tipoMais[1]})</h6>`;
+      html += `<table class='table table-bordered'><thead><tr><th>Tipo de Atestado</th><th>Quantidade</th></tr></thead><tbody>`;
+      Object.entries(tipos).forEach(([tipo, qtd]) => {
+        html += `<tr><td>${tipo}</td><td><b>${qtd}</b></td></tr>`;
+      });
+      html += `</tbody></table>`;
+      html += `<h6>Duração mais comum: <b>${durMais[0]} dias</b> (${durMais[1]})</h6>`;
+      html += `<table class='table table-bordered'><thead><tr><th>Duração (dias)</th><th>Quantidade</th></tr></thead><tbody>`;
+      Object.entries(duracoes).forEach(([dur, qtd]) => {
+        html += `<tr><td>${dur}</td><td><b>${qtd}</b></td></tr>`;
+      });
+      html += `</tbody></table>`;
+      html += `<h6>Número de atestados enviados:</h6>`;
+      html += `<table class='table table-bordered'><thead><tr><th>Período</th><th>Quantidade</th></tr></thead><tbody>`;
+      html += `<tr><td>Últimos 7 dias</td><td><b>${count7}</b></td></tr>`;
+      html += `<tr><td>Últimos 30 dias</td><td><b>${count30}</b></td></tr>`;
+      html += `<tr><td>Todo o período</td><td><b>${countTotal}</b></td></tr>`;
+      html += `</tbody></table>`;
+      return html;
+    }
+
+    // Evento para abrir o modal e buscar métricas
+    $("#modalMetricas").on("show.bs.modal", function () {
+      $("#metricasConteudo").html('<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Carregando...</span></div>');
+      $.ajax({
+        url: "/atestado/lista/",
+        type: "GET",
+        success: function (response) {
+          $("#metricasConteudo").html(calcularMetricas(response));
+        },
+        error: function () {
+          $("#metricasConteudo").html('<div class="alert alert-danger">Erro ao carregar métricas.</div>');
+        },
+      });
+    });
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("btnExportarPDF").addEventListener("click", function () {
+      const element = document.getElementById("metricasConteudo");
+
+      const opt = {
+        margin: 0.5,
+        filename: `metricas_atestados_${new Date().toISOString().slice(0, 10)}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+      };
+
+      html2pdf().from(element).set(opt).save();
+    });
+  });
+
+  function showToast(message, category) {
+    const toastContainer = document.getElementById("toastContainer");
+    const toast = document.createElement("div");
+
+    toast.className = `toast align-items-center text-bg-${category} border-0 mt-2`;
+    toast.style = "font-size: large";
+    toast.setAttribute("role", "alert");
+    toast.setAttribute("aria-live", "assertive");
+    toast.setAttribute("aria-atomic", "true");
+    toast.innerHTML = `
+        <div class="d-flex">
+          <div class="toast-body">
+            ${message}
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      `;
+
+    toastContainer.appendChild(toast);
+    const bsToast = new bootstrap.Toast(toast);
+    bsToast.show();
+
+    // Remover o toast da DOM após fechar
+    toast.addEventListener("hidden.bs.toast", () => {
+      toast.remove();
+    });
+  }
+</script>
+
+{% endblock %}
