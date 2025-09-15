@@ -1,25 +1,24 @@
 # API - 1° Semestre ADS - FATEC SJC
 
-## Objetivo do Projeto
+## 1. Objetivo do Projeto
 
 O objetivo é desenvolver um sistema web para o registro e gestão de atestados médicos de alunos, facilitando a comunicação entre estudantes, professores e a coordenação acadêmica, além de permitir a avaliação contínua de equipes ágeis em projetos de desenvolvimento de software. A plataforma garantirá um armazenamento seguro e organizado dos atestados, possibilitando consultas rápidas e emissão de relatórios sobre afastamentos. Paralelamente, permitirá a avaliação individual dos membros de equipes Scrum, analisando métricas como colaboração, proatividade e entrega de resultados, fornecendo relatórios analíticos para acompanhamento da evolução das equipes ao longo do tempo.
 
 <hr>
 
-### Sprints
+## 2. Cronograma
 
-| Sprint               | Previsão                | Status    |
+| Sprints              | Previsão                | Status    |
 | -------------------- | ----------------------- | --------- |
-| Kick Off Geral       | 26/08/2024 - 30/08/2024 | Concluído |
-| Kick Off 1° Semestre | 02/09/2024 - 06/09/2024 | concluído |
-| 01                   | 10/03/2025 - 30/03/2025 | Concluído |
-| 02                   | 07/04/2025 - 27/04/2025 | Concluído |
-| 03                   | 05/05/2025 - 25/05/2025 | Concluído |
-| Feira de Soluções    | 29/05/2024              | A começar |
+| Kick Off Geral       | 24/02/2025 - 28/02/2025 | Concluído |
+| Sprint 01            | 10/03/2025 - 30/03/2025 | Concluído |
+| Sprint 02            | 07/04/2025 - 27/04/2025 | Concluído |
+| Sprint 03            | 05/05/2025 - 25/05/2025 | Concluído |
+| Feira de Soluções    |        29/05/2025       | Concluído |
 
 <hr>
 
-## MVP
+## 3. MVP - (Minimum Viable Product)
 
 <p align="center">
       <img src="./documents/mvp.jpg" alt="MVP do Projeto" width=550 height=310>
@@ -32,15 +31,15 @@ O objetivo é desenvolver um sistema web para o registro e gestão de atestados 
   </li>
 </ul>
 
-| Sprint   | Link do Vídeo                                              |
-| -------- | ---------------------------------------------------------- |
-| Sprint 1 | [Clique aqui](https://www.youtube.com/watch?v=Aag2fdVSDXw) |
-| Sprint 2 | [Clique aqui](https://www.youtube.com/watch?v=LrEpRZ4XQmg) |
-| Sprint 3 | [Clique aqui](https://www.youtube.com/watch?v=2vUJxWFI6WU) |
+| Sprint    | Link do Vídeo                                              |
+| --------- | ---------------------------------------------------------- |
+| Sprint 01 | [Clique Aqui](https://www.youtube.com/watch?v=Aag2fdVSDXw) |
+| Sprint 02 | [Clique Aqui](https://www.youtube.com/watch?v=LrEpRZ4XQmg) |
+| Sprint 03 | [Clique Aqui](https://www.youtube.com/watch?v=2vUJxWFI6WU) |
 
 <hr>
 
-## Backlog do produto
+## 4. Backlog do Produto
 
 | Rank | Backlog                                                                             | User Story                                                                                                                                                                                                                             | Prioridade | Sprint |
 | ---- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ------ |
@@ -83,26 +82,26 @@ O objetivo é desenvolver um sistema web para o registro e gestão de atestados 
 
 <hr>
 
-## Tecnologias utilizadas
+## 5. Tecnologias Utilizadas
 
 ![My Skills](https://go-skill-icons.vercel.app/api/icons?i=git,github,vscode,html,css,bootstrap,js,python,flask,figma)
 
 <hr>
 
-## Autores
+## 6. Autores
 
-|    Função     | Nome                      |                                                                    GitHub                                                                     |
-| :-----------: | :------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------: |
-| Scrum Master  | Giovanni Moretto          |   [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/Giomoret)    |
-| Product Owner | Gustavo Bueno da Silva    |  [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/Darkghostly)  |
-|   Dev Team    | Rafael Giordano Matesco   |  [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/RafaMatesco)  |
-|   Dev Team    | Gustavo Monteiro Greco    | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/GustavoMGreco) |
-|   Dev Team    | Gabriel dos Santos Lasaro |   [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/Sashxjssx)   |
-|   Dev Team    | Alice Azambuja            | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/AlicePenrose)  |
+|    Função     | Nome             |                                                                        GitHub                                                                 |
+| :-----------: | :--------------: | :-------------------------------------------------------------------------------------------------------------------------------------------: |
+| Scrum Master  | Giovanni Moretto | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/Giomoret)      |
+| Product Owner | Gustavo Bueno    | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/Darkghostly)   |
+|   Dev Team    | Rafael Matesco   | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/RafaMatesco)   |
+|   Dev Team    | Gabriel Lasaro   | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/GaelNotFound)  |
+|   Dev Team    | Gustavo Monteiro | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/GustavoMGreco) |
+|   Dev Team    | Alice Azambuja   | [![GitHub Badge](https://img.shields.io/badge/GitHub-111217?style=flat-square&logo=github&logoColor=white)](https://github.com/AlicePenrose)  |
 
 <hr>
 
-## Instalação
+## 7. Instalação
 
 - Dependências:
 - - Python > 3.7
@@ -139,7 +138,7 @@ Sobre a política de execução do Windows [^1]
 Para instalar as dependências, apenas passe o arquivo requirements.txt com o parâmetro -r para o comando install do pip:
 
 ```bash
-pip instal -r requirements.txt
+pip install -r requirements.txt
 ```
 
 #### Iniciando a aplicação
